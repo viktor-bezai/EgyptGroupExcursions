@@ -37,21 +37,25 @@ jobs:
         run: |
           npm install
 
-      # Step 4: Run CodeGPT for AI PR Review
+      # Step 4: Install CodeGPT
+      - name: Install CodeGPT
+        run: npm install -g codegpt
+
+      # Step 5: Run CodeGPT Review for Suggestions
       - name: Run CodeGPT Review
         run: |
           npx codegpt pr-review analyze --token ${{ secrets.OPENAI_API_KEY }}
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
-      # Run Tests
-      - name: Run Tests for Django
-        working-directory: backend
-        run: python manage.py test
-
-      # Explanation of the PR
-      - name: Run CodeGPT Review
+      # Step 6: Explanation of the PR
+      - name: Run CodeGPT Explanation
         run: |
           npx codegpt pr-review analyze --context "Explain the changes in this PR in detail." --token ${{ secrets.OPENAI_API_KEY }}
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      # Step 7: Run Tests for Django
+      - name: Run Tests for Django
+        working-directory: backend
+        run: python manage.py test
