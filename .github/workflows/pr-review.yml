@@ -38,7 +38,11 @@ jobs:
 
     # Step 4: Install OpenAI Python SDK
     - name: Install OpenAI Python SDK
-      run: pip install openai@latest
+      run: pip install openai
+
+    # Step 4: openai migrate
+    - name: openai migrate
+      run: openai migrate
 
     # Step 5: Analyze Django and Next.js code with OpenAI API
     - name: Analyze Django and Next.js code
