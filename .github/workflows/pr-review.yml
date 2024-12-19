@@ -42,7 +42,7 @@ jobs:
 
     # Step 4: openai migrate
     - name: openai migrate
-      run: openai migrate
+      run: openai migrate --force
 
     # Step 5: Analyze Django and Next.js code with OpenAI API
     - name: Analyze Django and Next.js code
