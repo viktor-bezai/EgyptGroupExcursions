@@ -37,8 +37,8 @@ jobs:
       run: npm install
 
     # Step 4: Install CodeGPT CLI (or other CodeGPT tools)
-    - name: Install CodeGPT CLI
-      run: npm install -g @codegpt/cli
+    - name: Install CodeGPT
+      run: npm install -g @codegpt@latest
 
     # Step 5: Analyze Django and Next.js code with CodeGPT
     - name: Analyze PR with CodeGPT
