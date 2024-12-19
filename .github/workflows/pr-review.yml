@@ -33,6 +33,7 @@ jobs:
           node-version: '22.12.0'
 
       - name: Install Next.js Dependencies
+        working-directory: frontend
         run: |
           npm install
 
