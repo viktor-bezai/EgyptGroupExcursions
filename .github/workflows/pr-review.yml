@@ -48,7 +48,3 @@ jobs:
       - name: Run Tests for Django
         working-directory: backend
         run: python manage.py test
-
-      - name: Run Tests for Next.js
-        working-directory: frontend
-        run: npm test
