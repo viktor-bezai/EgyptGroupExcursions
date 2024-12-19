@@ -14,7 +14,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.x"
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
@@ -24,6 +24,7 @@ jobs:
       - name: Review PR with OpenAI
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python - <<EOF
           import openai
@@ -32,14 +33,22 @@ jobs:
 
           # Configuration
           openai.api_key = os.getenv("OPENAI_API_KEY")
-          pr_number = os.getenv("GITHUB_REF").split('/')[-2]
           repo_name = os.getenv("GITHUB_REPOSITORY")
+          pr_number = os.getenv("GITHUB_REF").split('/')[-2]
           token = os.getenv("GITHUB_TOKEN")
 
           # Fetch PR diff
-          headers = {"Authorization": f"token {token}"}
+          headers = {
+              "Authorization": f"token {token}",
+              "Accept": "application/vnd.github.v3.diff"
+          }
           diff_url = f"https://api.github.com/repos/{repo_name}/pulls/{pr_number}"
-          pr_diff = requests.get(diff_url, headers=headers).json()["diff"]
+          response = requests.get(diff_url, headers=headers)
+
+          if response.status_code != 200:
+              raise Exception(f"Failed to fetch PR diff: {response.status_code} - {response.text}")
+
+          pr_diff = response.text
 
           # Send PR diff to OpenAI
           response = openai.ChatCompletion.create(
@@ -53,5 +62,6 @@ jobs:
           # Post a comment on the PR
           review_comment = response['choices'][0]['message']['content']
           comment_url = f"https://api.github.com/repos/{repo_name}/issues/{pr_number}/comments"
+          headers = {"Authorization": f"token {token}"}
           requests.post(comment_url, headers=headers, json={"body": review_comment})
           EOF
