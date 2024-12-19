@@ -31,7 +31,7 @@ jobs:
     - name: Run OpenAI Review
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      run: python review_pr.py > review_feedback.txt
+      run: python analyze_code.py > analyze_code_feedback.txt
 
     - name: Post Review as Comment
       uses: peter-evans/create-or-update-comment@v3
