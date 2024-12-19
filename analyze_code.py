@@ -10,7 +10,7 @@ pr_diff = "Example code changes to analyze..."  # Replace with logic to get PR d
 
 # Send the diff to OpenAI for analysis
 response = client.chat.completions.create(
-    model="gpt-4",
+    model="gpt-4o-mini",
     messages=[
         {"role": "system", "content": "You are a code reviewer."},
         {"role": "user", "content": f"Please review the following PR diff:\n{pr_diff}"}
