@@ -25,13 +25,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Step 3: Set up Node.js environment for React
+      # Step 3: Set up Node.js environment for Next.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '22.12.0'
 
-      - name: Install React Dependencies
+      - name: Install Next.js Dependencies
         run: |
           npm install
 
@@ -46,11 +46,11 @@ jobs:
       - name: Run Lint for Django
         run: flake8
 
-      - name: Run Lint for React
+      - name: Run Lint for Next.js
         run: npm run lint
 
       - name: Run Tests for Django
         run: python manage.py test
 
-      - name: Run Tests for React
+      - name: Run Tests for Next.js
         run: npm test
