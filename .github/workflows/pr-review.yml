@@ -48,3 +48,10 @@ jobs:
       - name: Run Tests for Django
         working-directory: backend
         run: python manage.py test
+
+      # Explanation of the PR
+      - name: Run CodeGPT Review
+        run: |
+          npx codegpt pr-review analyze --context "Explain the changes in this PR in detail." --token ${{ secrets.OPENAI_API_KEY }}
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
