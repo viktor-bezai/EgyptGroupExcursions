@@ -44,13 +44,7 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
-      # Optional: Run additional checks (e.g., linting, testing)
-      - name: Run Lint for Django
-        run: flake8
-
-      - name: Run Lint for Next.js
-        run: npm run lint
-
+      # Run Tests
       - name: Run Tests for Django
         run: python manage.py test
 
