@@ -17,7 +17,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.10  # Adjust to your Django version requirements (3.13 is not available)
+        python-version: 3.10
 
     - name: Install Django dependencies
       working-directory: backend
@@ -30,7 +30,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 18  # Adjust to your Next.js version requirements (22.12.0 is invalid)
+        node-version: 18
 
     - name: Install Next.js dependencies
       working-directory: frontend
