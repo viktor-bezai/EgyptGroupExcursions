@@ -1,29 +1,37 @@
-name: CodeGPT PR Check
+name: Review Pull Request
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize]
 
 jobs:
-  codegpt-analysis:
+  review:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
 
-      - name: Install Dependencies
-        working-directory: backend
-        run: |
-          pip install -r requirements.txt
+    - name: Install dependencies
+      run: pip install openai
 
-      - name: Run CodeGPT Analysis
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          python analyze_code.py
+    - name: Generate Review Feedback
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: |
+        git diff origin/main...HEAD > changes.diff
+        python review_pr.py > review_feedback.txt
+
+    - name: Post Review as Comment
+      uses: peter-evans/create-or-update-comment@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        issue-number: ${{ github.event.pull_request.number }}
+        body: |
+          ### AI-Generated Code Review
+          $(cat review_feedback.txt)

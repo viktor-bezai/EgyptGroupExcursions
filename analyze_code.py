@@ -1,21 +1,31 @@
-import os
-from openai import OpenAI
+import openai
 
-client = OpenAI(
-    api_key=os.environ.get("OPENAI_API_KEY"),
-)
+# Load your OpenAI API key
+openai.api_key = "your-api-key"
 
-# Define the PR diff or files to analyze
-pr_diff = "Example code changes to analyze..."  # Replace with logic to get PR diff
+def review_code_changes(diff):
+    # Prompt for the AI
+    prompt = f"""You are a code reviewer for a Django project. Analyze the following code changes 
+    and describe what was modified in this pull request:
+    ```
+    {diff}
+    ```
+    Provide detailed feedback for clarity, correctness, and best practices."""
 
-# Send the diff to OpenAI for analysis
-response = client.chat.completions.create(
-    model="gpt-4o-mini",
-    messages=[
-        {"role": "system", "content": "You are a code reviewer."},
-        {"role": "user", "content": f"Please review the following PR diff:\n{pr_diff}"}
-    ]
-)
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a highly skilled Django code reviewer."},
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.7
+    )
+    return response['choices'][0]['message']['content']
 
-# Print the response
-print(response["choices"][0]["message"]["content"])
+# Read the diff file
+with open('changes.diff', 'r') as f:
+    diff_content = f.read()
+
+# Generate the review
+review_feedback = review_code_changes(diff_content)
+print("Review Feedback:\n", review_feedback)
