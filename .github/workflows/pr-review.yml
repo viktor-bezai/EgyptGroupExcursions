@@ -1,0 +1,56 @@
+name: CodeGPT PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  ai_pr_review:
+    name: AI PR Review with CodeGPT
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Python environment for Django
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.13'
+
+      - name: Install Django Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 3: Set up Node.js environment for React
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install React Dependencies
+        run: |
+          npm install
+
+      # Step 4: Run CodeGPT for AI PR Review
+      - name: Run CodeGPT Review
+        run: |
+          npx codegpt pr-review analyze --token ${{ secrets.OPENAI_API_KEY }}
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      # Optional: Run additional checks (e.g., linting, testing)
+      - name: Run Lint for Django
+        run: flake8
+
+      - name: Run Lint for React
+        run: npm run lint
+
+      - name: Run Tests for Django
+        run: python manage.py test
+
+      - name: Run Tests for React
+        run: npm test
