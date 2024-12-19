@@ -20,6 +20,7 @@ jobs:
         python-version: 3.13  # Adjust to your Django version requirements
 
     - name: Install Django dependencies
+      working-directory: backend
       run: |
         python -m venv venv
         source venv/bin/activate
@@ -32,6 +33,7 @@ jobs:
         node-version: 22.12.0  # Adjust to your Next.js version requirements
 
     - name: Install Next.js dependencies
+      working-directory: frontend
       run: npm install
 
     # Step 4: Install CodeGPT CLI (or other CodeGPT tools)
