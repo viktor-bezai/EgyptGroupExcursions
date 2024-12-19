@@ -11,21 +11,27 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all branches and history
+
+    - name: Fetch main branch
+      run: git fetch origin main
+
+    - name: Generate Diff
+      run: git diff origin/main...HEAD > changes.diff
 
     - name: Install Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.9'
 
-    - name: Install dependencies
+    - name: Install Dependencies
       run: pip install openai
 
-    - name: Generate Review Feedback
+    - name: Run OpenAI Review
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      run: |
-        git diff origin/main...HEAD > changes.diff
-        python review_pr.py > review_feedback.txt
+      run: python review_pr.py > review_feedback.txt
 
     - name: Post Review as Comment
       uses: peter-evans/create-or-update-comment@v3
