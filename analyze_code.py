@@ -22,7 +22,7 @@ def review_code_changes(diff):
             {"role": "user", "content": prompt}
         ],
     )
-    return response['choices'][0]['message']['content']
+    return response
 
 
 # Read the diff file
