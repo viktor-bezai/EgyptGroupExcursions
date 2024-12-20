@@ -17,7 +17,7 @@ def review_code_changes(diff):
     Provide detailed feedback for clarity, correctness, and best practices."""
 
     response = client.chat.completions.create(
-        model="gpt-4",
+        model="gpt-4o-mini",
         messages=[
             {
                 "role": "system",
