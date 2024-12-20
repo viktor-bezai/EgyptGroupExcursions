@@ -1,13 +1,13 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
 
 // Create a custom theme
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: "#c09300",
     },
     secondary: {
-      main: '#dc004e',
+      main: "#000000",
     },
   },
 });
