@@ -35,19 +35,15 @@ jobs:
     - name: Run OpenAI Review
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      run: python analyze_code.py > analyze_code_feedback.txt
+      run: python analyze_code.py > feedback.txt
 
-    - name: Read Feedback
-      id: read-feedback
+    - name: Post Feedback as Comment
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        feedback=$(cat analyze_code_feedback.txt | sed ':a;N;$!ba;s/\n/\\n/g' | sed 's/"/\\"/g')
-        echo "feedback=$feedback" >> $GITHUB_ENV
-
-    - name: Post Summary as Comment
-      uses: peter-evans/create-or-update-comment@v3
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        issue-number: ${{ github.event.pull_request.number }}
-        body: |
-          ### AI-Generated Code Review
-          ${{ env.feedback }}
+        feedback=$(<feedback.txt)
+        curl -X POST \
+          -H "Authorization: Bearer $GITHUB_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d "{\"body\": \"$feedback\"}" \
+          "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
