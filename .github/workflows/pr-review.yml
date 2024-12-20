@@ -18,16 +18,16 @@ jobs:
       with:
         fetch-depth: 0  # Fetch all branches and history
 
-    - name: Fetch main branch
-      run: git fetch origin preview
+    - name: Fetch base branch
+      run: git fetch origin ${{ github.event.pull_request.base.ref }}
 
     - name: Generate Diff
-      run: git diff origin/preview...HEAD > changes.diff
+      run: git diff origin/${{ github.event.pull_request.base.ref }}...HEAD > changes.diff
 
     - name: Install Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
+        python-version: '3.11'
 
     - name: Install Dependencies
       run: pip install openai jq
