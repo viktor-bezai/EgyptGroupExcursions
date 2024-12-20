@@ -1,28 +1,35 @@
 import os
-
-import openai
+from openai import OpenAI
 
 # Set the OpenAI API key
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+)
 
 
 def review_code_changes(diff):
     # Prompt for the AI
-    prompt = f"""You are a code reviewer for a Django project. Analyze the following code changes 
+    prompt = f"""You are a code reviewer for a Django and Next.js project. Analyze the following code changes 
     and describe what was modified in this pull request:
     ```
     {diff}
     ```
     Provide detailed feedback for clarity, correctness, and best practices."""
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4",
         messages=[
-            {"role": "system", "content": "You are a highly skilled Django code reviewer."},
-            {"role": "user", "content": prompt}
+            {
+                "role": "system",
+                "content": "You are a highly skilled Django and Next.js code reviewer."
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
         ]
     )
-    return response['choices'][0]['message']['content']
+    return response.choices[0].message
 
 
 # Read the diff file
