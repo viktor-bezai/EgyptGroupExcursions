@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   review:
     runs-on: ubuntu-latest
@@ -33,6 +37,10 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: python analyze_code.py > analyze_code_feedback.txt
 
+    - name: Read Analyze Code Feedback
+      id: read_feedback
+      run: echo "feedback=$(<analyze_code_feedback.txt)" >> $GITHUB_ENV
+
     - name: Post Review as Comment
       uses: peter-evans/create-or-update-comment@v3
       with:
@@ -40,4 +48,4 @@ jobs:
         issue-number: ${{ github.event.pull_request.number }}
         body: |
           ### AI-Generated Code Review
-          $(cat analyze_code_feedback.txt)
+          ${{ env.feedback }}
