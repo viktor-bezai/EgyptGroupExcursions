@@ -1,56 +1,53 @@
-name: CodeGPT PR Review
+name: Review Pull Request
 
 on:
   pull_request:
     types: [opened, synchronize]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
-  ai_pr_review:
-    name: AI PR Review with CodeGPT
+  review:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the repository
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all branches and history
 
-      # Step 2: Set up Python environment for Django
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.13'
+    - name: Fetch main branch
+      run: git fetch origin preview
 
-      - name: Install Django Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+    - name: Generate Diff
+      run: git diff origin/preview...HEAD > changes.diff
 
-      # Step 3: Set up Node.js environment for React
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
 
-      - name: Install React Dependencies
-        run: |
-          npm install
+    - name: Install Dependencies
+      run: pip install openai
 
-      # Step 4: Run CodeGPT for AI PR Review
-      - name: Run CodeGPT Review
-        run: |
-          npx codegpt pr-review analyze --token ${{ secrets.OPENAI_API_KEY }}
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    - name: Run OpenAI Review
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: python analyze_code.py > analyze_code_feedback.txt
 
-      # Optional: Run additional checks (e.g., linting, testing)
-      - name: Run Lint for Django
-        run: flake8
+    - name: Read Feedback
+      id: read-feedback
+      run: |
+        feedback=$(cat analyze_code_feedback.txt | sed ':a;N;$!ba;s/\n/\\n/g' | sed 's/"/\\"/g')
+        echo "feedback=$feedback" >> $GITHUB_ENV
 
-      - name: Run Lint for React
-        run: npm run lint
-
-      - name: Run Tests for Django
-        run: python manage.py test
-
-      - name: Run Tests for React
-        run: npm test
+    - name: Post Summary as Comment
+      uses: peter-evans/create-or-update-comment@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        issue-number: ${{ github.event.pull_request.number }}
+        body: |
+          ### AI-Generated Code Review
+          ${{ env.feedback }}
