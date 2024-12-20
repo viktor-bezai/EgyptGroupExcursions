@@ -1,9 +1,9 @@
 import os
 
-from openai import OpenAI
+import openai
 
-# Load your OpenAI API key
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Set the OpenAI API key
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 def review_code_changes(diff):
@@ -15,35 +15,22 @@ def review_code_changes(diff):
     ```
     Provide detailed feedback for clarity, correctness, and best practices."""
 
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
         messages=[
-            {
-                "role": "system",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": "You are a highly skilled Django code reviewer."
-                    }
-                ]
-            },
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": prompt
-                    }
-                ]
-            }
-        ],
+            {"role": "system", "content": "You are a highly skilled Django code reviewer."},
+            {"role": "user", "content": prompt}
+        ]
     )
-    return response
+    return response['choices'][0]['message']['content']
 
 
 # Read the diff file
 with open('changes.diff', 'r') as f:
     diff_content = f.read()
+
+# Debug: Print diff content
+print("Diff Content:\n", diff_content)
 
 # Generate the review
 review_feedback = review_code_changes(diff_content)
