@@ -39,7 +39,9 @@ jobs:
 
     - name: Read Feedback
       id: read-feedback
-      run: echo "feedback=$(cat analyze_code_feedback.txt)" >> $GITHUB_ENV
+      run: |
+        feedback=$(cat analyze_code_feedback.txt | sed ':a;N;$!ba;s/\n/\\n/g' | sed 's/"/\\"/g')
+        echo "feedback=$feedback" >> $GITHUB_ENV
 
     - name: Post Summary as Comment
       uses: peter-evans/create-or-update-comment@v3
