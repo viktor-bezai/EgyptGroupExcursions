@@ -18,8 +18,24 @@ def review_code_changes(diff):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "You are a highly skilled Django code reviewer."},
-            {"role": "user", "content": prompt}
+            {
+                "role": "system",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "You are a highly skilled Django code reviewer."
+                    }
+                ]
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": prompt
+                    }
+                ]
+            }
         ],
     )
     return response
