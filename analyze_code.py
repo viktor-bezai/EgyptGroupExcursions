@@ -29,7 +29,7 @@ def review_code_changes(diff):
             }
         ]
     )
-    return response.choices[0].message
+    return response.choices[0].message['content']
 
 
 # Read the diff file

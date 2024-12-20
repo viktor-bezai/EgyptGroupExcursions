@@ -37,16 +37,9 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: python analyze_code.py > analyze_code_feedback.txt
 
-    - name: Generate Summary
-      run: |
-        head -n 20 analyze_code_feedback.txt > summary.txt
-        echo "\n...Truncated. See full feedback in the artifact." >> summary.txt
-
-    - name: Upload Full Feedback as Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: full-code-review-feedback
-        path: analyze_code_feedback.txt
+    - name: Read Feedback
+      id: read-feedback
+      run: echo "feedback=$(cat analyze_code_feedback.txt)" >> $GITHUB_ENV
 
     - name: Post Summary as Comment
       uses: peter-evans/create-or-update-comment@v3
@@ -55,4 +48,4 @@ jobs:
         issue-number: ${{ github.event.pull_request.number }}
         body: |
           ### AI-Generated Code Review
-          $(cat summary.txt)
+          ${{ env.feedback }}
