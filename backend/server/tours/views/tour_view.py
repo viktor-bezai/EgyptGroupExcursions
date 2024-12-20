@@ -8,6 +8,9 @@ from server.tours.serializers.tour_serializer import TourSerializer
 
 
 class TourView(APIView):
+    authentication_classes = ()
+    permission_classes = ()
+
     @swagger_auto_schema(responses={200: TourSerializer(many=True)},
                          operation_summary='Get a list of available tours',
                          operation_description='Retrieves a list containing the details of all currently available '
