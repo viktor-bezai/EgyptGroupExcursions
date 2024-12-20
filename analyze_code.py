@@ -29,16 +29,11 @@ def review_code_changes(diff):
             }
         ]
     )
-    return response.choices[0].message['content']
+    return response.choices[0].message.content
 
 
-# Read the diff file
 with open('changes.diff', 'r') as f:
     diff_content = f.read()
 
-# Debug: Print diff content
-print("Diff Content:\n", diff_content)
-
-# Generate the review
 review_feedback = review_code_changes(diff_content)
 print("Review Feedback:\n", review_feedback)
