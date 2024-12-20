@@ -40,4 +40,4 @@ jobs:
         issue-number: ${{ github.event.pull_request.number }}
         body: |
           ### AI-Generated Code Review
-          $(cat review_feedback.txt)
+          $(cat analyze_code_feedback.txt)
