@@ -1,14 +1,15 @@
-import { AppProps } from 'next/app';
-import { ThemeProvider, CssBaseline } from '@mui/material';
+import {AppProps} from 'next/app';
+import {CssBaseline, ThemeProvider} from '@mui/material';
 import theme from '@/styles/theme';
 import Layout from '@/components/layout/Layout';
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({Component, pageProps}: AppProps) {
+
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
+      <CssBaseline/>
       <Layout>
-        <Component {...pageProps} />
+        <Component {...pageProps}/>
       </Layout>
     </ThemeProvider>
   );
