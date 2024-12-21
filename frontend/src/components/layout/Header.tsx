@@ -1,12 +1,12 @@
-import React from "react";
-import Link from "next/link";
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import React from 'react';
+import Link from 'next/link';
+import {AppBar, Toolbar, Typography, Button, Box} from '@mui/material';
 
 const Header: React.FC = () => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
           Egypt Group Excursions
         </Typography>
         <Box>

@@ -1,7 +1,7 @@
-import { AppProps } from "next/app";
-import { ThemeProvider, CssBaseline } from "@mui/material";
-import theme from "@/styles/theme";
-import Layout from "@/components/layout/Layout";
+import { AppProps } from 'next/app';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import theme from '@/styles/theme';
+import Layout from '@/components/layout/Layout';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
