@@ -1,9 +1,12 @@
-import React, { useState, useMemo } from "react";
-import { GetServerSideProps } from "next";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import React, { useMemo, useEffect, useState } from "react";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { Box, Grid, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import TourCard from "@/components/home/TourCard";
+import { fetchToursAndCategories } from "@/utils/api";
+import CategoryFilter from "@/components/home/CategoryFilter";
 
-interface Category {
+export interface Category {
   id: number;
   name: string;
 }
@@ -21,74 +24,52 @@ export interface Tour {
 interface HomeProps {
   tours: Tour[];
   categories: Category[];
+  lang: string;
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  try {
-    // Fetch tours and categories
-    const [toursRes, categoriesRes] = await Promise.all([
-      fetch("http://127.0.0.1:8000/api/v1/tours/"),
-      fetch("http://127.0.0.1:8000/api/v1/tours/categories"),
-    ]);
+export const getServerSideProps: GetServerSideProps<HomeProps> = async (context) => {
+  const lang = context.locale || "ru";
+  const { tours, categories } = await fetchToursAndCategories(lang);
 
-    const [tours, categories] = await Promise.all([
-      toursRes.json(),
-      categoriesRes.json(),
-    ]);
-
-    return { props: { tours, categories } };
-  } catch (error) {
-    console.error("Failed to fetch data:", error);
-    return { props: { tours: [], categories: [] } };
-  }
+  return {
+    props: { tours, categories, lang },
+  };
 };
 
-const Home: React.FC<HomeProps> = ({ tours = [], categories = [] }) => {
+const Home = ({
+  tours,
+  categories,
+  lang,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const { t, i18n } = useTranslation("common");
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
+  // Ensure translations are consistent
+  useEffect(() => {
+    i18n.changeLanguage(lang); // Set the language to match the server-rendered language
+  }, [lang, i18n]);
+
   const filteredTours = useMemo(() => {
-    if (!selectedCategory) {
-      return tours;
-    }
+    if (!selectedCategory) return tours;
     return tours.filter((tour) => tour.category.id === selectedCategory.id);
   }, [tours, selectedCategory]);
 
-  const handleCategoryClick = (category: Category | null) => {
-    setSelectedCategory(category);
-  };
-
   return (
     <Box>
+      {/* Page Header */}
       <Box textAlign="center" sx={{ py: 4 }}>
         <Typography variant="h3" gutterBottom>
-          Available Tours
+          {t("title")} {/* Ensure translations are synchronized */}
         </Typography>
       </Box>
 
-      {/* Categories Filter */}
-      <Box sx={{ mb: 4, textAlign: "center" }}>
-        <Button
-          key={"all"}
-          onClick={() => handleCategoryClick(null)}
-          variant="outlined"
-          sx={{ mx: 1 }}
-          color={!selectedCategory ? "primary" : "inherit"}
-        >
-          All Categories
-        </Button>
-
-        {categories.map((category) => (
-          <Button
-            key={category.id}
-            onClick={() => handleCategoryClick(category)}
-            variant="outlined"
-            sx={{ mx: 1 }}
-            color={selectedCategory?.id === category.id ? "primary" : "inherit"}
-          >
-            {category.name}
-          </Button>
-        ))}
-      </Box>
+      {/* Category Filters */}
+      <CategoryFilter
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
+        t={t}
+      />
 
       {/* Tours Grid */}
       <Box sx={{ width: "80%", mx: "auto" }}>
@@ -101,7 +82,7 @@ const Home: React.FC<HomeProps> = ({ tours = [], categories = [] }) => {
             ))
           ) : (
             <Typography variant="h6" color="text.secondary" textAlign="center" sx={{ mt: 4 }}>
-              No tours available for the selected category.
+              {t("no-tours")}
             </Typography>
           )}
         </Grid>

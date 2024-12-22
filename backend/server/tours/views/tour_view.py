@@ -1,10 +1,11 @@
+from django.utils.translation import activate, gettext as _
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from server.tours.models import Tour
-from server.tours.serializers.category_query_serializer import CategoryQuerySerializer
+from server.tours.serializers.tour_query_serializer import TourQuerySerializer
 from server.tours.serializers.tour_serializer import TourSerializer
 
 
@@ -13,21 +14,27 @@ class TourView(APIView):
     permission_classes = ()
 
     @swagger_auto_schema(
-        query_serializer=CategoryQuerySerializer(),
+        query_serializer=TourQuerySerializer(),
         responses={200: TourSerializer(many=True)},
-        operation_summary='Get a list of available tours',
-        operation_description='Retrieves a list containing the details of all currently available '
-                              'Store objects within the database.'
+        operation_summary=_('Get a list of available tours'),
+        operation_description=_('Retrieves a list containing the details of all currently available '
+                                'Tour objects within the database.')
     )
     def get(self, request):
         """
         Returns list of Tours
         """
-        category_id = request.query_params.get('category_id')
-        category_name = request.query_params.get('category_name')
+        tour_query_serializer = TourQuerySerializer(data=request.query_params)
+        tour_query_serializer.is_valid(raise_exception=True)
 
-        tours = Tour.filter_tours(category_id=category_id, category_name=category_name)
+        lang = tour_query_serializer.validated_data.get("lang")
+        category_id = tour_query_serializer.validated_data.get('category_id')
+        category_name = tour_query_serializer.validated_data.get('category_name')
 
-        serializer = TourSerializer(instance=tours, many=True)
+        # Filter tours based on query params
+        tours = Tour.filter_tours(lang=lang, category_id=category_id, category_name=category_name)
+
+        # Serialize the tours
+        serializer = TourSerializer(instance=tours, many=True, context={'lang': lang})
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
