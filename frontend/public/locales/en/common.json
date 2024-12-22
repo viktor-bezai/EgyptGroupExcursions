@@ -1,6 +1,10 @@
 {
+  "egypt-group-excursions": "Egypt Excursions",
   "title": "Available Tours",
   "no-tours": "No tours available for the selected category.",
   "all-categories": "All Categories",
-  "language": "Language"
+  "language": "Language",
+  "tours": "Tours",
+  "about-me": "About Me",
+  "contacts": "Contacts"
 }
