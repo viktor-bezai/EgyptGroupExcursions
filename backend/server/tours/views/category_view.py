@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from server.tours.models import Category
-from server.tours.serializers.category_query_serializer import CategoryQuerySerializer
+from server.tours.serializers.lang_query_serializer import LangQuerySerializer
 from server.tours.serializers.category_serializer import CategorySerializer
 
 
@@ -14,7 +14,7 @@ class CategoryView(APIView):
     permission_classes = ()
 
     @swagger_auto_schema(
-        query_serializer=CategoryQuerySerializer(),
+        query_serializer=LangQuerySerializer(),
         responses={200: CategorySerializer(many=True)},
         operation_summary="Get a list of existing categories",
     )
@@ -22,7 +22,7 @@ class CategoryView(APIView):
         """
         Returns list of existing Categories
         """
-        category_query_serializer = CategoryQuerySerializer(data=request.query_params)
+        category_query_serializer = LangQuerySerializer(data=request.query_params)
         category_query_serializer.is_valid(raise_exception=True)
 
         lang = category_query_serializer.validated_data.get("lang")
