@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { Box, Typography, Button } from "@mui/material";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "@mui/material/styles";
 
+// Interfaces
 export interface Tour {
   id: number;
   image: string;
   title: string;
-  description: string;
+  description: string; // HTML string
   cost_from: number;
   cost_to: number;
   is_available: boolean;
@@ -18,35 +20,62 @@ export interface Tour {
   };
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { id } = context.params!;
-  const lang = context.locale || "ru";
+// Helper function for embedding media links
+const processDescription = (description: string): string => {
+  const youtubeRegex = /https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
+  const tiktokRegex = /https?:\/\/(?:www\.)?tiktok\.com\/(?:@[\w.-]+\/video\/|v\/|embed\/)(\d+)(?:\?.*)?/g;
+
+  const replaceWithIframe = (url: string, id: string, platform: string): string => {
+    const aspectRatio = platform === "youtube" ? "56.25%" : "101%";
+    return `
+      <div style="margin: 1em 0; position: relative; padding-bottom: ${aspectRatio}; height: 0; overflow: hidden;">
+        <iframe 
+          src="${url}${id}"
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+          allowfullscreen
+          title="${platform.charAt(0).toUpperCase() + platform.slice(1)} Video"
+        ></iframe>
+      </div>`;
+  };
+
+  let processed = description.replace(youtubeRegex, (match, videoId) =>
+    replaceWithIframe("https://www.youtube.com/embed/", videoId, "youtube")
+  );
+
+  processed = processed.replace(tiktokRegex, (match, videoId) =>
+    replaceWithIframe("https://www.tiktok.com/embed/", videoId, "tiktok")
+  );
+
+  return processed;
+};
+
+// Fetching data server-side
+export const getServerSideProps: GetServerSideProps = async ({ params, locale }) => {
+  const { id } = params!;
+  const lang = locale || "ru";
 
   try {
-    // Make a request to fetch tour details
-    const res = await fetch(
+    const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/tours/${id}/?lang=${lang}`
     );
 
-    if (!res.ok) {
-      return { notFound: true }; // Return 404 if the tour is not found
+    if (!response.ok) {
+      return { notFound: true };
     }
 
-    const tour = await res.json();
+    const tour: Tour = await response.json();
     return { props: { tour, lang } };
   } catch (error) {
-    console.error("Failed to fetch tour data:", error);
-    return { notFound: true }; // Return 404 in case of an error
+    console.error("Error fetching tour data:", error);
+    return { notFound: true };
   }
 };
 
-const TourDetail = ({
-  tour,
-  lang,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const TourDetail = ({ tour, lang }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t, i18n } = useTranslation("common");
+  const theme = useTheme();
 
-  React.useEffect(() => {
+  useEffect(() => {
     i18n.changeLanguage(lang);
   }, [lang, i18n]);
 
@@ -55,7 +84,11 @@ const TourDetail = ({
       {/* Image Section */}
       <Box position="relative" sx={{ width: "100%", height: 400, mb: 4 }}>
         <Image
-          src={tour.image ? `${process.env.NEXT_PUBLIC_MEDIA_URL}${tour.image}` : "/images/placeholder.jpg"}
+          src={
+            tour.image
+              ? `${process.env.NEXT_PUBLIC_MEDIA_URL}${tour.image}`
+              : "/images/placeholder.jpg"
+          }
           alt={tour.title}
           fill
           style={{ objectFit: "cover", borderRadius: "8px" }}
@@ -68,9 +101,20 @@ const TourDetail = ({
       </Typography>
 
       {/* Description */}
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-        {tour.description}
-      </Typography>
+      <Box
+        dangerouslySetInnerHTML={{ __html: processDescription(tour.description) }}
+        sx={{
+          mb: 4,
+          p: 2,
+          border: "1px solid",
+          borderColor: theme.palette.divider,
+          borderRadius: "8px",
+          backgroundColor: theme.palette.background.default,
+          "& img": { maxWidth: "100%", borderRadius: "8px", mt: 2 },
+          "& a": { color: theme.palette.primary.main, textDecoration: "none" },
+          "& p": { mb: 2, lineHeight: 1.6 },
+        }}
+      />
 
       {/* Cost */}
       <Typography variant="h5" color="primary" sx={{ mb: 2 }}>
