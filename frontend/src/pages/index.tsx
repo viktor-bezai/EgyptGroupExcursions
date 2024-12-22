@@ -13,6 +13,7 @@ export interface Category {
 
 export interface Tour {
   id: number;
+  image: string;
   title: string;
   description: string;
   cost_from: number;

@@ -36,10 +36,13 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-                  # Admin App
-                  path('admin/', admin.site.urls),
+    # Admin App
+    path('admin/', admin.site.urls),
+    # API
+    path('api/v1/', include('server.urls', namespace='api_v1')),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+]
 
-                  # API
-                  path('api/v1/', include('server.urls', namespace='api_v1')),
-                  path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

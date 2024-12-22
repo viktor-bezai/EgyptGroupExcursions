@@ -6,5 +6,10 @@
   "language": "Language",
   "tours": "Tours",
   "about-me": "About Me",
-  "contacts": "Contacts"
+  "contacts": "Contacts",
+  "cost": "Cost",
+  "available": "Available",
+  "not-available": "Not Available",
+  "book-now": "Book Now",
+  "details": "Details"
 }

@@ -14,6 +14,7 @@ class TourSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'title',
+            'image',
             'category',
             'description',
             'cost_from',

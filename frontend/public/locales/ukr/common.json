@@ -6,5 +6,10 @@
   "language": "Язык",
   "tours": "Туры",
   "about-me": "Обо мне",
-  "contacts": "Контакты"
+  "contacts": "Контакты",
+  "cost": "Стоимость",
+  "available": "Доступна",
+  "not-available": "Приостановлена",
+  "book-now": "Заказать",
+  "details": "Просмотр"
 }
