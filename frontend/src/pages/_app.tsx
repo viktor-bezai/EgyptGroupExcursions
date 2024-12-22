@@ -5,6 +5,8 @@ import i18n from '../../i18n';
 import theme from '@/styles/theme';
 import Layout from '@/components/layout/Layout';
 import "@/styles/globals.css";
+import '@/styles/fonts.css';
+
 
 function MyApp({Component, pageProps}: AppProps) {
   return (
