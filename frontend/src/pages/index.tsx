@@ -55,7 +55,7 @@ const Home = ({
   }, [tours, selectedCategory]);
 
   return (
-    <Box>
+    <Box mb={6}>
       {/* Page Header */}
       <Box textAlign="center" sx={{ py: 4 }}>
         <Typography variant="h3" gutterBottom>
