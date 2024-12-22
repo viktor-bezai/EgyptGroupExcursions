@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import {Box, Button, ButtonGroup} from "@mui/material";
-import InstagramFeed from "@/components/about-me/InstagramFeed";
-import TikTokEmbed from "@/components/about-me/TikTokEmbed";
+import TikTokFeed from "@/components/about-me/TikTokFeed";
 
 const AboutMe: React.FC = () => {
   const [selectedPlatform, setSelectedPlatform] = useState("instagram");
@@ -32,11 +31,12 @@ const AboutMe: React.FC = () => {
       <Box sx={{display: "flex", flexDirection: {xs: "column", md: "row"}, gap: 4}}>
         {selectedPlatform === "instagram" ? (
           <Box sx={{flex: 1}}>
-            <InstagramFeed/>
+            {/*<InstagramFeed/>*/}
+            {'Blocked, need to wait'}
           </Box>
         ) : (
           <Box sx={{flex: 1}}>
-            <TikTokEmbed/>
+            <TikTokFeed/>
           </Box>
         )}
       </Box>

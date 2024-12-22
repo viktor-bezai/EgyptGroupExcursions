@@ -1,38 +1,36 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
-  CircularProgress,
   Box,
+  Card,
+  CardActionArea,
+  CardMedia,
+  CircularProgress,
   Grid,
   Typography,
-  Card,
-  CardMedia,
-  CardActionArea,
-  CardContent,
 } from "@mui/material";
-import {truncateText} from "@/utils/textUtils";
-import {useTranslation} from "react-i18next";
-import {InstagramPost} from "@/pages/api/instagram-feed";
+import { useTranslation } from "react-i18next";
+import { TikTokPost } from "@/pages/api/tiktok-feed";
 
-const InstagramFeed: React.FC = () => {
-  const [posts, setPosts] = useState<InstagramPost[]>([]);
+const TikTokFeed: React.FC = () => {
+  const [posts, setPosts] = useState<TikTokPost[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const {t} = useTranslation("common");
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch("/api/instagram-feed");
+        const response = await fetch("/api/tiktok-feed");
 
         if (!response.ok) {
-          throw new Error("Failed to fetch Instagram feed.");
+          throw new Error("Failed to fetch TikTok feed.");
         }
 
-        const data: InstagramPost[] = await response.json();
+        const data: TikTokPost[] = await response.json();
         setPosts(data);
       } catch (err) {
         console.error(err);
-        setError("Unable to load Instagram feed. Please try again later.");
+        setError(t("Unable to load TikTok feed. Please try again later."));
       } finally {
         setLoading(false);
       }
@@ -51,14 +49,14 @@ const InstagramFeed: React.FC = () => {
           height: "50vh",
         }}
       >
-        <CircularProgress/>
+        <CircularProgress />
       </Box>
     );
   }
 
   if (error) {
     return (
-      <Box sx={{textAlign: "center", mt: 4}}>
+      <Box sx={{ textAlign: "center", mt: 4 }}>
         <Typography variant="h6" color="error">
           {error}
         </Typography>
@@ -67,33 +65,31 @@ const InstagramFeed: React.FC = () => {
   }
 
   return (
-    <Box sx={{px: 4, py: 2}}>
+    <Box sx={{ px: 4, py: 2 }}>
       <Grid container spacing={4} justifyContent="center">
         {posts.map((post, index) => (
           <Grid item key={index}>
-            <Card sx={{width: 300, height: 400, borderRadius: 2, boxShadow: 3}}>
+            <Card sx={{ width: 300, height: 450, borderRadius: 2, boxShadow: 3 }}>
               <CardActionArea
                 href={post.postUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                sx={{
+                  cursor: "pointer",
+                }}
               >
                 <CardMedia
                   component="img"
-                  height="300"
-                  image={`/api/proxy-image?url=${encodeURIComponent(post.imageUrl)}`}
-                  alt={post.altText || "Instagram Post"}
+                  height="100%"
+                  image={post.thumbnailUrl}
+                  alt={t("tiktok-thumbnail-alt") || "TikTok Post"}
                   onError={(e) => {
                     const imgElement = e.target as HTMLImageElement;
                     imgElement.src = "/images/placeholder.jpg";
                   }}
-                  sx={{objectFit: "cover"}}
+                  sx={{ objectFit: "cover" }}
                 />
               </CardActionArea>
-              <CardContent>
-                <Typography variant="body2" color="textSecondary">
-                  {truncateText(post.description || t("no-post-description"), 100)}
-                </Typography>
-              </CardContent>
             </Card>
           </Grid>
         ))}
@@ -102,4 +98,4 @@ const InstagramFeed: React.FC = () => {
   );
 };
 
-export default InstagramFeed;
+export default TikTokFeed;
