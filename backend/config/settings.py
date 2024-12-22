@@ -103,11 +103,18 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGES = [
+    ('ru', 'Russian'),
+    ('ukr', 'Ukrainian'),
+    ('en', 'English'),
+]
 
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'ru'
 
 USE_I18N = True
+USE_L10N = True
+
+TIME_ZONE = 'UTC'
 
 USE_TZ = True
 
@@ -124,3 +131,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
+

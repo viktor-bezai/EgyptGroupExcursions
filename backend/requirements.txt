@@ -17,6 +17,7 @@ jiter==0.8.2
 mccabe==0.7.0
 openai==1.58.1
 packaging==24.2
+pillow==11.0.0
 pycodestyle==2.12.1
 pydantic==2.10.4
 pydantic_core==2.27.2

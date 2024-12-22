@@ -2,5 +2,6 @@ from rest_framework import serializers
 
 
 class CategoryQuerySerializer(serializers.Serializer):
-    category_id = serializers.IntegerField(required=False)
-    category_name = serializers.CharField(required=False)
+    lang = serializers.ChoiceField(
+        choices=("ru", "ukr", "en"), required=True, help_text="Language code for localization (default is 'en')"
+    )
