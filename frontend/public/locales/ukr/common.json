@@ -1,15 +1,16 @@
 {
-  "egypt-excursions": "Экскурсии Египта",
-  "title": "Доступные туры",
-  "no-tours": "Нет доступных туров в выбранной категории.",
-  "all-categories": "Все категории",
-  "language": "Язык",
-  "tours": "Туры",
-  "about-me": "Обо мне",
-  "contacts": "Контакты",
-  "cost": "Стоимость",
+  "egypt-excursions": "Екскурсії Єгипту",
+  "title": "Доступні тури",
+  "no-tours": "Немає доступних турів у вибраній категорії.",
+  "all-categories": "Усі категорії",
+  "language": "Мова",
+  "tours": "Тури",
+  "about-me": "Про мене",
+  "contacts": "Контакти",
+  "cost": "Вартість",
   "available": "Доступна",
-  "not-available": "Приостановлена",
-  "book-now": "Заказать",
-  "details": "Просмотр"
+  "not-available": "Призупинена",
+  "book-now": "Замовити",
+  "details": "Перегляд",
+  "no-post-description": "Для этого поста нет описания"
 }
