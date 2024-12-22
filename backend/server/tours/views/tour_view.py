@@ -1,4 +1,3 @@
-from django.utils.translation import activate, gettext as _
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.response import Response
@@ -16,9 +15,9 @@ class TourView(APIView):
     @swagger_auto_schema(
         query_serializer=TourQuerySerializer(),
         responses={200: TourSerializer(many=True)},
-        operation_summary=_('Get a list of available tours'),
-        operation_description=_('Retrieves a list containing the details of all currently available '
-                                'Tour objects within the database.')
+        operation_summary="Get a list of available tours",
+        operation_description="Retrieves a list containing the details of all currently available "
+                              "Tour objects within the database.",
     )
     def get(self, request):
         """
@@ -28,13 +27,11 @@ class TourView(APIView):
         tour_query_serializer.is_valid(raise_exception=True)
 
         lang = tour_query_serializer.validated_data.get("lang")
-        category_id = tour_query_serializer.validated_data.get('category_id')
-        category_name = tour_query_serializer.validated_data.get('category_name')
+        category_id = tour_query_serializer.validated_data.get("category_id")
+        category_name = tour_query_serializer.validated_data.get("category_name")
 
-        # Filter tours based on query params
         tours = Tour.filter_tours(lang=lang, category_id=category_id, category_name=category_name)
 
-        # Serialize the tours
-        serializer = TourSerializer(instance=tours, many=True, context={'lang': lang})
+        serializer = TourSerializer(instance=tours, many=True, context={"lang": lang})
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
