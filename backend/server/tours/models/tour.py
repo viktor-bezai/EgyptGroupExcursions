@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import Q
-
+from ckeditor.fields import RichTextField
 from server.tours.models.category import Category
 
 
@@ -10,9 +10,9 @@ class Tour(models.Model):
     title_ukr = models.CharField(max_length=100, verbose_name="Назва (Украiнська)")
     title_en = models.CharField(max_length=100, verbose_name="Title (English)")
     image = models.ImageField(upload_to='tours', null=True, blank=True)
-    description_ru = models.TextField(verbose_name="Описание (Русский)")
-    description_ukr = models.TextField(verbose_name="Опис (Украiнська)")
-    description_en = models.TextField(verbose_name="Description (English)")
+    description_ru = RichTextField(verbose_name="Описание (Русский)")
+    description_ukr = RichTextField(verbose_name="Опис (Украiнська)")
+    description_en = RichTextField(verbose_name="Description (English)")
     cost_from = models.IntegerField()
     cost_to = models.IntegerField()
     is_available = models.BooleanField(default=False)

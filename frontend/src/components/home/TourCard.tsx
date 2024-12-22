@@ -4,15 +4,25 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { Tour } from "@/pages";
 import { useTranslation } from "react-i18next";
+import sanitizeHtml from "sanitize-html";
+
 
 const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
   const mediaUrl = process.env.NEXT_PUBLIC_MEDIA_URL;
   const { t } = useTranslation("common");
   const router = useRouter();
 
-  const truncateText = (text: string, length: number) => {
-    return text.length > length ? `${text.slice(0, length)}...` : text;
-  };
+  const truncateText = (htmlString: string, length: number) => {
+  // Sanitize HTML to plain text
+  const sanitizedString = sanitizeHtml(htmlString, {
+    allowedTags: [],
+    allowedAttributes: {},
+  });
+
+  // Truncate sanitized string
+  return sanitizedString.length > length ? `${sanitizedString.slice(0, length)}...` : sanitizedString;
+};
+
 
   const handleDetailsClick = () => {
     router.push(`/tours/${tour.id}`);

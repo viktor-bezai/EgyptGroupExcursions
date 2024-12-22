@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'server',
     'corsheaders',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -137,3 +138,21 @@ CORS_ALLOWED_ORIGINS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 600,
+        'width': '100%',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
+            ['NumberedList', 'BulletedList'],
+            ['Cut', 'Copy', 'Paste', 'Undo', 'Redo'],
+            ['Link', 'Unlink', 'Anchor'],
+            ['Image', 'Table', 'HorizontalRule'],
+            ['TextColor', 'BGColor'],
+            ['Maximize', 'Source'],
+        ],
+    },
+}
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
