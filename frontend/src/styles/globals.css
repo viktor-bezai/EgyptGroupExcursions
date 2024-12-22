@@ -42,3 +42,7 @@ html {
 html {
   scroll-behavior: smooth; /* Enables smooth scrolling */
 }
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
