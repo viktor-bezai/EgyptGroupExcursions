@@ -1,14 +1,15 @@
 import React from "react";
 import { Box, Container, Typography, IconButton } from "@mui/material";
-import { Facebook, Twitter, Instagram, LinkedIn } from "@mui/icons-material";
+import { Instagram } from "@mui/icons-material";
+import TikTokIcon from "@/components/common/TikTokIcon";
+import {useTranslation} from "react-i18next";
 
 const Footer: React.FC = () => {
   const socialIcons = [
-    { icon: <Facebook />, href: "https://www.facebook.com" },
-    { icon: <Twitter />, href: "https://www.twitter.com" },
-    { icon: <Instagram />, href: "https://www.instagram.com" },
-    { icon: <LinkedIn />, href: "https://www.linkedin.com" },
+    { icon: <Instagram />, href: "https://www.instagram.com/anna_egypt_/" },
+    { icon: <TikTokIcon />, href: "https://www.tiktok.com/@assis_travel" },
   ];
+  const { t } = useTranslation("common");
 
   return (
     <Box
@@ -31,7 +32,7 @@ const Footer: React.FC = () => {
           }}
         >
           <Typography variant="h6" gutterBottom>
-            Follow Us
+            {t("follow-me")}
           </Typography>
           <Box sx={{ display: "flex", gap: 2 }}>
             {socialIcons.map((social, index) => (
@@ -43,8 +44,11 @@ const Footer: React.FC = () => {
                 rel="noopener noreferrer"
                 sx={{
                   color: "white",
-                  "&:hover": {
-                    color: "secondary.main",
+                  "& svg": {
+                    fill: "white", // Default fill color
+                  },
+                  "&:hover svg": {
+                    fill: "black", // Fill color on hover
                   },
                 }}
               >
