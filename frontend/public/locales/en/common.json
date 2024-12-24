@@ -12,5 +12,14 @@
   "not-available": "Not Available",
   "book-now": "Book Now",
   "details": "Details",
-  "no-post-description": "There is no description to this post"
+  "no-post-description": "There is no description to this post",
+  "get-in-touch": "Get in Touch",
+  "have-questions": "Have questions or want to connect? Use the contact form below or reach out via email, phone, or social media!",
+  "contact-information": "Contact Information",
+  "contact-form": "Contact Form",
+  "first-name": "First Name",
+  "last-name": "Last Name",
+  "email-addredd": "Email Address",
+  "message": "Message",
+  "follow-me": "Follow Me"
 }

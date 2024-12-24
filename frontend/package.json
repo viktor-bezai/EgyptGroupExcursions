@@ -20,6 +20,7 @@
     "@mui/material": "^6.2.1",
     "@mui/system": "^6.2.1",
     "@mui/types": "^7.2.20",
+    "@svgr/webpack": "^8.1.0",
     "@types/sanitize-html": "^2.13.0",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
