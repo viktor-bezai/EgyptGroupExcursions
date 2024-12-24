@@ -58,15 +58,17 @@ async function scrapeInstagramPosts(page: Page): Promise<InstagramPost[]> {
   return page.evaluate(() => {
     const postElements = document.querySelectorAll("article div a");
     return Array.from(postElements).map((postElement) => {
-      const imageElement = postElement.querySelector("img");
+      const img = postElement.querySelector("img") as HTMLImageElement;
+      const postAnchor = postElement.closest("a");
+      const descriptionElement = postAnchor?.parentElement?.querySelector("div span");
       return {
-        imageUrl: imageElement?.getAttribute("src") || "",
-        altText: imageElement?.getAttribute("alt") || "",
-        postUrl: postElement.getAttribute("href") || "",
-        description: imageElement?.getAttribute("alt") || null,
+        imageUrl: img?.src || "",
+        altText: img?.alt || "",
+        postUrl: postAnchor?.href || "",
+        description: descriptionElement?.textContent || null,
       };
     });
-  });
+  }) as Promise<InstagramPost[]>;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
