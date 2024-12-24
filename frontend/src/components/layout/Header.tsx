@@ -16,8 +16,8 @@ const Header: React.FC = () => {
   const {t, i18n} = useTranslation("common");
   const navItems = [
     {label: t("tours"), href: "/"},
-    {label: t("about-me"), href: "/about"},
-    {label: t("contacts"), href: "/contact"},
+    {label: t("about-me"), href: "/about-me"},
+    {label: t("contacts"), href: "/contacts"},
   ];
   const router = useRouter();
 

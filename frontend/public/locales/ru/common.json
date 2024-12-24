@@ -11,5 +11,6 @@
   "available": "Доступна",
   "not-available": "Приостановлена",
   "book-now": "Заказать",
-  "details": "Просмотр"
+  "details": "Просмотр",
+  "no-post-description": "Для этого поста нет описания"
 }

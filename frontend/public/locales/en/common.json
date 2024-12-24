@@ -1,5 +1,5 @@
 {
-  "egypt-group-excursions": "Egypt Excursions",
+  "egypt-excursions": "Egypt Excursions",
   "title": "Available Tours",
   "no-tours": "No tours available for the selected category.",
   "all-categories": "All Categories",
@@ -11,5 +11,6 @@
   "available": "Available",
   "not-available": "Not Available",
   "book-now": "Book Now",
-  "details": "Details"
+  "details": "Details",
+  "no-post-description": "There is no description to this post"
 }

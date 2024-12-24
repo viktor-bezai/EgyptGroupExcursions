@@ -54,3 +54,4 @@ yarn-error.log*
 /frontend/*.tsbuildinfo
 /frontend/next-env.d.ts
 /backend/media/
+/frontend/cookies.json
