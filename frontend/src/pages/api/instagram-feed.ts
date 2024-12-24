@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
-import fs from "fs";
+import fs from "fs/promises";
+import path from "path";
 import { Page } from "puppeteer";
 
 puppeteer.use(StealthPlugin());
@@ -13,17 +14,25 @@ export interface InstagramPost {
   description?: string | null;
 }
 
+// Cache variables
+let cachedFeed: InstagramPost[] | null = null;
+let lastUpdated: number | null = null;
+const CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const COOKIES_FILE_PATH = path.join(process.cwd(), "cookies.json");
+
 async function loadCookies(page: Page, filePath: string) {
-  if (fs.existsSync(filePath)) {
-    const cookies = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  try {
+    const cookies = JSON.parse(await fs.readFile(filePath, "utf-8"));
     await page.setCookie(...cookies);
     console.log("Cookies loaded.");
+  } catch (error) {
+    console.warn("No cookies found or failed to load cookies:", error);
   }
 }
 
 async function saveCookies(page: Page, filePath: string) {
   const cookies = await page.cookies();
-  fs.writeFileSync(filePath, JSON.stringify(cookies));
+  await fs.writeFile(filePath, JSON.stringify(cookies, null, 2));
   console.log("Cookies saved.");
 }
 
@@ -46,7 +55,7 @@ async function autoScroll(page: Page, scrollCount = 2) {
 }
 
 async function scrapeInstagramPosts(page: Page): Promise<InstagramPost[]> {
-  const posts = await page.evaluate(() => {
+  return page.evaluate(() => {
     const postElements = document.querySelectorAll("article div a");
     return Array.from(postElements).map((postElement) => {
       const imageElement = postElement.querySelector("img");
@@ -58,13 +67,22 @@ async function scrapeInstagramPosts(page: Page): Promise<InstagramPost[]> {
       };
     });
   });
-  return posts;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
+    const now = Date.now();
+
+    // Serve cached feed if valid
+    if (cachedFeed && lastUpdated && now - lastUpdated < CACHE_EXPIRY) {
+      console.log("Serving cached Instagram feed.");
+      return res.status(200).json(cachedFeed);
+    }
+
+    console.log("Cache expired or missing. Scraping Instagram feed...");
+
     const browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
@@ -81,23 +99,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await page.setViewport({ width: 1920, height: 1080 });
     await page.setExtraHTTPHeaders({ "Accept-Language": "en-US,en;q=0.9" });
 
-    const cookiesFilePath = "./cookies.json";
-    await loadCookies(page, cookiesFilePath);
+    // Load cookies if available
+    await loadCookies(page, COOKIES_FILE_PATH);
 
-    const profileUrl = "https://www.instagram.com/viktorbezai/";
-    await page.goto(profileUrl, { waitUntil: "networkidle2", timeout: 60000 });
+    // Navigate to the Instagram profile
+    const profileUrl = "https://www.instagram.com/anna_egypt_/";
+    await page.goto(profileUrl, { waitUntil: "networkidle2", timeout: 30000 });
 
-    const scrollCount = req.query.scrollCount ? parseInt(req.query.scrollCount as string, 10) : 2;
+    const scrollCount = parseInt(req.query.scrollCount as string, 10) || 2;
     await autoScroll(page, scrollCount);
 
     const posts = await scrapeInstagramPosts(page);
-    await saveCookies(page, cookiesFilePath);
+
+    // Save cookies after the operation
+    await saveCookies(page, COOKIES_FILE_PATH);
+
     await browser.close();
 
     if (!posts || posts.length === 0) {
       throw new Error("No posts found.");
     }
 
+    // Update cache
+    cachedFeed = posts;
+    lastUpdated = now;
+
+    console.log(`Cache updated with ${posts.length} posts.`);
     res.status(200).json(posts);
   } catch (error) {
     console.error("Error in Instagram feed handler:", error);
