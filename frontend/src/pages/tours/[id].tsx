@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { Box, Typography, Button } from "@mui/material";
+import React, {useEffect} from "react";
+import {GetServerSideProps, InferGetServerSidePropsType} from "next";
+import {Box, Typography, Button} from "@mui/material";
 import Image from "next/image";
-import { useTranslation } from "react-i18next";
-import { useTheme } from "@mui/material/styles";
+import {useTranslation} from "react-i18next";
+import {useTheme} from "@mui/material/styles";
 
 // Interfaces
 export interface Tour {
@@ -21,7 +21,7 @@ export interface Tour {
 }
 
 // Description Renderer
-const DescriptionRenderer: React.FC<{ description: string }> = ({ description }) => {
+const DescriptionRenderer: React.FC<{ description: string }> = ({description}) => {
   const theme = useTheme();
 
   // Function to process the content
@@ -53,18 +53,41 @@ const DescriptionRenderer: React.FC<{ description: string }> = ({ description })
 
   return (
     <Box
-      dangerouslySetInnerHTML={{ __html: processContent(description) }}
+      dangerouslySetInnerHTML={{__html: processContent(description)}}
       sx={{
         mb: 4,
         p: 2,
         border: "1px solid",
         borderColor: theme.palette.divider,
         borderRadius: "8px",
-        backgroundColor: "#ffffff", // White background
-        "& img": { maxWidth: "100%", borderRadius: "8px", mt: 2 },
-        "& a": { color: theme.palette.primary.main, textDecoration: "none" },
-        "& p": { mb: 2, lineHeight: 1.6 },
-        "& iframe": { maxWidth: "100%", height: "auto", aspectRatio: "16/9" },
+        backgroundColor: "#ffffff",
+        "& img": {
+          maxWidth: "100%",
+          height: "auto",
+          borderRadius: 2,
+        },
+        "& a": {color: theme.palette.primary.main, textDecoration: "none"},
+        "& .image-style-align-left": {
+          float: "left",
+          marginRight: 2,
+          marginBottom: 2,
+          maxWidth: "50%",
+        },
+        "& .image-style-align-right": {
+          float: "right",
+          marginLeft: 16,
+          marginBottom: 16,
+          maxWidth: "50%",
+        },
+        "& .image-style-align-center": {
+          display: "block",
+          margin: "auto",
+        },
+        "&:after": {
+          content: '""',
+          display: "block",
+          clear: "both",
+        },
       }}
     />
   );
@@ -72,8 +95,8 @@ const DescriptionRenderer: React.FC<{ description: string }> = ({ description })
 
 
 // Fetching data server-side
-export const getServerSideProps: GetServerSideProps = async ({ params, locale }) => {
-  const { id } = params!;
+export const getServerSideProps: GetServerSideProps = async ({params, locale}) => {
+  const {id} = params!;
   const lang = locale || "en";
 
   try {
@@ -83,31 +106,31 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locale })
 
     if (!response.ok) {
       console.error(`Failed to fetch tour data: ${response.statusText}`);
-      return { notFound: true };
+      return {notFound: true};
     }
 
     const tour: Tour = await response.json();
-    return { props: { tour, lang } };
+    return {props: {tour, lang}};
   } catch (error) {
     console.error("Error fetching tour data:", error);
-    return { notFound: true };
+    return {notFound: true};
   }
 };
 
 const TourDetail = ({
-  tour,
-  lang,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t, i18n } = useTranslation("common");
+                      tour,
+                      lang,
+                    }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const {t, i18n} = useTranslation("common");
 
   useEffect(() => {
     i18n.changeLanguage(lang);
   }, [lang, i18n]);
 
   return (
-    <Box sx={{ maxWidth: 800, mx: "auto", my: 4, p: 2 }}>
+    <Box sx={{maxWidth: 800, mx: "auto", my: 4, p: 2}}>
       {/* Image Section */}
-      <Box position="relative" sx={{ width: "100%", height: 400, mb: 4 }}>
+      <Box position="relative" sx={{width: "100%", height: 400, mb: 4}}>
         <Image
           src={
             tour.image
@@ -116,7 +139,7 @@ const TourDetail = ({
           }
           alt={tour.title}
           fill
-          style={{ objectFit: "cover", borderRadius: "8px" }}
+          style={{objectFit: "cover", borderRadius: "8px"}}
         />
       </Box>
 
@@ -126,10 +149,10 @@ const TourDetail = ({
       </Typography>
 
       {/* Description */}
-      <DescriptionRenderer description={tour.description} />
+      <DescriptionRenderer description={tour.description}/>
 
       {/* Cost */}
-      <Typography variant="h5" color="primary" sx={{ mb: 2 }}>
+      <Typography variant="h5" color="primary" sx={{mb: 2}}>
         {t("cost")}: ${tour.cost_from} - ${tour.cost_to}
       </Typography>
 
@@ -137,13 +160,13 @@ const TourDetail = ({
       <Typography
         variant="h6"
         color={tour.is_available ? "success.main" : "error.main"}
-        sx={{ mb: 4 }}
+        sx={{mb: 4}}
       >
         {tour.is_available ? t("available") : t("not-available")}
       </Typography>
 
       {/* Book Button */}
-      <Box sx={{ display: "flex", gap: 2 }}>
+      <Box sx={{display: "flex", gap: 2}}>
         <Button variant="contained" color="primary" fullWidth>
           {t("book-now")}
         </Button>
