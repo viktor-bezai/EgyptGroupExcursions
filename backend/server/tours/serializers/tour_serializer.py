@@ -6,7 +6,7 @@ from server.tours.serializers.tour_type_serializer import TourTypeSerializer
 
 class TourSerializer(serializers.ModelSerializer):
     category = TourCategorySerializer()
-    types = serializers.SerializerMethodField()  # Fix: Use SerializerMethodField for ManyToMany
+    types = serializers.SerializerMethodField()
     title = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
 

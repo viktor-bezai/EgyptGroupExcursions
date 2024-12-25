@@ -12,19 +12,19 @@ class TourAdminForm(forms.ModelForm):
         model = Tour
         fields = "__all__"
 
-    type = forms.ModelMultipleChoiceField(
+    types = forms.ModelMultipleChoiceField(
         queryset=TourType.objects.all(),
         widget=FilteredSelectMultiple("Types", is_stacked=False),
-        required=False,
+        required=False,  # Allow empty selection
     )
 
 
 class TourAdmin(admin.ModelAdmin):
-    list_display = ["id", "title_ru", "category__name_ru", "cost_from", "cost_to", "is_available"]
+    form = TourAdminForm  # Use the custom form
+    list_display = ["id", "title_ru", "category", "cost_from", "cost_to", "is_available"]
     list_display_links = ["id", "title_ru"]
     readonly_fields = ["image_preview"]
-    form = TourAdminForm
-    change_form_template = "admin/tours/tours_change_form.html"
+    save_on_top = True
 
     # Define the layout for the detail page
     fieldsets = (
@@ -34,7 +34,8 @@ class TourAdmin(admin.ModelAdmin):
         ("Tour Details", {
             "fields": (
                 "image", "title_ru", "title_ukr", "title_en",
-                "category", "types", "description_ru", "description_ukr", "description_en",
+                "category", "types",
+                "description_ru", "description_ukr", "description_en",
                 "cost_from", "cost_to", "is_available",
             ),
         }),

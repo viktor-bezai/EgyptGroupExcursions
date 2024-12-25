@@ -1,16 +1,16 @@
 import React from "react";
 import {Box, Button} from "@mui/material";
-import {Category} from "@/pages";
+import {tourCategory} from "@/pages";
 
 interface CategoryFilterProps {
-  categories: Category[];
-  selectedCategory: Category | null;
-  onSelectCategory: (category: Category | null) => void;
+  tourCategories: tourCategory[];
+  selectedCategory: tourCategory | null;
+  onSelectCategory: (category: tourCategory | null) => void;
   t: (key: string) => string;
 }
 
 const CategoryFilter: React.FC<CategoryFilterProps> = (props) => {
-  const { categories, selectedCategory, onSelectCategory, t } = props
+  const { tourCategories, selectedCategory, onSelectCategory, t } = props
 
   return <Box sx={{mb: 4, textAlign: "center"}}>
     <Button
@@ -22,7 +22,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = (props) => {
     >
       {t("all-categories")}
     </Button>
-    {categories.map((category) => (
+    {tourCategories.map((category) => (
       <Button
         key={category.id}
         onClick={() => onSelectCategory(category)}
