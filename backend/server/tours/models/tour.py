@@ -11,7 +11,7 @@ class Tour(models.Model):
     title_ukr = models.CharField(max_length=100, verbose_name="Назва (Украiнська)")
     title_en = models.CharField(max_length=100, verbose_name="Title (English)")
     category = models.ForeignKey(TourCategory, on_delete=models.CASCADE, related_name='tours')
-    type = models.ManyToManyField(TourType, related_name='tours')
+    types = models.ManyToManyField(TourType, related_name='tours')
     description_ru = CKEditor5Field(verbose_name="Описание (Русский)")
     description_ukr = CKEditor5Field(verbose_name="Опис (Украiнська)")
     description_en = CKEditor5Field(verbose_name="Description (English)")
