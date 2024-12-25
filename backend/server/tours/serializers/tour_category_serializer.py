@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from server.tours.models import Category
+from server.tours.models import TourCategory
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class TourCategorySerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
 
     class Meta:
-        model = Category
+        model = TourCategory
         fields = [
             'id',
             'name',
@@ -16,4 +16,4 @@ class CategorySerializer(serializers.ModelSerializer):
         lang = self.context.get('lang', 'ru')
         # Dynamically fetch the name field based on the language
         name_field = f"name_{lang}"
-        return getattr(obj, name_field, obj.name_ru)  # Fallback to English if the field is missing
+        return getattr(obj, name_field, obj.name_ru)

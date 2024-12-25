@@ -1,34 +1,35 @@
-from django.utils.translation import activate
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from server.tours.models import Category
+from server.tours.models import TourCategory
+from server.tours.models.tour_type import TourType
+from server.tours.serializers.tour_category_serializer import TourCategorySerializer
 from server.tours.serializers.lang_query_serializer import LangQuerySerializer
-from server.tours.serializers.category_serializer import CategorySerializer
+from server.tours.serializers.tour_type_serializer import TourTypeSerializer
 
 
-class CategoryView(APIView):
+class TourTypeView(APIView):
     authentication_classes = ()
     permission_classes = ()
 
     @swagger_auto_schema(
         query_serializer=LangQuerySerializer(),
-        responses={200: CategorySerializer(many=True)},
-        operation_summary="Get a list of existing categories",
+        responses={200: TourTypeSerializer(many=True)},
+        operation_summary="Get a list of existing Tour Types",
     )
     def get(self, request):
         """
-        Returns list of existing Categories
+        Returns list of existing Tour Types
         """
         category_query_serializer = LangQuerySerializer(data=request.query_params)
         category_query_serializer.is_valid(raise_exception=True)
 
         lang = category_query_serializer.validated_data.get("lang")
 
-        categories = Category.objects.all()
+        tour_types = TourType.objects.all()
 
-        serializer = CategorySerializer(instance=categories, many=True, context={"lang": lang})
+        serializer = TourTypeSerializer(instance=tour_types, many=True, context={"lang": lang})
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)

@@ -46,3 +46,47 @@ html {
 body {
   font-family: 'Roboto', sans-serif;
 }
+
+.ck-content {
+    overflow: auto;
+}
+
+.ck-content iframe {
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16/9; /* Maintains a 16:9 aspect ratio */
+    border: none;
+}
+
+.ck-content .image-style-alignLeft img,
+.ck-content .image-style-alignRight img {
+    float: left; /* Align to the left for text wrapping */
+    max-width: 100%; /* Constrain image to container width */
+    height: auto !important; /* Ensure height scales proportionally */
+    margin-right: 1em; /* Add spacing for left-aligned images */
+    margin-bottom: 1em;
+}
+
+.ck-content .image-style-alignRight img {
+    float: right; /* Align to the right for text wrapping */
+    margin-left: 1em; /* Add spacing for right-aligned images */
+    margin-right: 0;
+}
+
+.ck-content .image-style-alignCenter img {
+    display: block;
+    margin: 0 auto; /* Center-align the image */
+    max-width: 100%; /* Constrain width to fit container */
+    height: auto !important; /* Ensure proportional scaling */
+}
+
+/* Ensure responsive behavior */
+@media (max-width: 768px) {
+    .ck-content .image-style-alignLeft img,
+    .ck-content .image-style-alignRight img {
+        float: none; /* Remove float for smaller screens */
+        margin: 0 auto 1em; /* Center image with spacing below */
+        display: block;
+    }
+}
+

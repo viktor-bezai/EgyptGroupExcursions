@@ -10,7 +10,7 @@ export interface Tour {
   id: number;
   image: string;
   title: string;
-  description: string; // HTML string
+  description: string; // CKEditor HTML string
   cost_from: number;
   cost_to: number;
   is_available: boolean;
@@ -20,39 +20,61 @@ export interface Tour {
   };
 }
 
-// Helper function for embedding media links
-const processDescription = (description: string): string => {
-  const youtubeRegex = /https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
-  const tiktokRegex = /https?:\/\/(?:www\.)?tiktok\.com\/(?:@[\w.-]+\/video\/|v\/|embed\/)(\d+)(?:\?.*)?/g;
+// Description Renderer
+const DescriptionRenderer: React.FC<{ description: string }> = ({ description }) => {
+  const theme = useTheme();
 
-  const replaceWithIframe = (url: string, id: string, platform: string): string => {
-    const aspectRatio = platform === "youtube" ? "56.25%" : "101%";
-    return `
-      <div style="margin: 1em 0; position: relative; padding-bottom: ${aspectRatio}; height: 0; overflow: hidden;">
-        <iframe 
-          src="${url}${id}"
-          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
-          allowfullscreen
-          title="${platform.charAt(0).toUpperCase() + platform.slice(1)} Video"
-        ></iframe>
-      </div>`;
+  // Function to process the content
+  const processContent = (content: string): string => {
+    const mediaUrl = process.env.NEXT_PUBLIC_MEDIA_URL || "";
+
+    // Match and update image src attributes
+    const updatedContent = content.replace(
+      /<img[^>]+src="\/media\/ckeditor\/([^"]+)"/g,
+      `<img src="${mediaUrl}/media/ckeditor/$1"`
+    );
+
+    // Match TikTok video links (if needed)
+    const tiktokRegex = /https?:\/\/(?:www\.)?tiktok\.com\/(?:@[\w.-]+\/video\/|v\/|embed\/)(\d+)(?:\?.*)?/g;
+    const finalContent = updatedContent.replace(tiktokRegex, (match, videoId) => {
+      return `
+        <div style="margin: 1em 0; position: relative; padding-bottom: 101%; height: 0; overflow: hidden;">
+          <iframe 
+            src="https://www.tiktok.com/embed/${videoId}" 
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
+            allowfullscreen
+            title="TikTok Video">
+          </iframe>
+        </div>`;
+    });
+
+    return finalContent;
   };
 
-  let processed = description.replace(youtubeRegex, (match, videoId) =>
-    replaceWithIframe("https://www.youtube.com/embed/", videoId, "youtube")
+  return (
+    <Box
+      dangerouslySetInnerHTML={{ __html: processContent(description) }}
+      sx={{
+        mb: 4,
+        p: 2,
+        border: "1px solid",
+        borderColor: theme.palette.divider,
+        borderRadius: "8px",
+        backgroundColor: "#ffffff", // White background
+        "& img": { maxWidth: "100%", borderRadius: "8px", mt: 2 },
+        "& a": { color: theme.palette.primary.main, textDecoration: "none" },
+        "& p": { mb: 2, lineHeight: 1.6 },
+        "& iframe": { maxWidth: "100%", height: "auto", aspectRatio: "16/9" },
+      }}
+    />
   );
-
-  processed = processed.replace(tiktokRegex, (match, videoId) =>
-    replaceWithIframe("https://www.tiktok.com/embed/", videoId, "tiktok")
-  );
-
-  return processed;
 };
+
 
 // Fetching data server-side
 export const getServerSideProps: GetServerSideProps = async ({ params, locale }) => {
   const { id } = params!;
-  const lang = locale || "ru";
+  const lang = locale || "en";
 
   try {
     const response = await fetch(
@@ -60,6 +82,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locale })
     );
 
     if (!response.ok) {
+      console.error(`Failed to fetch tour data: ${response.statusText}`);
       return { notFound: true };
     }
 
@@ -71,9 +94,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locale })
   }
 };
 
-const TourDetail = ({ tour, lang }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const TourDetail = ({
+  tour,
+  lang,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t, i18n } = useTranslation("common");
-  const theme = useTheme();
 
   useEffect(() => {
     i18n.changeLanguage(lang);
@@ -101,20 +126,7 @@ const TourDetail = ({ tour, lang }: InferGetServerSidePropsType<typeof getServer
       </Typography>
 
       {/* Description */}
-      <Box
-        dangerouslySetInnerHTML={{ __html: processDescription(tour.description) }}
-        sx={{
-          mb: 4,
-          p: 2,
-          border: "1px solid",
-          borderColor: theme.palette.divider,
-          borderRadius: "8px",
-          backgroundColor: theme.palette.background.default,
-          "& img": { maxWidth: "100%", borderRadius: "8px", mt: 2 },
-          "& a": { color: theme.palette.primary.main, textDecoration: "none" },
-          "& p": { mb: 2, lineHeight: 1.6 },
-        }}
-      />
+      <DescriptionRenderer description={tour.description} />
 
       {/* Cost */}
       <Typography variant="h5" color="primary" sx={{ mb: 2 }}>

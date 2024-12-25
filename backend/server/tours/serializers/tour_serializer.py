@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
 from server.tours.models import Tour
-from server.tours.serializers.category_serializer import CategorySerializer
+from server.tours.serializers.tour_category_serializer import TourCategorySerializer
 
 
 class TourSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
+    category = TourCategorySerializer()
     title = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
 

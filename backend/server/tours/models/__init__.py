@@ -1,2 +1,2 @@
 from .tour import Tour  # noqa
-from .category import Category  # noqa
+from .tour_category import TourCategory  # noqa
