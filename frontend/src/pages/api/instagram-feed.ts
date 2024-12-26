@@ -116,9 +116,14 @@ async function acceptCookies(page: Page) {
     }
     console.log("No 'Allow all cookies' button found.");
   } catch (error) {
-    console.log("Error while handling cookie consent dialog:", error);
+    if ((error as Error).name === "TimeoutError") {
+      console.log("Cookie consent dialog not found; proceeding without accepting cookies.");
+    } else {
+      console.log("Unexpected error while handling cookie consent dialog:", error);
+    }
   }
 }
+
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const username = process.env.INSTAGRAM_USERNAME;
@@ -167,21 +172,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Load cookies if available
     await loadCookies(page, COOKIES_FILE_PATH);
 
-    // Navigate to the Instagram profile
-    const profileUrl = "https://www.instagram.com/anna_egypt_/";
-    console.log(`Navigating to ${profileUrl}`);
-    await page.goto(profileUrl, { waitUntil: "networkidle2", timeout: 30000 });
-    console.log("Page loaded successfully.");
+    // Accept cookies
+    await acceptCookies(page);
 
     // Check if login is needed
     if (await page.$('input[name="username"]')) {
       await loginToInstagram(page, username, password);
     }
 
-    // Accept cookies
-    await acceptCookies(page);
-
     const scrollCount = parseInt(req.query.scrollCount as string, 10) || 2;
+    // Navigate to the Instagram profile
+    const profileUrl = "https://www.instagram.com/anna_egypt_/";
+    console.log(`Navigating to ${profileUrl}`);
+    await page.goto(profileUrl, { waitUntil: "networkidle2", timeout: 30000 });
+    console.log("Page loaded successfully.");
     await autoScroll(page, scrollCount);
 
     const posts = await scrapeInstagramPosts(page);
