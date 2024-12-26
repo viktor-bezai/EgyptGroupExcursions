@@ -184,7 +184,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Navigate to the Instagram profile
     const profileUrl = "https://www.instagram.com/anna_egypt_/";
     console.log(`Navigating to ${profileUrl}`);
-    await page.goto(profileUrl, { waitUntil: "networkidle2", timeout: 30000 });
+    await page.goto(profileUrl, { waitUntil: "networkidle2", timeout: 50000 });
     console.log("Page loaded successfully.");
     await autoScroll(page, scrollCount);
 
