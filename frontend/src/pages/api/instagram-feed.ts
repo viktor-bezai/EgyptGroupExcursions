@@ -40,6 +40,20 @@ async function saveCookies(page: Page, filePath: string) {
   }
 }
 
+async function loginToInstagram(page: Page, username: string, password: string) {
+  try {
+    console.log("Attempting to log in...");
+    await page.waitForSelector('input[name="username"]', { timeout: 30000 });
+    await page.type('input[name="username"]', username, { delay: 100 });
+    await page.type('input[name="password"]', password, { delay: 100 });
+    await page.click('button[type="submit"]');
+    await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 30000 });
+    console.log("Login successful.");
+  } catch (error) {
+    console.error("Error during login:", error);
+  }
+}
+
 async function autoScroll(page: Page, scrollCount = 2) {
   try {
     console.log(`Auto-scrolling the page ${scrollCount} times.`);
@@ -50,7 +64,6 @@ async function autoScroll(page: Page, scrollCount = 2) {
         const timer = setInterval(() => {
           window.scrollBy(0, distance);
           totalScrolls++;
-
           if (totalScrolls >= scrollCount) {
             clearInterval(timer);
             resolve();
@@ -91,9 +104,7 @@ async function scrapeInstagramPosts(page: Page): Promise<InstagramPost[]> {
 async function acceptCookies(page: Page) {
   try {
     console.log("Checking for cookie consent dialog...");
-    // Use a more precise selector to locate the "Allow all cookies" button
     await page.waitForSelector('button', { visible: true, timeout: 5000 });
-
     const buttons = await page.$$('button');
     for (const button of buttons) {
       const text = await page.evaluate((el) => el.textContent, button);
@@ -103,15 +114,20 @@ async function acceptCookies(page: Page) {
         return;
       }
     }
-
     console.log("No 'Allow all cookies' button found.");
   } catch (error) {
     console.log("Error while handling cookie consent dialog:", error);
   }
 }
 
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const username = process.env.INSTAGRAM_USERNAME;
+  const password = process.env.INSTAGRAM_PASSWORD;
+
+  if (!username || !password) {
+    return res.status(500).json({ error: "Instagram credentials are missing." });
+  }
+
   try {
     const now = Date.now();
 
@@ -156,6 +172,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log(`Navigating to ${profileUrl}`);
     await page.goto(profileUrl, { waitUntil: "networkidle2", timeout: 30000 });
     console.log("Page loaded successfully.");
+
+    // Check if login is needed
+    if (await page.$('input[name="username"]')) {
+      await loginToInstagram(page, username, password);
+    }
 
     // Accept cookies
     await acceptCookies(page);
