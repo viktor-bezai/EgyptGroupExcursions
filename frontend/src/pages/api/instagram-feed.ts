@@ -169,6 +169,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await page.setExtraHTTPHeaders({ "Accept-Language": "en-US,en;q=0.9" });
     console.log("Extra HTTP headers set.");
 
+    await page.goto("https://www.instagram.com/", { waitUntil: "networkidle2", timeout: 50000 });
+    console.log("Going to https://www.instagram.com/.");
+
     // Load cookies if available
     await loadCookies(page, COOKIES_FILE_PATH);
 
