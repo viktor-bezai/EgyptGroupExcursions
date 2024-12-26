@@ -1,8 +1,11 @@
 from django.contrib import admin
 
-from .tours.admin.category_admin import CategoryAdmin
+from .tours.admin.tour_category_admin import TourCategoryAdmin
 from .tours.admin.tour_admin import TourAdmin
-from .tours.models import Tour, Category
+from .tours.admin.tour_type_admin import TourTypeAdmin
+from .tours.models import Tour, TourCategory
+from .tours.models.tour_type import TourType
 
 admin.site.register(Tour, TourAdmin)
-admin.site.register(Category, CategoryAdmin)
+admin.site.register(TourCategory, TourCategoryAdmin)
+admin.site.register(TourType, TourTypeAdmin)

@@ -1,18 +1,20 @@
 from django.db import models
 from django.db.models import Q
-from ckeditor.fields import RichTextField
-from server.tours.models.category import Category
+from django_ckeditor_5.fields import CKEditor5Field
+from server.tours.models.tour_category import TourCategory
+from server.tours.models.tour_type import TourType
 
 
 class Tour(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='tours')
+    image = models.ImageField(upload_to='tours', null=True, blank=True)
     title_ru = models.CharField(max_length=100, verbose_name="Название (Русский)")
     title_ukr = models.CharField(max_length=100, verbose_name="Назва (Украiнська)")
     title_en = models.CharField(max_length=100, verbose_name="Title (English)")
-    image = models.ImageField(upload_to='tours', null=True, blank=True)
-    description_ru = RichTextField(verbose_name="Описание (Русский)")
-    description_ukr = RichTextField(verbose_name="Опис (Украiнська)")
-    description_en = RichTextField(verbose_name="Description (English)")
+    category = models.ForeignKey(TourCategory, on_delete=models.CASCADE, related_name='tours')
+    types = models.ManyToManyField(TourType, related_name='tours')
+    description_ru = CKEditor5Field(verbose_name="Описание (Русский)")
+    description_ukr = CKEditor5Field(verbose_name="Опис (Украiнська)")
+    description_en = CKEditor5Field(verbose_name="Description (English)")
     cost_from = models.IntegerField()
     cost_to = models.IntegerField()
     is_available = models.BooleanField(default=False)
@@ -23,6 +25,10 @@ class Tour(models.Model):
 
     def __str__(self):
         return self.title_ru
+
+    def description_image_upload_to(self, filename):
+        # Use the tour ID to create a subdirectory
+        return f'tours/{self.id}/{filename}'
 
     def get_title(self, lang):
         return getattr(self, f'title_{lang}', self.title_ru)

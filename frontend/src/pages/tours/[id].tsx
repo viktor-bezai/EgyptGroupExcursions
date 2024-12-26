@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { Box, Typography, Button } from "@mui/material";
+import React, {useEffect} from "react";
+import {GetServerSideProps, InferGetServerSidePropsType} from "next";
+import {Box, Typography, Button} from "@mui/material";
 import Image from "next/image";
-import { useTranslation } from "react-i18next";
-import { useTheme } from "@mui/material/styles";
+import {useTranslation} from "react-i18next";
+import {useTheme} from "@mui/material/styles";
 
 // Interfaces
 export interface Tour {
   id: number;
   image: string;
   title: string;
-  description: string; // HTML string
+  description: string; // CKEditor HTML string
   cost_from: number;
   cost_to: number;
   is_available: boolean;
@@ -20,39 +20,84 @@ export interface Tour {
   };
 }
 
-// Helper function for embedding media links
-const processDescription = (description: string): string => {
-  const youtubeRegex = /https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
-  const tiktokRegex = /https?:\/\/(?:www\.)?tiktok\.com\/(?:@[\w.-]+\/video\/|v\/|embed\/)(\d+)(?:\?.*)?/g;
+// Description Renderer
+const DescriptionRenderer: React.FC<{ description: string }> = ({description}) => {
+  const theme = useTheme();
 
-  const replaceWithIframe = (url: string, id: string, platform: string): string => {
-    const aspectRatio = platform === "youtube" ? "56.25%" : "101%";
-    return `
-      <div style="margin: 1em 0; position: relative; padding-bottom: ${aspectRatio}; height: 0; overflow: hidden;">
-        <iframe 
-          src="${url}${id}"
-          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
-          allowfullscreen
-          title="${platform.charAt(0).toUpperCase() + platform.slice(1)} Video"
-        ></iframe>
-      </div>`;
+  // Function to process the content
+  const processContent = (content: string): string => {
+    const mediaUrl = process.env.NEXT_PUBLIC_MEDIA_URL || "";
+
+    // Match and update image src attributes
+    const updatedContent = content.replace(
+      /<img[^>]+src="\/media\/ckeditor\/([^"]+)"/g,
+      `<img src="${mediaUrl}/media/ckeditor/$1"`
+    );
+
+    // Match TikTok video links (if needed)
+    const tiktokRegex = /https?:\/\/(?:www\.)?tiktok\.com\/(?:@[\w.-]+\/video\/|v\/|embed\/)(\d+)(?:\?.*)?/g;
+    const finalContent = updatedContent.replace(tiktokRegex, (match, videoId) => {
+      return `
+        <div style="margin: 1em 0; position: relative; padding-bottom: 101%; height: 0; overflow: hidden;">
+          <iframe 
+            src="https://www.tiktok.com/embed/${videoId}" 
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
+            allowfullscreen
+            title="TikTok Video">
+          </iframe>
+        </div>`;
+    });
+
+    return finalContent;
   };
 
-  let processed = description.replace(youtubeRegex, (match, videoId) =>
-    replaceWithIframe("https://www.youtube.com/embed/", videoId, "youtube")
+  return (
+    <Box
+      dangerouslySetInnerHTML={{__html: processContent(description)}}
+      sx={{
+        mb: 4,
+        p: 2,
+        border: "1px solid",
+        borderColor: theme.palette.divider,
+        borderRadius: "8px",
+        backgroundColor: "#ffffff",
+        "& img": {
+          maxWidth: "100%",
+          height: "auto",
+          borderRadius: 2,
+        },
+        "& a": {color: theme.palette.primary.main, textDecoration: "none"},
+        "& .image-style-align-left": {
+          float: "left",
+          marginRight: 2,
+          marginBottom: 2,
+          maxWidth: "50%",
+        },
+        "& .image-style-align-right": {
+          float: "right",
+          marginLeft: 16,
+          marginBottom: 16,
+          maxWidth: "50%",
+        },
+        "& .image-style-align-center": {
+          display: "block",
+          margin: "auto",
+        },
+        "&:after": {
+          content: '""',
+          display: "block",
+          clear: "both",
+        },
+      }}
+    />
   );
-
-  processed = processed.replace(tiktokRegex, (match, videoId) =>
-    replaceWithIframe("https://www.tiktok.com/embed/", videoId, "tiktok")
-  );
-
-  return processed;
 };
 
+
 // Fetching data server-side
-export const getServerSideProps: GetServerSideProps = async ({ params, locale }) => {
-  const { id } = params!;
-  const lang = locale || "ru";
+export const getServerSideProps: GetServerSideProps = async ({params, locale}) => {
+  const {id} = params!;
+  const lang = locale || "en";
 
   try {
     const response = await fetch(
@@ -60,29 +105,32 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locale })
     );
 
     if (!response.ok) {
-      return { notFound: true };
+      console.error(`Failed to fetch tour data: ${response.statusText}`);
+      return {notFound: true};
     }
 
     const tour: Tour = await response.json();
-    return { props: { tour, lang } };
+    return {props: {tour, lang}};
   } catch (error) {
     console.error("Error fetching tour data:", error);
-    return { notFound: true };
+    return {notFound: true};
   }
 };
 
-const TourDetail = ({ tour, lang }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t, i18n } = useTranslation("common");
-  const theme = useTheme();
+const TourDetail = ({
+                      tour,
+                      lang,
+                    }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const {t, i18n} = useTranslation("common");
 
   useEffect(() => {
     i18n.changeLanguage(lang);
   }, [lang, i18n]);
 
   return (
-    <Box sx={{ maxWidth: 800, mx: "auto", my: 4, p: 2 }}>
+    <Box sx={{maxWidth: 800, mx: "auto", my: 4, p: 2}}>
       {/* Image Section */}
-      <Box position="relative" sx={{ width: "100%", height: 400, mb: 4 }}>
+      <Box position="relative" sx={{width: "100%", height: 400, mb: 4}}>
         <Image
           src={
             tour.image
@@ -91,7 +139,7 @@ const TourDetail = ({ tour, lang }: InferGetServerSidePropsType<typeof getServer
           }
           alt={tour.title}
           fill
-          style={{ objectFit: "cover", borderRadius: "8px" }}
+          style={{objectFit: "cover", borderRadius: "8px"}}
         />
       </Box>
 
@@ -101,23 +149,10 @@ const TourDetail = ({ tour, lang }: InferGetServerSidePropsType<typeof getServer
       </Typography>
 
       {/* Description */}
-      <Box
-        dangerouslySetInnerHTML={{ __html: processDescription(tour.description) }}
-        sx={{
-          mb: 4,
-          p: 2,
-          border: "1px solid",
-          borderColor: theme.palette.divider,
-          borderRadius: "8px",
-          backgroundColor: theme.palette.background.default,
-          "& img": { maxWidth: "100%", borderRadius: "8px", mt: 2 },
-          "& a": { color: theme.palette.primary.main, textDecoration: "none" },
-          "& p": { mb: 2, lineHeight: 1.6 },
-        }}
-      />
+      <DescriptionRenderer description={tour.description}/>
 
       {/* Cost */}
-      <Typography variant="h5" color="primary" sx={{ mb: 2 }}>
+      <Typography variant="h5" color="primary" sx={{mb: 2}}>
         {t("cost")}: ${tour.cost_from} - ${tour.cost_to}
       </Typography>
 
@@ -125,13 +160,13 @@ const TourDetail = ({ tour, lang }: InferGetServerSidePropsType<typeof getServer
       <Typography
         variant="h6"
         color={tour.is_available ? "success.main" : "error.main"}
-        sx={{ mb: 4 }}
+        sx={{mb: 4}}
       >
         {tour.is_available ? t("available") : t("not-available")}
       </Typography>
 
       {/* Book Button */}
-      <Box sx={{ display: "flex", gap: 2 }}>
+      <Box sx={{display: "flex", gap: 2}}>
         <Button variant="contained" color="primary" fullWidth>
           {t("book-now")}
         </Button>
