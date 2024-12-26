@@ -91,13 +91,25 @@ async function scrapeInstagramPosts(page: Page): Promise<InstagramPost[]> {
 async function acceptCookies(page: Page) {
   try {
     console.log("Checking for cookie consent dialog...");
-    await page.waitForSelector('button:has-text("Allow all cookies")', { timeout: 5000 });
-    await page.click('button:has-text("Allow all cookies")');
-    console.log("Cookie consent accepted.");
+    // Use a more precise selector to locate the "Allow all cookies" button
+    await page.waitForSelector('button', { visible: true, timeout: 5000 });
+
+    const buttons = await page.$$('button');
+    for (const button of buttons) {
+      const text = await page.evaluate((el) => el.textContent, button);
+      if (text?.trim() === "Allow all cookies") {
+        await button.click();
+        console.log("Cookie consent accepted.");
+        return;
+      }
+    }
+
+    console.log("No 'Allow all cookies' button found.");
   } catch (error) {
-    console.log("No cookie consent dialog found or failed to accept cookies:", error);
+    console.log("Error while handling cookie consent dialog:", error);
   }
 }
+
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
