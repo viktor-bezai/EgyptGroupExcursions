@@ -55,3 +55,4 @@ yarn-error.log*
 /frontend/next-env.d.ts
 /backend/media/
 /frontend/cookies.json
+/connection.txt
