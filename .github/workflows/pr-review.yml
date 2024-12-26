@@ -1,57 +1,64 @@
-name: OpenAI PR Reviewer
+name: Review Pull Request
 
 on:
   pull_request:
     types: [opened, synchronize]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   review:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all branches and history
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
+    - name: Fetch base branch
+      run: git fetch origin ${{ github.event.pull_request.base.ref }}
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install openai requests
+    - name: Generate Diff
+      run: git diff origin/${{ github.event.pull_request.base.ref }}...HEAD > changes.diff
 
-      - name: Review PR with OpenAI
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          python - <<EOF
-          import openai
-          import os
-          import requests
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
 
-          # Configuration
-          openai.api_key = os.getenv("OPENAI_API_KEY")
-          pr_number = os.getenv("GITHUB_REF").split('/')[-2]
-          repo_name = os.getenv("GITHUB_REPOSITORY")
-          token = os.getenv("GITHUB_TOKEN")
+    - name: Install Dependencies
+      run: pip install openai jq
 
-          # Fetch PR diff
-          headers = {"Authorization": f"token {token}"}
-          diff_url = f"https://api.github.com/repos/{repo_name}/pulls/{pr_number}"
-          pr_diff = requests.get(diff_url, headers=headers).json()["diff"]
+    - name: Run OpenAI Review
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: python analyze_code.py > feedback.txt
 
-          # Send PR diff to OpenAI
-          response = openai.ChatCompletion.create(
-              model="gpt-4",
-              messages=[
-                  {"role": "system", "content": "You are a code reviewer."},
-                  {"role": "user", "content": pr_diff}
-              ]
-          )
+    - name: Debug Feedback Content
+      run: |
+        echo "Feedback content:"
+        cat feedback.txt
 
-          # Post a comment on the PR
-          review_comment = response['choices'][0]['message']['content']
-          comment_url = f"https://api.github.com/repos/{repo_name}/issues/{pr_number}/comments"
-          requests.post(comment_url, headers=headers, json={"body": review_comment})
-          EOF
+    - name: Escape Feedback Content
+      id: escape-feedback
+      run: |
+        feedback=$(<feedback.txt)
+        escaped_feedback=$(echo "$feedback" | jq -Rsa .)
+        echo "escaped_feedback=$escaped_feedback" >> $GITHUB_ENV
+
+    - name: Post Feedback as Comment
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ESCAPED_FEEDBACK: ${{ env.escaped_feedback }}
+      run: |
+        curl -v -X POST \
+          -H "Authorization: Bearer $GITHUB_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d "{\"body\": $ESCAPED_FEEDBACK}" \
+          "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
+
+    - name: Cleanup Feedback File
+      run: rm feedback.txt
