@@ -66,6 +66,7 @@ async function autoScroll(page: Page, scrollCount = 2) {
 async function scrapeInstagramPosts(page: Page): Promise<InstagramPost[]> {
   try {
     console.log("Scraping Instagram posts...");
+    await page.waitForSelector("article div a", { timeout: 30000 });
     return page.evaluate(() => {
       const postElements = document.querySelectorAll("article div a");
       return Array.from(postElements).map((postElement) => {
@@ -82,6 +83,7 @@ async function scrapeInstagramPosts(page: Page): Promise<InstagramPost[]> {
     }) as Promise<InstagramPost[]>;
   } catch (error) {
     console.error("Error scraping posts:", error);
+    await page.screenshot({ path: "error-screenshot.png" });
     return [];
   }
 }
