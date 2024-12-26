@@ -88,6 +88,17 @@ async function scrapeInstagramPosts(page: Page): Promise<InstagramPost[]> {
   }
 }
 
+async function acceptCookies(page: Page) {
+  try {
+    console.log("Checking for cookie consent dialog...");
+    await page.waitForSelector('button:has-text("Allow all cookies")', { timeout: 5000 });
+    await page.click('button:has-text("Allow all cookies")');
+    console.log("Cookie consent accepted.");
+  } catch (error) {
+    console.log("No cookie consent dialog found or failed to accept cookies:", error);
+  }
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const now = Date.now();
@@ -133,6 +144,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log(`Navigating to ${profileUrl}`);
     await page.goto(profileUrl, { waitUntil: "networkidle2", timeout: 30000 });
     console.log("Page loaded successfully.");
+
+    // Accept cookies
+    await acceptCookies(page);
 
     const scrollCount = parseInt(req.query.scrollCount as string, 10) || 2;
     await autoScroll(page, scrollCount);
