@@ -1,9 +1,9 @@
-import React, { useMemo, useEffect, useState } from "react";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { Box, Grid, Typography } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import React, {useEffect, useMemo, useState} from "react";
+import {GetServerSideProps, InferGetServerSidePropsType} from "next";
+import {Box, Grid, Typography} from "@mui/material";
+import {useTranslation} from "react-i18next";
 import TourCard from "@/components/home/TourCard";
-import { fetchHomePageData } from "@/utils/api";
+import {fetchHomePageData} from "@/utils/api";
 import CategoryFilter from "@/components/home/CategoryFilter";
 import TypeFilter from "@/components/home/TypeFilter";
 
@@ -38,20 +38,20 @@ interface HomeProps {
 
 export const getServerSideProps: GetServerSideProps<HomeProps> = async (context) => {
   const lang = context.locale || "ru";
-  const { tours, tourCategories, tourTypes } = await fetchHomePageData(lang);
+  const {tours, tourCategories, tourTypes} = await fetchHomePageData(lang);
 
   return {
-    props: { tours, tourCategories, tourTypes, lang },
+    props: {tours, tourCategories, tourTypes, lang},
   };
 };
 
 const Home = ({
-  tours,
-  tourCategories,
-  tourTypes,
-  lang,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t, i18n } = useTranslation("common");
+                tours,
+                tourCategories,
+                tourTypes,
+                lang,
+              }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const {t, i18n} = useTranslation("common");
   const [selectedCategory, setSelectedCategory] = useState<tourCategory | null>(null);
   const [selectedType, setSelectedType] = useState<tourType | null>(null);
 
@@ -77,9 +77,9 @@ const Home = ({
   }, [tours, selectedCategory, selectedType]);
 
   return (
-    <Box mb={6}>
+    <Box mb={6} position="relative">
       {/* Page Header */}
-      <Box textAlign="center" sx={{ py: 4 }}>
+      <Box textAlign="center" sx={{py: 4}}>
         <Typography variant="h3" gutterBottom>
           {t("title")}
         </Typography>
@@ -95,40 +95,84 @@ const Home = ({
         />
       </Box>
 
-      <Grid container spacing={4}>
-        {/* Tours Grid */}
-        <Grid item xs={12} md={9}>
-          <Box>
-            <Grid container spacing={4} justifyContent="center">
-              {filteredTours.length > 0 ? (
-                filteredTours.map((tour) => (
-                  <Grid item xs={12} sm={6} md={4} key={tour.id}>
-                    <TourCard tour={tour} />
-                  </Grid>
-                ))
-              ) : (
-                <Typography variant="h6" color="text.secondary" textAlign="center" sx={{ mt: 4 }}>
-                  {t("no-tours")}
-                </Typography>
-              )}
-            </Grid>
-          </Box>
-        </Grid>
+      {/* Main Content */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          width: "100%",
+          maxWidth: "1200px",
+          mx: "auto",
+          px: 2,
+        }}
+      >
+        {/* Left Are - Notifications */}
+        <Box
+          sx={{
+            width: "15%",
+            flexShrink: 0,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          {/* Здесь будет содержимое уведомлений */}
+          <Typography variant="h6">Уведомления</Typography>
+        </Box>
 
-        {/* Type Filter on the Right */}
-        <Grid item xs={12} md={3}>
-          <Box>
-            <TypeFilter
-              tourTypes={tourTypes}
-              selectedType={selectedType}
-              onSelectType={setSelectedType}
-              t={t}
-            />
-          </Box>
-        </Grid>
-      </Grid>
+        {/* Certer Area - Tours */}
+        <Box
+          sx={{
+            width: "70%",
+            display: "flex",
+            flexDirection: "column",
+            gap: 4,
+          }}
+        >
+          <Grid container spacing={4} justifyContent="center">
+            {filteredTours.length > 0 ? (
+              filteredTours.map((tour) => (
+                <Grid item xs={12} sm={6} md={4} key={tour.id}>
+                  <TourCard tour={tour}/>
+                </Grid>
+              ))
+            ) : (
+              <Typography
+                variant="h6"
+                color="text.secondary"
+                textAlign="center"
+                sx={{mt: 4}}
+              >
+                {t("no-tours")}
+              </Typography>
+            )}
+          </Grid>
+        </Box>
+
+        {/* Right Area - TypeFilter */}
+        <Box
+          sx={{
+            width: "15%",
+            flexShrink: 0,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            paddingLeft: 2,
+          }}
+        >
+          <TypeFilter
+            tourTypes={tourTypes}
+            selectedType={selectedType}
+            onSelectType={setSelectedType}
+            t={t}
+          />
+        </Box>
+      </Box>
+
     </Box>
   );
+
 };
 
 export default Home;

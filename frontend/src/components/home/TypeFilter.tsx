@@ -13,12 +13,20 @@ const TypeFilter: React.FC<TypeFilterProps> = (props) => {
   const { tourTypes, selectedType, onSelectType, t } = props;
 
   return (
-    <Box sx={{ mb: 4, display: "flex", flexDirection: "column", alignItems: "start" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "start",
+        gap: 1, // Пространство между кнопками
+        maxWidth: "200px", // Ограничение ширины фильтра
+        width: "100%", // Автоматическая подстройка
+      }}
+    >
       <Button
         key={"all"}
         onClick={() => onSelectType(null)}
         variant="outlined"
-        sx={{ mb: 1 }}
         color={!selectedType ? "primary" : "inherit"}
       >
         {t("all-types")}
@@ -28,7 +36,6 @@ const TypeFilter: React.FC<TypeFilterProps> = (props) => {
           key={type.id}
           onClick={() => onSelectType(type)}
           variant="outlined"
-          sx={{ mb: 1 }}
           color={selectedType?.id === type.id ? "primary" : "inherit"}
         >
           {type.name}
