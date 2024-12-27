@@ -60,7 +60,6 @@ python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 python-slugify==8.0.4
 python3-xlib==0.15
-pytok @ git+https://github.com/networkdynamics/pytok.git@75b7ccddcd18014cc30f8073f8d25a8cec698d14
 pytweening==1.2.0
 pytz==2024.2
 PyVirtualDisplay==3.0
