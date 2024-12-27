@@ -2,8 +2,38 @@ import React, {useState} from "react";
 import {Box, Button, ButtonGroup} from "@mui/material";
 import TikTokFeed from "@/components/about-me/TikTokFeed";
 import InstagramFeed from "@/components/about-me/InstagramFeed";
+import {GetServerSideProps} from "next";
+import {fetchAboutMePageData} from "@/utils/api";
 
-const AboutMe: React.FC = () => {
+export interface SocialMediaPostInterface {
+  id: number
+  imageUrl: string
+  description: string | null
+  url: string
+  postDate: string | null
+  socialMedia: string
+}
+
+interface AboutMeProps {
+  socialMediaPosts: SocialMediaPostInterface[];
+}
+
+export const getServerSideProps: GetServerSideProps<AboutMeProps> = async () => {
+  const data = await fetchAboutMePageData();
+
+  const socialMediaPosts: SocialMediaPostInterface[] = data?.socialMediaPosts || [];
+
+  return {
+    props: {socialMediaPosts},
+  };
+};
+
+const AboutMe = (props: AboutMeProps) => {
+  const {socialMediaPosts} = props
+
+  const instagramPosts = socialMediaPosts.filter(post => post.socialMedia.toLowerCase() === "instagram");
+  const tikTokPosts = socialMediaPosts.filter(post => post.socialMedia.toLowerCase() === "tiktok");
+
   const [selectedPlatform, setSelectedPlatform] = useState("instagram");
 
   return (
@@ -32,11 +62,11 @@ const AboutMe: React.FC = () => {
       <Box sx={{display: "flex", flexDirection: {xs: "column", md: "row"}, gap: 4}}>
         {selectedPlatform === "instagram" ? (
           <Box sx={{flex: 1}}>
-            <InstagramFeed />
+            <InstagramFeed posts={instagramPosts}/>
           </Box>
         ) : (
           <Box sx={{flex: 1}}>
-            <TikTokFeed />
+            <TikTokFeed posts={tikTokPosts}/>
           </Box>
         )}
       </Box>

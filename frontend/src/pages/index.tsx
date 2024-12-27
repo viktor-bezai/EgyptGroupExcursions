@@ -45,12 +45,8 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async (context)
   };
 };
 
-const Home = ({
-                tours,
-                tourCategories,
-                tourTypes,
-                lang,
-              }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const { tours, tourCategories, tourTypes, lang } = props
   const {t, i18n} = useTranslation("common");
   const [selectedCategory, setSelectedCategory] = useState<tourCategory | null>(null);
   const [selectedType, setSelectedType] = useState<tourType | null>(null);

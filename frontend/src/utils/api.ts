@@ -20,3 +20,39 @@ export const fetchHomePageData = async (lang: string) => {
     return { tours: [], tourCategories: [], tourTypes: [] };
   }
 };
+
+export const fetchAboutMePageData = async () => {
+  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  try {
+    const socialMediaPostsRes = await fetch(`${apiUrl}/social-media-posts/`);
+
+    if (!socialMediaPostsRes.ok) {
+      console.error("Failed to fetch social media posts:", socialMediaPostsRes.statusText);
+      return { socialMediaPosts: [] };
+    }
+
+    const rawSocialMediaPosts = await socialMediaPostsRes.json();
+
+    // Map to rename keys
+    const socialMediaPosts = Array.isArray(rawSocialMediaPosts)
+      ? rawSocialMediaPosts.map(post => ({
+          id: post.id,
+          imageUrl: post.image_url,
+          description: post.description,
+          url: post.url,
+          postDate: post.post_date,
+          socialMedia: post.social_media,
+        }))
+      : [];
+
+    return {
+      socialMediaPosts,
+    };
+  } catch (error) {
+    console.error("Error fetching social media posts:", error);
+    return { socialMediaPosts: [] };
+  }
+};
+
+
