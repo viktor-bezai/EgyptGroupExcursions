@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Container, Typography, IconButton } from "@mui/material";
 import { Instagram } from "@mui/icons-material";
-import TikTokIcon from "@/components/common/TikTokIcon";
+import {TikTokIcon} from "@/components/common/TikTokIcon";
 import {useTranslation} from "react-i18next";
 
 const Footer: React.FC = () => {

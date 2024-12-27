@@ -1,13 +1,35 @@
 import React from "react";
+import { useTheme } from "@mui/material/styles";
+import { Box } from "@mui/material";
 
 interface TikTokIconProps {
   color?: string; // Optional color prop
 }
 
-const TikTokIcon: React.FC<TikTokIconProps> = ({ color = "secondary.main" }) => {
+export const TikTokIcon: React.FC<TikTokIconProps> = ({ color = "secondary.main" }) => {
+  const theme = useTheme();
+
+  const resolveColor = (color: string): string => {
+    const [paletteKey, shade] = color.split(".");
+    const palette = theme.palette as Record<string, any>;
+
+    if (paletteKey in palette) {
+      const paletteColor = palette[paletteKey];
+      if (typeof paletteColor === "object" && shade && shade in paletteColor) {
+        return paletteColor[shade];
+      }
+      if (typeof paletteColor === "string") {
+        return paletteColor;
+      }
+    }
+    return color; // Fallback to raw color
+  };
+
+  const resolvedColor = resolveColor(color);
+
   return (
     <svg
-      fill={color}
+      fill={resolvedColor}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 50 50"
       width="24px"
@@ -18,4 +40,18 @@ const TikTokIcon: React.FC<TikTokIconProps> = ({ color = "secondary.main" }) => 
   );
 };
 
-export default TikTokIcon;
+export const TikTokIconWithBackground: React.FC = () => (
+  <Box
+    sx={{
+      display: "inline-flex",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100%",
+      height: "100%",
+      backgroundColor: "white",
+      borderRadius: "10%"
+    }}
+  >
+    <TikTokIcon color="primary.main" />
+  </Box>
+);
