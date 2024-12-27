@@ -48,7 +48,7 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
           {tour.title}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-          {truncateText(tour.description, 100)}
+          {truncateText(tour.description, 100, "")}
         </Typography>
         <Typography variant="body2" color="text.primary">
           {t("cost")}: <strong>${tour.cost_from} - ${tour.cost_to}</strong>
