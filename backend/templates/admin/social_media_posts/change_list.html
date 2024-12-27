@@ -1,0 +1,9 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools %}
+    {{ block.super }}
+    <div class="custom-buttons" style="padding-bottom: 10px">
+        <a class="button" href="{% url 'admin:update-instagram-posts' %}">Обновить Instagram</a>
+        <a class="button" href="{% url 'admin:update-tiktok-posts' %}">Обновить TikTok</a>
+    </div>
+{% endblock %}

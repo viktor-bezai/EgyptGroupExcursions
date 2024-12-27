@@ -3,11 +3,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from server.social_media.models import SocialMediaPost
-from server.social_media.serializers.social_media_post_serializer import SocialMediaPostSerializer
-from server.tours.models import Tour
-from server.tours.serializers.tour_query_serializer import TourQuerySerializer
-from server.tours.serializers.tour_serializer import TourSerializer
+from server.social_media_posts.models import SocialMediaPost
+from server.social_media_posts.serializers.social_media_post_serializer import SocialMediaPostSerializer
 
 
 class SocialMediaPostView(APIView):
