@@ -1,20 +1,57 @@
-import React, {useState} from "react";
-import {Box, Button, ButtonGroup} from "@mui/material";
+import React, { useState } from "react";
+import { Box, Button, ButtonGroup } from "@mui/material";
+import { Instagram } from "@mui/icons-material";
+import {TikTokIconWithBackground} from "@/components/common/TikTokIcon";
 import TikTokFeed from "@/components/about-me/TikTokFeed";
 import InstagramFeed from "@/components/about-me/InstagramFeed";
+import { GetServerSideProps } from "next";
+import { fetchAboutMePageData } from "@/utils/api";
 
-const AboutMe: React.FC = () => {
+export interface SocialMediaPostInterface {
+  id: number;
+  imageUrl: string;
+  description: string | null;
+  url: string;
+  postDate: string | null;
+  socialMedia: string;
+}
+
+interface AboutMeProps {
+  socialMediaPosts: SocialMediaPostInterface[];
+}
+
+export const getServerSideProps: GetServerSideProps<AboutMeProps> = async () => {
+  const data = await fetchAboutMePageData();
+
+  const socialMediaPosts: SocialMediaPostInterface[] = data?.socialMediaPosts || [];
+
+  return {
+    props: { socialMediaPosts },
+  };
+};
+
+const AboutMe = (props: AboutMeProps) => {
+  const { socialMediaPosts } = props;
+
+  const instagramPosts = socialMediaPosts.filter(
+    (post) => post.socialMedia.toLowerCase() === "instagram"
+  );
+  const tikTokPosts = socialMediaPosts.filter(
+    (post) => post.socialMedia.toLowerCase() === "tiktok"
+  );
+
   const [selectedPlatform, setSelectedPlatform] = useState("instagram");
 
   return (
-    <Box sx={{p: 4, width: "80%", mx: "auto"}}>
+    <Box sx={{ p: 4, width: "80%", mx: "auto" }}>
       {/* Button Group */}
-      <Box sx={{mb: 4, display: "flex", justifyContent: "center"}}>
+      <Box sx={{ mb: 4, display: "flex", justifyContent: "center" }}>
         <ButtonGroup variant="contained" color="primary">
           <Button
             onClick={() => setSelectedPlatform("instagram")}
             variant={selectedPlatform === "instagram" ? "contained" : "outlined"}
             fullWidth
+            startIcon={<Instagram />} // Instagram icon on the left
           >
             Instagram
           </Button>
@@ -22,6 +59,7 @@ const AboutMe: React.FC = () => {
             onClick={() => setSelectedPlatform("tiktok")}
             variant={selectedPlatform === "tiktok" ? "contained" : "outlined"}
             fullWidth
+            endIcon={<TikTokIconWithBackground />}
           >
             TikTok
           </Button>
@@ -29,14 +67,14 @@ const AboutMe: React.FC = () => {
       </Box>
 
       {/* Dynamic Content */}
-      <Box sx={{display: "flex", flexDirection: {xs: "column", md: "row"}, gap: 4}}>
+      <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 4 }}>
         {selectedPlatform === "instagram" ? (
-          <Box sx={{flex: 1}}>
-            <InstagramFeed />
+          <Box sx={{ flex: 1 }}>
+            <InstagramFeed posts={instagramPosts} />
           </Box>
         ) : (
-          <Box sx={{flex: 1}}>
-            <TikTokFeed />
+          <Box sx={{ flex: 1 }}>
+            <TikTokFeed posts={tikTokPosts} />
           </Box>
         )}
       </Box>
