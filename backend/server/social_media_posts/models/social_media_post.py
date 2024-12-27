@@ -11,7 +11,7 @@ class SocialMediaPost(models.Model):
         ("TikTok", "TikTok"),
     ]
 
-    image_url = models.CharField(max_length=255)
+    image_url = models.TextField()
     description = models.TextField(null=True, blank=True)
     url = models.URLField()
     post_date = models.DateTimeField(null=True, blank=True)
