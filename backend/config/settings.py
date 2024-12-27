@@ -81,7 +81,6 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
@@ -89,8 +88,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DBNAME'),
+        'USER': os.getenv('DBUSER'),
+        'PASSWORD': os.getenv('DBPASS'),
+        'HOST': os.getenv('DBHOST'),
+        'PORT': '5432',
     }
 }
 
@@ -187,6 +190,3 @@ CKEDITOR_5_CONFIGS = {
 }
 
 CKEDITOR_5_FILE_STORAGE = "server.ckeditor_storage.CustomStorage"
-
-TIKTOK_CLIENT_KEY = os.getenv('TIKTOK_CLIENT_KEY')
-TIKTOK_CLIENT_SECRET = os.getenv('TIKTOK_CLIENT_SECRET')
