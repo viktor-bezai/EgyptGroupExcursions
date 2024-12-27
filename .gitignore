@@ -3,7 +3,7 @@
 
 # Python/Django
 # Byte-compiled / optimized / DLL files
-/backend/__pycache__/
+__pycache__/
 *.py[cod]
 *$py.class
 

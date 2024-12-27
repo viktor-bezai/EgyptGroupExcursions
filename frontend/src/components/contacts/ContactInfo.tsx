@@ -4,7 +4,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { Instagram } from "@mui/icons-material";
-import TikTokIcon from "@/components/common/TikTokIcon";
+import { TikTokIcon } from "@/components/common/TikTokIcon";
 import { useTranslation } from "react-i18next";
 
 const ContactInfo: React.FC = () => {
