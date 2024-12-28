@@ -1,7 +1,7 @@
 import React from "react";
-import { Box, Button } from "@mui/material";
-import { tourType } from "@/pages";
-import { useTranslation } from "react-i18next";
+import {Box, Button, Typography} from "@mui/material";
+import {tourType} from "@/pages";
+import {useTranslation} from "react-i18next";
 
 interface TypeFilterProps {
   tourTypes: tourType[];
@@ -10,8 +10,8 @@ interface TypeFilterProps {
 }
 
 const TypeFilter: React.FC<TypeFilterProps> = (props) => {
-  const { tourTypes, selectedType, onSelectType } = props;
-  const { t } = useTranslation("common");
+  const {tourTypes, selectedType, onSelectType} = props;
+  const {t} = useTranslation("common");
 
   return (
     <Box
@@ -19,15 +19,15 @@ const TypeFilter: React.FC<TypeFilterProps> = (props) => {
         display: "flex",
         flexDirection: {
           xs: "row", // Horizontal for extra-small screens
-          sm: "column", // Vertical for small screens and above
+          md: "column", // Vertical for small screens and above
         },
         alignItems: {
           xs: "center", // Center align items for horizontal layout
-          sm: "start", // Start align for vertical layout
+          md: "start", // Start align for vertical layout
         },
         justifyContent: {
           xs: "center", // Center buttons horizontally for small screens
-          sm: "start", // Align buttons to the start for larger screens
+          md: "start", // Align buttons to the start for larger screens
         },
         gap: 1,
         flexWrap: "wrap", // Wrap buttons in horizontal layout
@@ -43,7 +43,13 @@ const TypeFilter: React.FC<TypeFilterProps> = (props) => {
           textTransform: "none", // Preserve text case
         }}
       >
-        {t("all-types")}
+        <Typography
+          sx={{
+            fontSize: {xs: "0.8rem", sm: "1rem"},
+          }}
+        >
+          {t("all-types")}
+        </Typography>
       </Button>
       {tourTypes.map((type) => (
         <Button
@@ -56,7 +62,13 @@ const TypeFilter: React.FC<TypeFilterProps> = (props) => {
             textTransform: "none", // Preserve text case
           }}
         >
-          {type.name}
+          <Typography
+            sx={{
+              fontSize: {xs: "0.8rem", sm: "1rem"},
+            }}
+          >
+            {type.name}
+          </Typography>
         </Button>
       ))}
     </Box>

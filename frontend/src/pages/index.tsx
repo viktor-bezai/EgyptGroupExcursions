@@ -7,6 +7,7 @@ import {fetchHomePageData} from "@/utils/api";
 import CategoryFilter from "@/components/home/CategoryFilter";
 import TypeFilter from "@/components/home/TypeFilter";
 import Head from 'next/head';
+
 export interface tourCategory {
   id: number;
   name: string;
@@ -52,7 +53,7 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
   const [selectedType, setSelectedType] = useState<tourType | null>(null);
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     i18n.changeLanguage(lang);
@@ -88,7 +89,7 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
 
         {/* Filters for Mobile */}
         {isMobile && (
-          <Box mb={4} display="flex" flexDirection="column" gap={2}>
+          <Box mb={4} display="flex" flexDirection="column" gap={1}>
             <CategoryFilter
               tourCategories={tourCategories}
               selectedCategory={selectedCategory}
@@ -103,7 +104,7 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
         )}
 
         {!isMobile && (
-          <Box mb={4} display="flex" flexDirection="column" gap={2}>
+          <Box display="flex" flexDirection="column" gap={2}>
             <CategoryFilter
               tourCategories={tourCategories}
               selectedCategory={selectedCategory}
@@ -126,10 +127,29 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
 
           {/* Center Area - Tours */}
           <Grid item xs={12} md={8}>
-            <Grid container spacing={4} justifyContent="center">
+            <Grid
+              container
+              spacing={4}
+              justifyContent="center"
+              sx={{
+                px: 2,
+                justifyContent: {xs: "center", sm: "center"},
+              }}
+            >
               {filteredTours.length > 0 ? (
                 filteredTours.map((tour) => (
-                  <Grid item xs={12} sm={6} md={4} key={tour.id}>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    lg={6}
+                    xl={4}
+                    key={tour.id}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
                     <TourCard tour={tour}/>
                   </Grid>
                 ))
@@ -145,6 +165,7 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
               )}
             </Grid>
           </Grid>
+
 
           {/* Right Area - TypeFilter (Hidden on Mobile) */}
           {!isMobile && (

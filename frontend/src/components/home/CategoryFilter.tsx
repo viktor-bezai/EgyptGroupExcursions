@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, Button} from "@mui/material";
+import {Box, Button, Typography } from "@mui/material";
 import {tourCategory} from "@/pages";
 import {useTranslation} from "react-i18next";
 
@@ -13,7 +13,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = (props) => {
   const { tourCategories, selectedCategory, onSelectCategory } = props
   const {t} = useTranslation("common");
 
-  return <Box sx={{mb: {xs: 1, sm: 4}, textAlign: "center"}}>
+  return <Box sx={{mb: {xs: 1, md: 4}, textAlign: "center"}}>
     <Button
       key={"all"}
       onClick={() => onSelectCategory(null)}
@@ -21,7 +21,13 @@ const CategoryFilter: React.FC<CategoryFilterProps> = (props) => {
       sx={{mb: 1}}
       color={!selectedCategory ? "primary" : "inherit"}
     >
-      {t("all-categories")}
+      <Typography
+          sx={{
+            fontSize: { xs: "0.8rem", sm: "1rem" },
+          }}
+        >
+          {t("all-categories")}
+        </Typography>
     </Button>
     {tourCategories.map((category) => (
       <Button
@@ -31,7 +37,13 @@ const CategoryFilter: React.FC<CategoryFilterProps> = (props) => {
         sx={{mb: 1, ml: 1}}
         color={selectedCategory?.id === category.id ? "primary" : "inherit"}
       >
-        {category.name}
+        <Typography
+            sx={{
+              fontSize: { xs: "0.8rem", sm: "1rem" },
+            }}
+          >
+            {category.name}
+          </Typography>
       </Button>
     ))}
   </Box>

@@ -1,24 +1,27 @@
-import React from "react";
-import { Box, Button, Card, CardContent, CardMedia, Typography } from "@mui/material";
+import React, {useCallback} from "react";
+import {Box, Button, Card, CardContent, CardMedia, Typography} from "@mui/material";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { Tour } from "@/pages";
-import { useTranslation } from "react-i18next";
-import { truncateText } from "@/utils/textUtils";
+import {useRouter} from "next/router";
+import {useTranslation} from "react-i18next";
+import {truncateText} from "@/utils/textUtils";
+import {Tour} from "@/pages";
 
-const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
-  const mediaUrl = process.env.NEXT_PUBLIC_MEDIA_URL;
-  const { t } = useTranslation("common");
+const TourCard: React.FC<{ tour: Tour }> = ({tour}) => {
+  const mediaUrl = process.env.NEXT_PUBLIC_MEDIA_URL || "";
+  const {t} = useTranslation("common");
   const router = useRouter();
 
-  const handleDetailsClick = () => {
+  const handleDetailsClick = useCallback(() => {
     router.push(`/tours/${tour.id}`);
-  };
+  }, [router, tour.id]);
 
   return (
     <Card
       sx={{
         maxWidth: 345,
+        minHeight: 350,
+        height: "100%",
+        width: "100%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -28,11 +31,13 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
     >
       {/* Image Section */}
       <CardMedia>
-        <Box position="relative" sx={{ width: "100%", height: 200 }}>
+        <Box position="relative" sx={{width: "100%", height: 150}}>
           <Image
             src={tour.image ? `${mediaUrl}${tour.image}` : "/images/placeholder.jpg"}
-            alt={tour.title}
+            alt={tour.title || t("tour-placeholder-alt")}
             fill
+            sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={!tour.image}
             style={{
               objectFit: "cover",
               borderTopLeftRadius: "8px",
@@ -43,17 +48,24 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
       </CardMedia>
 
       {/* Content Section */}
-      <CardContent sx={{ flex: 1 }}>
+      <CardContent sx={{flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
         <Typography variant="h5" component="div" gutterBottom>
           {tour.title}
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-          {truncateText(tour.description, 100, "")}
+        <Typography variant="body2" color="text.secondary" sx={{mb: 1, minHeight: 65}}>
+          {truncateText(tour.description, 100, t("default-description"))}
         </Typography>
-        <Typography variant="body2" color="text.primary">
-          {t("cost")}: <strong>${tour.cost_from} - ${tour.cost_to}</strong>
-        </Typography>
-        <Box mt={2}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mt: 1, // Optional spacing
+          }}
+        >
+          <Typography variant="body2" color="text.primary">
+            {t("cost")}: <strong>${tour.cost_from} - ${tour.cost_to}</strong>
+          </Typography>
           <Typography
             variant="body2"
             sx={{
@@ -64,6 +76,7 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
             {tour.is_available ? t("available") : t("not-available")}
           </Typography>
         </Box>
+
       </CardContent>
 
       {/* Actions Section */}
@@ -71,13 +84,13 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
         sx={{
           display: "flex",
           gap: 1,
-          p: 2,
+          p: 1,
           justifyContent: "space-between",
           alignItems: "center",
           borderTop: "1px solid rgba(0, 0, 0, 0.1)",
         }}
       >
-        <Button variant="contained" color="primary" fullWidth onClick={() => alert(t("book-now") + " clicked!")}>
+        <Button variant="contained" color="primary" fullWidth onClick={() => alert(t("book-now"))}>
           {t("book-now")}
         </Button>
         <Button variant="outlined" color="secondary" fullWidth onClick={handleDetailsClick}>
