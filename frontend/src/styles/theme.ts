@@ -36,7 +36,7 @@ const theme = createTheme({
       dark: "#388e3c",
     },
     background: {
-      default: "#f4f4f4", // Default background color
+      default: "#f9f9f9", // Default background color
       paper: "#ffffff", // Background for cards and dialogs
     },
     text: {

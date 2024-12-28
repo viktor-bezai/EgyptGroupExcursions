@@ -1,9 +1,9 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {GetServerSideProps, InferGetServerSidePropsType} from "next";
-import {Box, Grid, Typography} from "@mui/material";
-import {useTranslation} from "react-i18next";
+import React, { useEffect, useMemo, useState } from "react";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import TourCard from "@/components/home/TourCard";
-import {fetchHomePageData} from "@/utils/api";
+import { fetchHomePageData } from "@/utils/api";
 import CategoryFilter from "@/components/home/CategoryFilter";
 import TypeFilter from "@/components/home/TypeFilter";
 
@@ -38,20 +38,22 @@ interface HomeProps {
 
 export const getServerSideProps: GetServerSideProps<HomeProps> = async (context) => {
   const lang = context.locale || "ru";
-  const {tours, tourCategories, tourTypes} = await fetchHomePageData(lang);
+  const { tours, tourCategories, tourTypes } = await fetchHomePageData(lang);
 
   return {
-    props: {tours, tourCategories, tourTypes, lang},
+    props: { tours, tourCategories, tourTypes, lang },
   };
 };
 
 const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { tours, tourCategories, tourTypes, lang } = props
-  const {t, i18n} = useTranslation("common");
+  const { tours, tourCategories, tourTypes, lang } = props;
+  const { t, i18n } = useTranslation("common");
   const [selectedCategory, setSelectedCategory] = useState<tourCategory | null>(null);
   const [selectedType, setSelectedType] = useState<tourType | null>(null);
 
-  // Ensure translations are consistent
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   useEffect(() => {
     i18n.changeLanguage(lang);
   }, [lang, i18n]);
@@ -59,12 +61,10 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
   const filteredTours = useMemo(() => {
     let filtered = tours;
 
-    // Filter by selected category
     if (selectedCategory) {
       filtered = filtered.filter((tour) => tour.category.id === selectedCategory.id);
     }
 
-    // Further filter by selected type
     if (selectedType) {
       filtered = filtered.filter((tour) => tour.types.some((type) => type.id === selectedType.id));
     }
@@ -75,88 +75,21 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
   return (
     <Box mb={6} position="relative">
       {/* Page Header */}
-      <Box textAlign="center" sx={{py: 4}}>
+      <Box textAlign="center" sx={{ py: 4 }}>
         <Typography variant="h3" gutterBottom>
           {t("title")}
         </Typography>
       </Box>
 
-      {/* Category Filter on Top */}
-      <Box mb={4}>
-        <CategoryFilter
-          tourCategories={tourCategories}
-          selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
-          t={t}
-        />
-      </Box>
-
-      {/* Main Content */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          width: "100%",
-          maxWidth: "1200px",
-          mx: "auto",
-          px: 2,
-        }}
-      >
-        {/* Left Are - Notifications */}
-        <Box
-          sx={{
-            width: "15%",
-            flexShrink: 0,
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-          }}
-        >
-          {/* Здесь будет содержимое уведомлений */}
-          <Typography variant="h6">Уведомления</Typography>
-        </Box>
-
-        {/* Certer Area - Tours */}
-        <Box
-          sx={{
-            width: "70%",
-            display: "flex",
-            flexDirection: "column",
-            gap: 4,
-          }}
-        >
-          <Grid container spacing={4} justifyContent="center">
-            {filteredTours.length > 0 ? (
-              filteredTours.map((tour) => (
-                <Grid item xs={12} sm={6} md={4} key={tour.id}>
-                  <TourCard tour={tour}/>
-                </Grid>
-              ))
-            ) : (
-              <Typography
-                variant="h6"
-                color="text.secondary"
-                textAlign="center"
-                sx={{mt: 4}}
-              >
-                {t("no-tours")}
-              </Typography>
-            )}
-          </Grid>
-        </Box>
-
-        {/* Right Area - TypeFilter */}
-        <Box
-          sx={{
-            width: "15%",
-            flexShrink: 0,
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            paddingLeft: 2,
-          }}
-        >
+      {/* Filters for Mobile */}
+      {isMobile && (
+        <Box mb={4} display="flex" flexDirection="column" gap={2}>
+          <CategoryFilter
+            tourCategories={tourCategories}
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
+            t={t}
+          />
           <TypeFilter
             tourTypes={tourTypes}
             selectedType={selectedType}
@@ -164,11 +97,56 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
             t={t}
           />
         </Box>
-      </Box>
+      )}
 
+      {/* Main Content */}
+      <Grid container spacing={4} justifyContent="center" sx={{ px: 2 }}>
+        {/* Left Area - Notifications (Hidden on Mobile) */}
+        {!isMobile && (
+          <Grid item xs={12} md={2}>
+            <Box>
+              <Typography variant="h6">{t("notifications")}</Typography>
+              {/* Notifications content here */}
+            </Box>
+          </Grid>
+        )}
+
+        {/* Center Area - Tours */}
+        <Grid item xs={12} md={8}>
+          <Grid container spacing={4} justifyContent="center">
+            {filteredTours.length > 0 ? (
+              filteredTours.map((tour) => (
+                <Grid item xs={12} sm={6} md={4} key={tour.id}>
+                  <TourCard tour={tour} />
+                </Grid>
+              ))
+            ) : (
+              <Typography
+                variant="h6"
+                color="text.secondary"
+                textAlign="center"
+                sx={{ mt: 4 }}
+              >
+                {t("no-tours")}
+              </Typography>
+            )}
+          </Grid>
+        </Grid>
+
+        {/* Right Area - TypeFilter (Hidden on Mobile) */}
+        {!isMobile && (
+          <Grid item xs={12} md={2}>
+            <TypeFilter
+              tourTypes={tourTypes}
+              selectedType={selectedType}
+              onSelectType={setSelectedType}
+              t={t}
+            />
+          </Grid>
+        )}
+      </Grid>
     </Box>
   );
-
 };
 
 export default Home;
