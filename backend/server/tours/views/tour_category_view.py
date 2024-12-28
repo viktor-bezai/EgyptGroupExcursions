@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 
 from server.tours.models import TourCategory
 from server.tours.serializers.tour_category_serializer import TourCategorySerializer
-from server.tours.serializers.lang_query_serializer import LangQuerySerializer
+from server.lang_query_serializer import LangQuerySerializer
 
 
 class TourCategoryView(APIView):

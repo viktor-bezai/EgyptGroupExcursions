@@ -7,6 +7,8 @@ import {fetchHomePageData} from "@/utils/api";
 import CategoryFilter from "@/components/home/CategoryFilter";
 import TypeFilter from "@/components/home/TypeFilter";
 import Head from 'next/head';
+import NotificationsPanel, {Notification} from "@/components/home/NotificationsPanel";
+import {useNotifications} from "@/context/NotificationsContext";
 
 export interface tourCategory {
   id: number;
@@ -34,26 +36,33 @@ interface HomeProps {
   tours: Tour[];
   tourCategories: tourCategory[];
   tourTypes: tourType[];
+  notifications: Notification[];
   lang: string;
 }
 
 export const getServerSideProps: GetServerSideProps<HomeProps> = async (context) => {
   const lang = context.locale || "ru";
-  const {tours, tourCategories, tourTypes} = await fetchHomePageData(lang);
+  const {tours, tourCategories, tourTypes, notifications} = await fetchHomePageData(lang);
 
   return {
-    props: {tours, tourCategories, tourTypes, lang},
+    props: {tours, tourCategories, tourTypes, notifications, lang},
   };
 };
 
 const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const {tours, tourCategories, tourTypes, lang} = props;
+  const {tours, tourCategories, tourTypes, notifications, lang} = props;
   const {t, i18n} = useTranslation("common");
   const [selectedCategory, setSelectedCategory] = useState<tourCategory | null>(null);
   const [selectedType, setSelectedType] = useState<tourType | null>(null);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const {setNotifications} = useNotifications();
+
+  useEffect(() => {
+    setNotifications(notifications);
+  }, [notifications, setNotifications]);
 
   useEffect(() => {
     i18n.changeLanguage(lang);
@@ -114,14 +123,11 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
         )}
 
         {/* Main Content */}
-        <Grid container spacing={4} justifyContent="center" sx={{px: 2}}>
+        <Grid container justifyContent="center">
           {/* Left Area - Notifications (Hidden on Mobile) */}
           {!isMobile && (
             <Grid item xs={12} md={2}>
-              <Box>
-                <Typography variant="h6">{t("notifications")}</Typography>
-                {/* Notifications content here */}
-              </Box>
+              <NotificationsPanel notifications={notifications}/>
             </Grid>
           )}
 
