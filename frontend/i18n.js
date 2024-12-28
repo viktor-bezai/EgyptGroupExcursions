@@ -2,7 +2,7 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import enCommon from "./public/locales/en/common.json";
 import ruCommon from "./public/locales/ru/common.json";
-import ukrCommon from "./public/locales/ukr/common.json";
+import uaCommon from "./public/locales/ua/common.json";
 
 i18n.use(initReactI18next).init({
   lng: "ru", // Default language
@@ -11,7 +11,7 @@ i18n.use(initReactI18next).init({
   resources: {
     en: { common: enCommon },
     ru: { common: ruCommon },
-    ukr: { common: ukrCommon },
+    ukr: { common: uaCommon },
   },
   interpolation: {
     escapeValue: false, // React already escapes values
