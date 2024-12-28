@@ -10,7 +10,7 @@ const Contacts: React.FC = () => {
 
   return <Box
     sx={{
-      width: "80%",
+      width: "100%",
       mx: "auto",
       py: 8,
       px: 2,

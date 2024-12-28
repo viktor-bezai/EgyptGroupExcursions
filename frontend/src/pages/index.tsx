@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import React, {useEffect, useMemo, useState} from "react";
+import {GetServerSideProps, InferGetServerSidePropsType} from "next";
+import {Box, Grid, Typography, useMediaQuery, useTheme} from "@mui/material";
+import {useTranslation} from "react-i18next";
 import TourCard from "@/components/home/TourCard";
-import { fetchHomePageData } from "@/utils/api";
+import {fetchHomePageData} from "@/utils/api";
 import CategoryFilter from "@/components/home/CategoryFilter";
 import TypeFilter from "@/components/home/TypeFilter";
 
@@ -38,16 +38,16 @@ interface HomeProps {
 
 export const getServerSideProps: GetServerSideProps<HomeProps> = async (context) => {
   const lang = context.locale || "ru";
-  const { tours, tourCategories, tourTypes } = await fetchHomePageData(lang);
+  const {tours, tourCategories, tourTypes} = await fetchHomePageData(lang);
 
   return {
-    props: { tours, tourCategories, tourTypes, lang },
+    props: {tours, tourCategories, tourTypes, lang},
   };
 };
 
 const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { tours, tourCategories, tourTypes, lang } = props;
-  const { t, i18n } = useTranslation("common");
+  const {tours, tourCategories, tourTypes, lang} = props;
+  const {t, i18n} = useTranslation("common");
   const [selectedCategory, setSelectedCategory] = useState<tourCategory | null>(null);
   const [selectedType, setSelectedType] = useState<tourType | null>(null);
 
@@ -75,9 +75,9 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
   return (
     <Box mb={6} position="relative">
       {/* Page Header */}
-      <Box textAlign="center" sx={{ py: 4 }}>
-        <Typography variant="h3" gutterBottom>
-          {t("title")}
+      <Box textAlign="center" sx={{py: {xs: 0, sm: 2}}}>
+        <Typography variant="h3" gutterBottom >
+          {t("available-tours")}
         </Typography>
       </Box>
 
@@ -88,19 +88,27 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
             tourCategories={tourCategories}
             selectedCategory={selectedCategory}
             onSelectCategory={setSelectedCategory}
-            t={t}
           />
           <TypeFilter
             tourTypes={tourTypes}
             selectedType={selectedType}
             onSelectType={setSelectedType}
-            t={t}
+          />
+        </Box>
+      )}
+
+      {!isMobile && (
+        <Box mb={4} display="flex" flexDirection="column" gap={2}>
+          <CategoryFilter
+            tourCategories={tourCategories}
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
           />
         </Box>
       )}
 
       {/* Main Content */}
-      <Grid container spacing={4} justifyContent="center" sx={{ px: 2 }}>
+      <Grid container spacing={4} justifyContent="center" sx={{px: 2}}>
         {/* Left Area - Notifications (Hidden on Mobile) */}
         {!isMobile && (
           <Grid item xs={12} md={2}>
@@ -117,7 +125,7 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
             {filteredTours.length > 0 ? (
               filteredTours.map((tour) => (
                 <Grid item xs={12} sm={6} md={4} key={tour.id}>
-                  <TourCard tour={tour} />
+                  <TourCard tour={tour}/>
                 </Grid>
               ))
             ) : (
@@ -125,7 +133,7 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
                 variant="h6"
                 color="text.secondary"
                 textAlign="center"
-                sx={{ mt: 4 }}
+                sx={{mt: 4}}
               >
                 {t("no-tours")}
               </Typography>
@@ -140,7 +148,6 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
               tourTypes={tourTypes}
               selectedType={selectedType}
               onSelectType={setSelectedType}
-              t={t}
             />
           </Grid>
         )}
