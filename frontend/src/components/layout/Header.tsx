@@ -82,10 +82,31 @@ const Header: React.FC = () => {
           >
             {navItems.map((item) => (
               <Link key={item.label} href={item.href} passHref>
-                <Button color="secondary">
-                  <Typography variant="h6">{t(item.label)}</Typography>
+                <Button
+                  color="inherit"
+                  sx={{
+                    px: 3, // Add horizontal padding for better spacing
+                    py: 1, // Add vertical padding for better clickability
+                    borderRadius: 2, // Smooth edges
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.1)", // Subtle hover effect
+                    },
+                  }}
+                >
+                  <Typography
+                    variant="subtitle1" // A slightly smaller font size
+                    sx={{
+                      fontWeight: "bold", // Make it bold for emphasis
+                      textTransform: "uppercase", // Ensure uniform appearance
+                      letterSpacing: 1, // Add spacing between letters for better readability
+                      color: "primary.contrastText", // Use the theme's secondary color
+                    }}
+                  >
+                    {t(item.label)}
+                  </Typography>
                 </Button>
               </Link>
+
             ))}
           </Box>
         )}
