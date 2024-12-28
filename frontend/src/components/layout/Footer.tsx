@@ -68,7 +68,7 @@ const Footer: React.FC = () => {
           }}
         >
           <Typography variant="body2">
-            © {new Date().getFullYear()} Egypt Group Excursions. All rights reserved.
+            © {new Date().getFullYear()} Mystical Egypt Travels. All rights reserved.
           </Typography>
         </Box>
       </Container>

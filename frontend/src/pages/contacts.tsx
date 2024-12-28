@@ -12,7 +12,7 @@ const Contacts: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Contacts | Egypt Tours</title>
+        <title>Contacts | Mystical Egypt Travels</title>
       </Head>
 
       <Box

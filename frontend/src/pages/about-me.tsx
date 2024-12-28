@@ -46,7 +46,7 @@ const AboutMe = (props: AboutMeProps) => {
   return (
     <>
       <Head>
-        <title>About Me | Egypt Tours</title>
+        <title>About Me | Mystical Egypt Travels</title>
       </Head>
 
       <Box sx={{p: 4, width: "80%", mx: "auto"}}>

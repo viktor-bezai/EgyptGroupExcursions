@@ -68,7 +68,7 @@ const Header: React.FC = () => {
 
   const languages = [
     {code: "RU", label: "Русский"},
-    {code: "UKR", label: "Українська"},
+    {code: "UA", label: "Українська"},
     {code: "EN", label: "English"},
   ];
 

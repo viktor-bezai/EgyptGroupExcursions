@@ -22,23 +22,36 @@ function MyApp({Component, pageProps}: AppProps) {
     <>
       <Head>
         <title>Egypt Tours</title>
-        <meta name="description" content="Welcome to Egypt Tours Website"/>
-        {/* Add favicon */}
+        <meta name="description" content="Welcome to Mystical Egypt Travels Website"/>
         <link rel="icon" href="/icons/favicon.ico"/>
-        {/*Add colored Head to mobile browsers */}
+        <link rel="canonical" href="https://mystical-egypt-travels.online/"/>
+        <meta charSet="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta name="theme-color" content={theme.palette.primary.main}/>
+
         {/* Open Graph meta tags */}
-        <meta property="og:title" content="Home | Egypt Tours"/>
-        <meta property="og:description" content="Welcome to Egypt Tours Website"/>
-        <meta property="og:image" content="/images/thumbnail.jpg"/>
-        <meta property="og:url" content="http://64.227.119.29/"/>
+        <meta property="og:title" content="Home | Mystical Egypt Travels"/>
+        <meta property="og:description" content="Welcome to Mystical Egypt Travels Website"/>
+        <meta property="og:image" content="https://mystical-egypt-travels.online/images/thumbnail.jpg"/>
+        <meta property="og:image:width" content="1200"/>
+        <meta property="og:image:height" content="630"/>
+        <meta property="og:url" content="https://mystical-egypt-travels.online/"/>
         <meta property="og:type" content="website"/>
+        <meta property="og:locale" content="ru_RU"/>
+        <meta property="og:locale:alternate" content="ua_UA"/>
+        <meta property="og:locale:alternate" content="en_US"/>
+        <meta property="og:site_name" content="Mystical Egypt Travels"/>
 
         {/* Twitter meta tags */}
         <meta name="twitter:card" content="summary_large_image"/>
-        <meta name="twitter:title" content="Home | Egypt Tours"/>
-        <meta name="twitter:description" content="Welcome to Egypt Tours Website"/>
-        <meta name="twitter:image" content="/images/thumbnail.jpg"/>
+        <meta name="twitter:title" content="Home | Mystical Egypt Travels"/>
+        <meta name="twitter:description" content="Welcome to Mystical Egypt Travels Website"/>
+        <meta name="twitter:image" content="https://mystical-egypt-travels.online/images/thumbnail.jpg"/>
+
+        {/* Favicons */}
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png"/>
+        <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png"/>
+        <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png"/>
       </Head>
       <I18nextProvider i18n={i18n}>
         <ThemeProvider theme={theme}>

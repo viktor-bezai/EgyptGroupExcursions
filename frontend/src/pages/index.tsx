@@ -85,7 +85,7 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
   return (
     <>
       <Head>
-        <title>Home | Egypt Tours</title>
+        <title>Home | Mystical Egypt Travels</title>
       </Head>
 
       <Box mb={6} position="relative">
