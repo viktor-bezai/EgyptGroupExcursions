@@ -31,10 +31,10 @@ SECRET_KEY = 'django-insecure-!o3b1(l26g2siw&-^zvhk#c06+w3*x-^@sh1jjmgffkfqlv9wb
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "64.227.119.29",
     "localhost",
     "127.0.0.1",
     "mystical-egypt-travels.online",
+    "www.mystical-egypt-travels.online",
 ]
 
 # Application definition
@@ -150,6 +150,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://mystical-egypt-travels.online",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://mystical-egypt-travels.online",
+    "https://www.mystical-egypt-travels.online"
 ]
 
 MEDIA_URL = '/media/'
