@@ -57,3 +57,4 @@ yarn-error.log*
 /frontend/cookies.json
 /connection.txt
 /backend/django_debug.log
+/backend/debug.log

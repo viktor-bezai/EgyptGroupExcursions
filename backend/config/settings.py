@@ -10,8 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
 import os
+import sys
+from pathlib import Path
+
 from django.utils.text import slugify
 from dotenv import load_dotenv
 
@@ -198,15 +200,21 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'django_debug.log',
+            'filename': 'debug.log',
+            'formatter': 'verbose',
+            'encoding': 'utf-8',
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s [%(levelname)s] %(message)s',
         },
     },
     'loggers': {
-        'django': {
+        'django.db.backends': {
             'handlers': ['file'],
             'level': 'DEBUG',
-            'propagate': True,
+            'propagate': False,
         },
     },
 }
-
