@@ -20,6 +20,7 @@
   "contact-form": "Форма зворотного зв'язку",
   "first-name": "Ім'я",
   "last-name": "Прізвище",
-  "email-addredd": "Електронна адреса",
-  "message": "Повідомлення"
+  "email-address": "Електронна адреса",
+  "message": "Повідомлення",
+  "notifications": "Повідомлення"
 }

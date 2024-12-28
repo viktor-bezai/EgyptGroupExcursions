@@ -20,7 +20,8 @@
   "contact-form": "Форма обратной связи",
   "first-name": "Имя",
   "last-name": "Фамилия",
-  "email-addredd": "Адрес электронной почты",
+  "email-address": "Адрес электронной почты",
   "message": "Сообщение",
-  "follow-me": "Подпишитесь на меня"
+  "follow-me": "Подпишитесь на меня",
+  "notifications": "Уведомления"
 }
