@@ -13,7 +13,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = (props) => {
   const { tourCategories, selectedCategory, onSelectCategory } = props
   const {t} = useTranslation("common");
 
-  return <Box sx={{mb: {xs: 1, sm: 4}, textAlign: "center"}}>
+  return <Box sx={{mb: {xs: 1, md: 4}, textAlign: "center"}}>
     <Button
       key={"all"}
       onClick={() => onSelectCategory(null)}

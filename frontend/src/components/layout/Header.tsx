@@ -16,6 +16,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import {useTranslation} from "react-i18next";
 import {useRouter} from "next/router";
 import HeaderDrawer from "@/components/layout/HeaderDrawer";
+import Image from "next/image";
 
 const Header: React.FC = () => {
   const {t, i18n} = useTranslation("common");
@@ -64,10 +65,27 @@ const Header: React.FC = () => {
   return (
     <AppBar position="static">
       <Toolbar>
-        {/* Logo or Title */}
-        <Typography variant="h6" component="div" sx={{flexGrow: isMobile ? 1 : 0}}>
-          {t("egypt-excursions")}
-        </Typography>
+         {/* Logo */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexGrow: isMobile ? 1 : 0,
+          }}
+        >
+          <Link href="/" passHref>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Image
+                src="/icons/logo.png"
+                alt="Mystical Egypt Travels"
+                width={50}
+                height={50}
+                priority
+                style={{ cursor: "pointer" }}
+              />
+            </Box>
+          </Link>
+        </Box>
 
         {/* Navigation for Desktop */}
         {!isMobile && (
@@ -85,7 +103,7 @@ const Header: React.FC = () => {
                 <Button
                   color="inherit"
                   sx={{
-                    px: 3, // Add horizontal padding for better spacing
+                    px: {sm: 1, lg: 3, xl: 4}, // Add horizontal padding for better spacing
                     py: 1, // Add vertical padding for better clickability
                     borderRadius: 2, // Smooth edges
                     "&:hover": {
@@ -94,8 +112,8 @@ const Header: React.FC = () => {
                   }}
                 >
                   <Typography
-                    variant="subtitle1" // A slightly smaller font size
                     sx={{
+                      fontSize: { xs: "0.8rem", md: "1rem" },
                       fontWeight: "bold", // Make it bold for emphasis
                       textTransform: "uppercase", // Ensure uniform appearance
                       letterSpacing: 1, // Add spacing between letters for better readability

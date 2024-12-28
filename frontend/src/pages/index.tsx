@@ -53,7 +53,7 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
   const [selectedType, setSelectedType] = useState<tourType | null>(null);
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     i18n.changeLanguage(lang);
