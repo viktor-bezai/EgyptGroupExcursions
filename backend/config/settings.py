@@ -34,6 +34,7 @@ ALLOWED_HOSTS = [
     "64.227.119.29",
     "localhost",
     "127.0.0.1",
+    "mystical-egypt-travels.online",
 ]
 
 # Application definition
@@ -148,7 +149,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://64.227.119.29",
+    "https://mystical-egypt-travels.online",
 ]
 
 MEDIA_URL = '/media/'
