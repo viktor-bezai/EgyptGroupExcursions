@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {GetServerSideProps, InferGetServerSidePropsType} from "next";
-import {Box, Grid, Typography} from "@mui/material";
+import {Box, Grid, Typography, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import TourCard from "@/components/home/TourCard";
 import {fetchHomePageData} from "@/utils/api";
@@ -46,12 +46,14 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async (context)
 };
 
 const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { tours, tourCategories, tourTypes, lang } = props
+  const {tours, tourCategories, tourTypes, lang} = props;
   const {t, i18n} = useTranslation("common");
   const [selectedCategory, setSelectedCategory] = useState<tourCategory | null>(null);
   const [selectedType, setSelectedType] = useState<tourType | null>(null);
 
-  // Ensure translations are consistent
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   useEffect(() => {
     i18n.changeLanguage(lang);
   }, [lang, i18n]);
@@ -59,12 +61,10 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
   const filteredTours = useMemo(() => {
     let filtered = tours;
 
-    // Filter by selected category
     if (selectedCategory) {
       filtered = filtered.filter((tour) => tour.category.id === selectedCategory.id);
     }
 
-    // Further filter by selected type
     if (selectedType) {
       filtered = filtered.filter((tour) => tour.types.some((type) => type.id === selectedType.id));
     }
@@ -75,57 +75,52 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
   return (
     <Box mb={6} position="relative">
       {/* Page Header */}
-      <Box textAlign="center" sx={{py: 4}}>
-        <Typography variant="h3" gutterBottom>
-          {t("title")}
+      <Box textAlign="center" sx={{py: {xs: 0, sm: 2}}}>
+        <Typography variant="h3" gutterBottom >
+          {t("available-tours")}
         </Typography>
       </Box>
 
-      {/* Category Filter on Top */}
-      <Box mb={4}>
-        <CategoryFilter
-          tourCategories={tourCategories}
-          selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
-          t={t}
-        />
-      </Box>
+      {/* Filters for Mobile */}
+      {isMobile && (
+        <Box mb={4} display="flex" flexDirection="column" gap={2}>
+          <CategoryFilter
+            tourCategories={tourCategories}
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
+          />
+          <TypeFilter
+            tourTypes={tourTypes}
+            selectedType={selectedType}
+            onSelectType={setSelectedType}
+          />
+        </Box>
+      )}
+
+      {!isMobile && (
+        <Box mb={4} display="flex" flexDirection="column" gap={2}>
+          <CategoryFilter
+            tourCategories={tourCategories}
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
+          />
+        </Box>
+      )}
 
       {/* Main Content */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          width: "100%",
-          maxWidth: "1200px",
-          mx: "auto",
-          px: 2,
-        }}
-      >
-        {/* Left Are - Notifications */}
-        <Box
-          sx={{
-            width: "15%",
-            flexShrink: 0,
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-          }}
-        >
-          {/* Здесь будет содержимое уведомлений */}
-          <Typography variant="h6">Уведомления</Typography>
-        </Box>
+      <Grid container spacing={4} justifyContent="center" sx={{px: 2}}>
+        {/* Left Area - Notifications (Hidden on Mobile) */}
+        {!isMobile && (
+          <Grid item xs={12} md={2}>
+            <Box>
+              <Typography variant="h6">{t("notifications")}</Typography>
+              {/* Notifications content here */}
+            </Box>
+          </Grid>
+        )}
 
-        {/* Certer Area - Tours */}
-        <Box
-          sx={{
-            width: "70%",
-            display: "flex",
-            flexDirection: "column",
-            gap: 4,
-          }}
-        >
+        {/* Center Area - Tours */}
+        <Grid item xs={12} md={8}>
           <Grid container spacing={4} justifyContent="center">
             {filteredTours.length > 0 ? (
               filteredTours.map((tour) => (
@@ -144,31 +139,21 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
               </Typography>
             )}
           </Grid>
-        </Box>
+        </Grid>
 
-        {/* Right Area - TypeFilter */}
-        <Box
-          sx={{
-            width: "15%",
-            flexShrink: 0,
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            paddingLeft: 2,
-          }}
-        >
-          <TypeFilter
-            tourTypes={tourTypes}
-            selectedType={selectedType}
-            onSelectType={setSelectedType}
-            t={t}
-          />
-        </Box>
-      </Box>
-
+        {/* Right Area - TypeFilter (Hidden on Mobile) */}
+        {!isMobile && (
+          <Grid item xs={12} md={2}>
+            <TypeFilter
+              tourTypes={tourTypes}
+              selectedType={selectedType}
+              onSelectType={setSelectedType}
+            />
+          </Grid>
+        )}
+      </Grid>
     </Box>
   );
-
 };
 
 export default Home;
