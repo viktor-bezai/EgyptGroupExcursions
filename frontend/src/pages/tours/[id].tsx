@@ -21,7 +21,7 @@ export interface Tour {
 }
 
 // Description Renderer
-const DescriptionRenderer: React.FC<{ description: string }> = ({description}) => {
+export const DescriptionRenderer: React.FC<{ description: string }> = ({description}) => {
   const theme = useTheme();
 
   // Function to process the content

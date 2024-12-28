@@ -7,4 +7,6 @@ urlpatterns = [
     path('tours/', include('server.tours.urls')),
     # SOCIAL MEDIA POSTS
     path('social-media-posts/', include('server.social_media_posts.urls')),
+    # NOTIFICATIONS
+    path('notifications/', include('server.notifications.urls')),
 ]
