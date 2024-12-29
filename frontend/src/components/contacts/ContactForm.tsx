@@ -41,7 +41,7 @@ const ContactForm: React.FC = () => {
     setErrors((prev) => ({
       ...prev,
       [name]: "",
-    })); // Clear the error when user starts typing
+    }));
   };
 
   const handlePreferredContactChange = (event: SelectChangeEvent<string>) => {
@@ -52,7 +52,7 @@ const ContactForm: React.FC = () => {
     setErrors((prev) => ({
       ...prev,
       preferredContact: "",
-    })); // Clear the error when user changes selection
+    }));
   };
 
   const validateForm = () => {
@@ -84,7 +84,6 @@ const ContactForm: React.FC = () => {
 
     setErrors(newErrors);
 
-    // Check if there are any errors
     return Object.values(newErrors).every((error) => !error);
   };
 
@@ -129,7 +128,7 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ padding: 3 }}>
+    <Paper elevation={3} sx={{ padding: 3, maxWidth: 900, mx: "auto" }}>
       <Typography variant="h5" sx={{ fontWeight: 500, mb: 2 }}>
         {t("contact-form")}
       </Typography>
@@ -146,6 +145,7 @@ const ContactForm: React.FC = () => {
               onChange={handleInputChange}
               error={!!errors.firstName}
               helperText={errors.firstName}
+              sx={{ width: "100%" }}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -159,6 +159,7 @@ const ContactForm: React.FC = () => {
               onChange={handleInputChange}
               error={!!errors.lastName}
               helperText={errors.lastName}
+              sx={{ width: "100%" }}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -171,6 +172,7 @@ const ContactForm: React.FC = () => {
               variant="outlined"
               required
               error={!!errors.preferredContact}
+              sx={{ width: "100%" }}
             >
               <MenuItem value="" disabled>
                 {t("select-contact-type")}
@@ -199,6 +201,7 @@ const ContactForm: React.FC = () => {
               required
               error={!!errors.contactLink}
               helperText={errors.contactLink}
+              sx={{ width: "100%" }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -214,12 +217,13 @@ const ContactForm: React.FC = () => {
               onChange={handleInputChange}
               error={!!errors.message}
               helperText={errors.message}
+              sx={{ width: "100%" }}
             />
           </Grid>
         </Grid>
         <Box sx={{ mt: 3, textAlign: "center" }}>
-          {error && <Typography color="error">{error}</Typography>}
-          {success && <Typography color="success.main">{success}</Typography>}
+          {error && <Typography mb={1} color="error">{error}</Typography>}
+          {success && <Typography mb={1} color="success.main">{success}</Typography>}
           <Button variant="contained" color="primary" size="large" type="submit" disabled={isSubmitting}>
             {isSubmitting ? t("sending") : t("submit")}
           </Button>
