@@ -33,7 +33,7 @@ class TourAdmin(admin.ModelAdmin):
         }),
         ("Tour Details", {
             "fields": (
-                "image", "title_ru", "title_ua", "title_en",
+                "image", "slug", "title_ru", "title_ua", "title_en",
                 "category", "types",
                 "description_ru", "description_ua", "description_en",
                 "cost_from", "cost_to", "is_available",
