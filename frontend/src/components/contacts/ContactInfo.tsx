@@ -1,46 +1,58 @@
 import React from "react";
-import { Box, Divider, IconButton, Paper, Typography } from "@mui/material";
+import {Box, Divider, IconButton, Paper, Typography} from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { Instagram } from "@mui/icons-material";
-import { TikTokIcon } from "@/components/common/TikTokIcon";
-import { useTranslation } from "react-i18next";
+import {Instagram} from "@mui/icons-material";
+import {TikTokIcon} from "@/components/common/TikTokIcon";
+import TelegramIcon from "@mui/icons-material/Telegram";
+import {useTranslation} from "react-i18next";
+
 
 const ContactInfo: React.FC = () => {
-  const { t } = useTranslation("common");
+  const {t} = useTranslation("common");
 
   // Contact details
   const contactDetails = [
-    { icon: <EmailIcon />, text: "contact@example.com" },
-    { icon: <PhoneIcon />, text: "+1 (123) 456-7890" },
-    { icon: <LocationOnIcon />, text: "123 Main Street, Toronto, Canada" },
+    {icon: <EmailIcon/>, text: "annabella@ukr.net"},
+    {icon: <PhoneIcon/>, text: "+38 (067) 256-8488"},
   ];
 
   // Social links
   const socialLinks = [
     {
-      icon: <Instagram />,
+      icon: <Instagram/>,
       href: "https://www.instagram.com/anna_egypt_/",
     },
     {
-      icon: <TikTokIcon />,
+      icon: <TikTokIcon/>,
       href: "https://www.tiktok.com/@assis_travel",
+    },
+    {
+      icon: <TelegramIcon/>,
+      href: "https://t.me/nino_nino_10",
+    },
+    {
+      icon: <img src={"/icons/whatsapp.svg"} alt="Whatsupp" style={{width: 25, height: 25}}/>,
+      href: "https://wa.me/380672568488",
+    },
+    {
+      icon: <img src={"/icons/viber.svg"} alt="Viber" style={{width: 19, height: 19}}/>,
+      href: "viber://chat?number=+380672568488",
     },
   ];
 
   return (
-    <Paper elevation={3} sx={{ padding: 3, mb: 4 }}>
-      <Typography variant="h5" sx={{ fontWeight: 500, mb: 2 }}>
+    <Paper elevation={3} sx={{padding: 3, mb: 4}}>
+      <Typography variant="h5" sx={{fontWeight: 500, mb: 2}}>
         {t("contact-information")}
       </Typography>
-      <Divider sx={{ mb: 2 }} />
+      <Divider sx={{mb: 2}}/>
 
       {/* Contact Details */}
       {contactDetails.map((detail, index) => (
         <Box
           key={index}
-          sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
+          sx={{display: "flex", alignItems: "center", gap: 1, mb: 1}}
         >
           {detail.icon}
           <Typography variant="body1">{detail.text}</Typography>
@@ -48,7 +60,7 @@ const ContactInfo: React.FC = () => {
       ))}
 
       {/* Social Links */}
-      <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
+      <Box sx={{display: "flex", gap: 1, mt: 2}}>
         {socialLinks.map((link, index) => (
           <IconButton
             key={index}

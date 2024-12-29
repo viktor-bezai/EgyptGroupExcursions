@@ -23,5 +23,7 @@
   "email-addredd": "Email Address",
   "message": "Message",
   "follow-me": "Follow Me",
-  "notifications": "Notifications"
+  "notifications": "Notifications",
+  "select-contact-type": "Select type of contact",
+  "your-contact": "Your contact"
 }
