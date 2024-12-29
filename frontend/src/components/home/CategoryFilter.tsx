@@ -1,6 +1,6 @@
 import React from "react";
 import {Box, Button, Typography } from "@mui/material";
-import {tourCategory} from "@/pages";
+import {tourCategory} from "@/pages/tours";
 import {useTranslation} from "react-i18next";
 
 interface CategoryFilterProps {
