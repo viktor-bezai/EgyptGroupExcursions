@@ -1,18 +1,25 @@
-import React, {createContext, useContext, useState, ReactNode} from "react";
-import {Notification} from "@/components/home/NotificationsPanel";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
-interface NotificationsContextProps {
+export interface Notification {
+  id: number;
+  title: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface NotificationsContextType {
   notifications: Notification[];
   setNotifications: (notifications: Notification[]) => void;
 }
 
-const NotificationsContext = createContext<NotificationsContextProps | undefined>(undefined);
+const NotificationsContext = createContext<NotificationsContextType | undefined>(undefined);
 
-export const NotificationsProvider: React.FC<{children: ReactNode}> = ({children}) => {
+export const NotificationsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   return (
-    <NotificationsContext.Provider value={{notifications, setNotifications}}>
+    <NotificationsContext.Provider value={{ notifications, setNotifications }}>
       {children}
     </NotificationsContext.Provider>
   );

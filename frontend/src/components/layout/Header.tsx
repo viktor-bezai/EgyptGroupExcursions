@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import Link from "next/link";
 import {
   AppBar,
-  Badge,
   Box,
   Button,
   IconButton,
@@ -14,15 +13,15 @@ import {
   useTheme,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import {useTranslation} from "react-i18next";
 import {useRouter} from "next/router";
 import HeaderDrawer from "@/components/layout/HeaderDrawer";
 import Image from "next/image";
+import HeaderNotifications from "@/components/layout/HeaderNotifications";
 import {useNotifications} from "@/context/NotificationsContext";
 
 const Header: React.FC = () => {
-  const {notifications} = useNotifications();
+  const { notifications } = useNotifications();
   const {t} = useTranslation("common");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -140,43 +139,12 @@ const Header: React.FC = () => {
 
         {/* Notifications */}
         {isMobile && (
-          <Box sx={{display: "flex", alignItems: "center", gap: 1, pr: 1}}>
-            <IconButton color="inherit" onClick={handleNotificationsClick}>
-              <Badge badgeContent={notifications.length} color="secondary">
-                <NotificationsIcon/>
-              </Badge>
-            </IconButton>
-            <Menu
-              anchorEl={notificationsAnchor}
-              open={Boolean(notificationsAnchor)}
-              onClose={handleNotificationsClose}
-              sx={{"& .MuiPaper-root": {minWidth: 300, maxHeight: 400, overflowY: "auto"}}}
-            >
-              {notifications.length > 0 ? (
-                notifications.map((notification) => (
-                  <MenuItem key={notification.id} onClick={handleNotificationsClose}>
-                    <Box>
-                      <Typography variant="subtitle2" fontWeight="bold">
-                        {notification.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {notification.description}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {new Date(notification.created_at).toLocaleString()}
-                      </Typography>
-                    </Box>
-                  </MenuItem>
-                ))
-              ) : (
-                <MenuItem onClick={handleNotificationsClose}>
-                  <Typography variant="body2" color="text.secondary">
-                    No notifications
-                  </Typography>
-                </MenuItem>
-              )}
-            </Menu>
-          </Box>
+          <HeaderNotifications
+            notifications={notifications}
+            notificationsAnchor={notificationsAnchor}
+            handleNotificationsClick={handleNotificationsClick}
+            handleNotificationsClose={handleNotificationsClose}
+          />
         )}
 
         {/* Language Selector */}
