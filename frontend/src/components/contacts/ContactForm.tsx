@@ -14,15 +14,118 @@ import { useTranslation } from "react-i18next";
 
 const ContactForm: React.FC = () => {
   const { t } = useTranslation("common");
-  const [preferredContact, setPreferredContact] = useState("");
-  const [contactLink, setContactLink] = useState("");
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    preferredContact: "",
+    contactLink: "",
+    message: "",
+  });
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    preferredContact: "",
+    contactLink: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const handlePreferredContactChange = (event: SelectChangeEvent<string>) => {
-    setPreferredContact(event.target.value);
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    })); // Clear the error when user starts typing
   };
 
-  const handleContactLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setContactLink(event.target.value);
+  const handlePreferredContactChange = (event: SelectChangeEvent<string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      preferredContact: event.target.value,
+    }));
+    setErrors((prev) => ({
+      ...prev,
+      preferredContact: "",
+    })); // Clear the error when user changes selection
+  };
+
+  const validateForm = () => {
+    const newErrors: typeof errors = {
+      firstName: "",
+      lastName: "",
+      preferredContact: "",
+      contactLink: "",
+      message: "",
+    };
+
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = t("first-name-required");
+    }
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = t("last-name-required");
+    }
+    if (!formData.preferredContact) {
+      newErrors.preferredContact = t("contact-type-required");
+    }
+    if (formData.preferredContact === "email" && !/^\S+@\S+\.\S+$/.test(formData.contactLink)) {
+      newErrors.contactLink = t("valid-email-required");
+    } else if (!formData.contactLink.trim()) {
+      newErrors.contactLink = t("contact-link-required");
+    }
+    if (!formData.message.trim()) {
+      newErrors.message = t("message-required");
+    }
+
+    setErrors(newErrors);
+
+    // Check if there are any errors
+    return Object.values(newErrors).every((error) => !error);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to send message.");
+      }
+
+      setSuccess(t("message-sent-successfully"));
+      setFormData({
+        firstName: "",
+        lastName: "",
+        preferredContact: "",
+        contactLink: "",
+        message: "",
+      });
+    } catch {
+      setError(t("message-send-error"));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -30,33 +133,44 @@ const ContactForm: React.FC = () => {
       <Typography variant="h5" sx={{ fontWeight: 500, mb: 2 }}>
         {t("contact-form")}
       </Typography>
-      <form noValidate>
+      <form onSubmit={handleSubmit} noValidate>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <TextField
+              name="firstName"
               label={t("first-name")}
               fullWidth
               variant="outlined"
               required
+              value={formData.firstName}
+              onChange={handleInputChange}
+              error={!!errors.firstName}
+              helperText={errors.firstName}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
+              name="lastName"
               label={t("last-name")}
               fullWidth
               variant="outlined"
               required
+              value={formData.lastName}
+              onChange={handleInputChange}
+              error={!!errors.lastName}
+              helperText={errors.lastName}
             />
           </Grid>
-
           <Grid item xs={12} sm={6}>
             <Select
-              value={preferredContact}
+              name="preferredContact"
+              value={formData.preferredContact}
               onChange={handlePreferredContactChange}
               displayEmpty
               fullWidth
               variant="outlined"
               required
+              error={!!errors.preferredContact}
             >
               <MenuItem value="" disabled>
                 {t("select-contact-type")}
@@ -68,31 +182,46 @@ const ContactForm: React.FC = () => {
               <MenuItem value="instagram">Instagram</MenuItem>
               <MenuItem value="tiktok">TikTok</MenuItem>
             </Select>
+            {errors.preferredContact && (
+              <Typography color="error" variant="caption">
+                {errors.preferredContact}
+              </Typography>
+            )}
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
+              name="contactLink"
               label={t("your-contact")}
               fullWidth
               variant="outlined"
-              value={contactLink}
-              onChange={handleContactLinkChange}
+              value={formData.contactLink}
+              onChange={handleInputChange}
               required
+              error={!!errors.contactLink}
+              helperText={errors.contactLink}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
+              name="message"
               label={t("message")}
               fullWidth
               variant="outlined"
               required
               multiline
               rows={4}
+              value={formData.message}
+              onChange={handleInputChange}
+              error={!!errors.message}
+              helperText={errors.message}
             />
           </Grid>
         </Grid>
         <Box sx={{ mt: 3, textAlign: "center" }}>
-          <Button variant="contained" color="primary" size="large">
-            {t("submit")}
+          {error && <Typography color="error">{error}</Typography>}
+          {success && <Typography color="success.main">{success}</Typography>}
+          <Button variant="contained" color="primary" size="large" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? t("sending") : t("submit")}
           </Button>
         </Box>
       </form>
