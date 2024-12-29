@@ -1,6 +1,6 @@
 import React from "react";
 import {Box, Button, Typography} from "@mui/material";
-import {tourType} from "@/pages";
+import {tourType} from "@/pages/tours";
 import {useTranslation} from "react-i18next";
 
 interface TypeFilterProps {
