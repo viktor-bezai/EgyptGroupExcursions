@@ -2,26 +2,24 @@ export const fetchHomePageData = async (lang: string) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   try {
-    const [toursRes, categoriesRes, typesRes, notificationsRes] = await Promise.all([
+    const [toursRes, categoriesRes, typesRes] = await Promise.all([
       fetch(`${apiUrl}/tours/?lang=${lang}`),
       fetch(`${apiUrl}/tours/categories/?lang=${lang}`),
       fetch(`${apiUrl}/tours/types/?lang=${lang}`),
-      fetch(`${apiUrl}/notifications/?lang=${lang}`),
     ]);
 
-    const [tours, tourCategories, tourTypes, notifications] = await Promise.all(
-      [toursRes.json(), categoriesRes.json(), typesRes.json(), notificationsRes.json()]
+    const [tours, tourCategories, tourTypes] = await Promise.all(
+      [toursRes.json(), categoriesRes.json(), typesRes.json()]
     );
 
     return {
       tours: Array.isArray(tours) ? tours : [],
       tourCategories: Array.isArray(tourCategories) ? tourCategories : [],
       tourTypes: Array.isArray(tourTypes) ? tourTypes : [],
-      notifications: Array.isArray(notifications) ? notifications : [],
     };
   } catch (error) {
-    console.error("Error fetching tours and categories:", error);
-    return { tours: [], tourCategories: [], tourTypes: [], notifications: [] };
+    console.error("Error fetching tours, tourCategories and tourTypes:", error);
+    return { tours: [], tourCategories: [], tourTypes: []};
   }
 };
 
@@ -59,4 +57,23 @@ export const fetchAboutMePageData = async () => {
   }
 };
 
+export const fetchNotificationsData = async (lang: string) => {
+  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+  try {
+    const [notificationsRes] = await Promise.all([
+      fetch(`${apiUrl}/notifications/?lang=${lang}`),
+    ]);
+
+    const [notifications] = await Promise.all(
+      [notificationsRes.json()]
+    );
+
+    return {
+      notifications: Array.isArray(notifications) ? notifications : [],
+    };
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    return { notifications: [] };
+  }
+};
