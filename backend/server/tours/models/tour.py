@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models import Q
+from django.utils.text import slugify
 from django_ckeditor_5.fields import CKEditor5Field
+
 from server.tours.models.tour_category import TourCategory
 from server.tours.models.tour_type import TourType
 
@@ -10,6 +12,7 @@ class Tour(models.Model):
     title_ru = models.CharField(max_length=100, verbose_name="Название (Русский)")
     title_ua = models.CharField(max_length=100, verbose_name="Назва (Украiнська)")
     title_en = models.CharField(max_length=100, verbose_name="Title (English)")
+    slug = models.SlugField(max_length=120, unique=True, blank=True)
     category = models.ForeignKey(TourCategory, on_delete=models.CASCADE, related_name='tours')
     types = models.ManyToManyField(TourType, related_name='tours')
     description_ru = CKEditor5Field(verbose_name="Описание (Русский)")
@@ -26,8 +29,12 @@ class Tour(models.Model):
     def __str__(self):
         return self.title_ru
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title_en)
+        super().save(*args, **kwargs)
+
     def description_image_upload_to(self, filename):
-        # Use the tour ID to create a subdirectory
         return f'tours/{self.id}/{filename}'
 
     def get_title(self, lang):

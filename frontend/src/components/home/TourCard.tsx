@@ -4,7 +4,7 @@ import Image from "next/image";
 import {useRouter} from "next/router";
 import {useTranslation} from "react-i18next";
 import {truncateText} from "@/utils/textUtils";
-import {Tour} from "@/pages";
+import {Tour} from "@/pages/tours";
 
 const TourCard: React.FC<{ tour: Tour }> = ({tour}) => {
   const mediaUrl = process.env.NEXT_PUBLIC_MEDIA_URL || "";
@@ -12,8 +12,8 @@ const TourCard: React.FC<{ tour: Tour }> = ({tour}) => {
   const router = useRouter();
 
   const handleDetailsClick = useCallback(() => {
-    router.push(`/tours/${tour.id}`);
-  }, [router, tour.id]);
+    router.push(`/tours/${tour.slug}`);
+  }, [router, tour.slug]);
 
   return (
     <Card

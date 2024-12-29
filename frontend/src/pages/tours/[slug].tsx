@@ -4,21 +4,7 @@ import {Box, Button, Typography} from "@mui/material";
 import Image from "next/image";
 import {useTranslation} from "react-i18next";
 import {DescriptionRenderer} from "@/utils/textUtils";
-
-// Interfaces
-export interface Tour {
-  id: number;
-  image: string;
-  title: string;
-  description: string;
-  cost_from: number;
-  cost_to: number;
-  is_available: boolean;
-  category: {
-    id: number;
-    name: string;
-  };
-}
+import {Tour} from "@/pages/tours/index";
 
 interface TourDetailProps {
   tour: Tour;
@@ -26,12 +12,12 @@ interface TourDetailProps {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({params, locale}) => {
-  const {id} = params!;
+  const {slug} = params!;
   const lang = locale || "ru";
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/tours/${id}/?lang=${lang}`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/tours/slug/${slug}/?lang=${lang}`
     );
 
     if (!response.ok) {
@@ -58,7 +44,7 @@ const TourDetail = (props: TourDetailProps) => {
   }, [lang, i18n]);
 
   return (
-    <Box sx={{maxWidth: 800, mx: "auto", my: 4, p: 2}}>
+    <Box sx={{maxWidth: 800, mx: "auto", my: {xs: 1, md: 4}, p: {xs: 1, md: 2}}}>
       {/* Image Section */}
       <Box position="relative" sx={{width: "100%", height: 400, mb: 4}}>
         <Image
