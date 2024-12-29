@@ -3,7 +3,7 @@ from django.db import models
 
 class TourCategory(models.Model):
     name_ru = models.CharField(max_length=200, verbose_name="Название (Русский)")
-    name_ukr = models.CharField(max_length=200, verbose_name="Назва (Украiнська)")
+    name_ua = models.CharField(max_length=200, verbose_name="Назва (Украiнська)")
     name_en = models.CharField(max_length=200, verbose_name="Name (English)")
 
     class Meta:

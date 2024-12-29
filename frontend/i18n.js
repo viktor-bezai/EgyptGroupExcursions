@@ -11,7 +11,7 @@ i18n.use(initReactI18next).init({
   resources: {
     en: { common: enCommon },
     ru: { common: ruCommon },
-    ukr: { common: uaCommon },
+    ua: { common: uaCommon },
   },
   interpolation: {
     escapeValue: false, // React already escapes values

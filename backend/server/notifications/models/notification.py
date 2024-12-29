@@ -4,10 +4,10 @@ from django_ckeditor_5.fields import CKEditor5Field
 
 class Notification(models.Model):
     title_ru = models.CharField(max_length=100, verbose_name="Название (Русский)")
-    title_ukr = models.CharField(max_length=100, verbose_name="Назва (Украiнська)")
+    title_ua = models.CharField(max_length=100, verbose_name="Назва (Украiнська)")
     title_en = models.CharField(max_length=100, verbose_name="Title (English)")
     description_ru = CKEditor5Field(verbose_name="Описание (Русский)")
-    description_ukr = CKEditor5Field(verbose_name="Опис (Украiнська)")
+    description_ua = CKEditor5Field(verbose_name="Опис (Украiнська)")
     description_en = CKEditor5Field(verbose_name="Description (English)")
 
     created_at = models.DateTimeField(auto_now_add=True)
