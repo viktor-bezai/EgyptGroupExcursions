@@ -13,8 +13,8 @@ const ContactInfo: React.FC = () => {
 
   // Contact details
   const contactDetails = [
-    {icon: <EmailIcon/>, text: "annabella@ukr.net"},
-    {icon: <PhoneIcon/>, text: "+38 (067) 256-8488"},
+    {icon: <EmailIcon/>, text: "bezayanna@gmail.com"},
+    {icon: <PhoneIcon/>, text: "+20 (127) 5816 675"},
   ];
 
   // Social links
