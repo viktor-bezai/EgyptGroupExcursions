@@ -4,7 +4,7 @@ import Image from "next/image";
 import {useRouter} from "next/router";
 import {useTranslation} from "react-i18next";
 import {truncateText} from "@/utils/textUtils";
-import {Tour} from "@/pages";
+import {Tour} from "@/pages/tours";
 
 const TourCard: React.FC<{ tour: Tour }> = ({tour}) => {
   const mediaUrl = process.env.NEXT_PUBLIC_MEDIA_URL || "";
@@ -12,8 +12,8 @@ const TourCard: React.FC<{ tour: Tour }> = ({tour}) => {
   const router = useRouter();
 
   const handleDetailsClick = useCallback(() => {
-    router.push(`/tours/${tour.id}`);
-  }, [router, tour.id]);
+    router.push(`/tours/${tour.slug}`);
+  }, [router, tour.slug]);
 
   return (
     <Card
@@ -48,11 +48,22 @@ const TourCard: React.FC<{ tour: Tour }> = ({tour}) => {
       </CardMedia>
 
       {/* Content Section */}
-      <CardContent sx={{flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
+      <CardContent
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
         <Typography variant="h5" component="div" gutterBottom>
           {tour.title}
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{mb: 1, minHeight: 65}}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{mb: 1, minHeight: 65}}
+        >
           {truncateText(tour.description, 100, t("default-description"))}
         </Typography>
         <Box
@@ -76,7 +87,32 @@ const TourCard: React.FC<{ tour: Tour }> = ({tour}) => {
             {tour.is_available ? t("available") : t("not-available")}
           </Typography>
         </Box>
-
+        {/* Types Section */}
+        <Box
+          sx={{
+            mt: 2,
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 1,
+          }}
+        >
+          {tour.types.map((type) => (
+            <Typography
+              key={type.id}
+              variant="body2"
+              sx={{
+                px: 0.5,
+                py: 0.2,
+                backgroundColor: "background.default",
+                borderRadius: "4px",
+                border: "solid 1px gray",
+                fontSize: "0.700rem",
+              }}
+            >
+              {type.name}
+            </Typography>
+          ))}
+        </Box>
       </CardContent>
 
       {/* Actions Section */}

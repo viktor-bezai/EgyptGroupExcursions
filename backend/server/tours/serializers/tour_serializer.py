@@ -22,6 +22,7 @@ class TourSerializer(serializers.ModelSerializer):
             'cost_from',
             'cost_to',
             'is_available',
+            'slug'
         ]
 
     def get_title(self, obj):
