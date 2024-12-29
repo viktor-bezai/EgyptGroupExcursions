@@ -11,6 +11,8 @@ import Head from 'next/head';
 import {NotificationsProvider} from "@/context/NotificationsContext";
 
 function MyApp({Component, pageProps}: AppProps) {
+  const lang = pageProps.lang || "ru";
+
   useEffect(() => {
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
@@ -53,11 +55,12 @@ function MyApp({Component, pageProps}: AppProps) {
         <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png"/>
         <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png"/>
       </Head>
+
       <I18nextProvider i18n={i18n}>
         <ThemeProvider theme={theme}>
           <CssBaseline/>
           <NotificationsProvider>
-            <Layout>
+            <Layout lang={lang}>
               <Component {...pageProps} />
             </Layout>
           </NotificationsProvider>
