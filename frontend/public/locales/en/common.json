@@ -23,5 +23,16 @@
   "email-addredd": "Email Address",
   "message": "Message",
   "follow-me": "Follow Me",
-  "notifications": "Notifications"
+  "notifications": "Notifications",
+  "select-contact-type": "Select your type of contact",
+  "your-contact": "Your contact",
+  "submit": "Submit",
+  "message-sent-successfully": "Your message has been sent successfully!",
+  "message-send-error": "Something went wrong. Please try again.",
+  "first-name-required": "First Name required",
+  "last-name-required": "Last Name required",
+  "contact-type-required": "Contact Type required",
+  "valid-email-required": "Valid Email required",
+  "contact-link-required": "Contact Link required",
+  "message-required": "Message required"
 }
