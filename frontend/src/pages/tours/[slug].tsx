@@ -5,6 +5,7 @@ import Image from "next/image";
 import {useTranslation} from "react-i18next";
 import {DescriptionRenderer} from "@/utils/textUtils";
 import {Tour} from "@/pages/tours/index";
+import {fetchTourBySlug} from "@/pages/api/tours";
 
 interface TourDetailProps {
   tour: Tour;
@@ -16,19 +17,15 @@ export const getServerSideProps: GetServerSideProps = async ({params, locale}) =
   const lang = locale || "ru";
 
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/tours/slug/${slug}/?lang=${lang}`
-    );
+    const tour = await fetchTourBySlug(slug as string, lang);
 
-    if (!response.ok) {
-      console.error(`Failed to fetch tour data: ${response.statusText}`);
+    if (!tour) {
       return {notFound: true};
     }
 
-    const tour: Tour = await response.json();
     return {props: {tour, lang}};
   } catch (error) {
-    console.error("Error fetching tour data:", error);
+    console.error("Error in getServerSideProps:", error);
     return {notFound: true};
   }
 };

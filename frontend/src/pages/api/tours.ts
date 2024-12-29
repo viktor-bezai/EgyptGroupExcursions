@@ -1,8 +1,8 @@
 import {Tour} from "@/pages/tours";
 
-export const fetchTourBySlug = async (slug: string): Promise<Tour> => {
+export const fetchTourBySlug = async (slug: string, lang: string): Promise<Tour> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tours/slug/${slug}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tours/slug/${slug}/?lang=${lang}`);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch tour data: ${response.statusText}`);

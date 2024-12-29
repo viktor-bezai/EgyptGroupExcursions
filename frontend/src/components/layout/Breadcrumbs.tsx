@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import NextLink from "next/link";
 import { Tour } from "@/pages/tours";
 import { fetchTourBySlug } from "@/pages/api/tours";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 interface BreadcrumbLinkProps {
   href: string;
@@ -15,7 +15,7 @@ interface BreadcrumbLinkProps {
 }
 
 const BreadcrumbLink = (props: BreadcrumbLinkProps) => {
-  const { href, label, isLast = false } = props
+  const { href, label, isLast = false } = props;
   return isLast ? (
     <Typography
       color="primary.main"
@@ -43,10 +43,11 @@ const BreadcrumbLink = (props: BreadcrumbLinkProps) => {
 };
 
 const Breadcrumbs: React.FC = () => {
-  const { t } = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
   const router = useRouter();
   const [dynamicTitle, setDynamicTitle] = useState<string | null>(null);
 
+  const lang = i18n.language || router.locale || "en"; // Determine the current language
   const pathArray = router.asPath.split("/").filter((path) => path);
 
   // Dynamically generate the breadcrumb map using translations
@@ -74,11 +75,11 @@ const Breadcrumbs: React.FC = () => {
     // Fetch dynamic title only for `/tours/{slug}` paths
     if (pathArray[0] === "tours" && pathArray.length > 1) {
       const slug = pathArray[1];
-      fetchTourBySlug(slug)
+      fetchTourBySlug(slug, lang) // Pass the lang parameter
         .then((data: Tour) => setDynamicTitle(data.title))
         .catch((error: string) => console.error("Error fetching tour title:", error));
     }
-  }, [pathArray]);
+  }, [pathArray, lang]);
 
   return (
     <Box sx={{ mx: 2, mt: 2, display: "flex", alignItems: "center" }}>
