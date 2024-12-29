@@ -21,7 +21,7 @@ import HeaderNotifications from "@/components/layout/HeaderNotifications";
 import {useNotifications} from "@/context/NotificationsContext";
 
 const Header: React.FC = () => {
-  const { notifications } = useNotifications();
+  const {notifications} = useNotifications();
   const {t} = useTranslation("common");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -107,32 +107,44 @@ const Header: React.FC = () => {
               gap: 3,
             }}
           >
-            {navItems.map((item) => (
-              <Link key={item.label} href={item.href} passHref>
-                <Button
-                  color="inherit"
-                  sx={{
-                    px: {sm: 1, lg: 3, xl: 4}, // Add horizontal padding for better spacing
-                    py: 1, // Add vertical padding for better clickability
-                    borderRadius: 2, // Smooth edges
-                    "&:hover": {
-                      backgroundColor: "rgba(255, 255, 255, 0.1)", // Subtle hover effect
-                    },
-                  }}
-                >
-                  <Typography
+            {navItems.map((item, index) => (
+              <React.Fragment key={item.label}>
+                <Link href={item.href} passHref>
+                  <Button
+                    color="inherit"
                     sx={{
-                      fontSize: {xs: "0.8rem", md: "1rem"},
-                      fontWeight: "bold", // Make it bold for emphasis
-                      textTransform: "uppercase", // Ensure uniform appearance
-                      letterSpacing: 1, // Add spacing between letters for better readability
-                      color: "primary.contrastText", // Use the theme's secondary color
+                      px: {sm: 1, lg: 3, xl: 4}, // Add horizontal padding for better spacing
+                      py: 1, // Add vertical padding for better clickability
+                      borderRadius: 2, // Smooth edges
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.1)", // Subtle hover effect
+                      },
                     }}
                   >
-                    {t(item.label)}
-                  </Typography>
-                </Button>
-              </Link>
+                    <Typography
+                      sx={{
+                        fontSize: {xs: "0.8rem", md: "1rem"},
+                        fontWeight: "bold", // Make it bold for emphasis
+                        textTransform: "uppercase", // Ensure uniform appearance
+                        letterSpacing: 1, // Add spacing between letters for better readability
+                        color: "primary.contrastText", // Use the theme's secondary color
+                      }}
+                    >
+                      {t(item.label)}
+                    </Typography>
+                  </Button>
+                </Link>
+                {index < navItems.length - 1 && (
+                  <Box
+                    sx={{
+                      height: "24px", // Adjust height to match the button height
+                      width: "1px",
+                      backgroundColor: "rgba(255, 255, 255, 0.5)", // Subtle divider color
+                      mx: 1, // Add horizontal margin for spacing
+                    }}
+                  />
+                )}
+              </React.Fragment>
             ))}
           </Box>
         )}
