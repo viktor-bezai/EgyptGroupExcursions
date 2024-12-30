@@ -23,7 +23,7 @@ function MyApp({Component, pageProps}: AppProps) {
   return (
     <>
       <Head>
-        <title>Egypt Tours</title>
+        <title>Mystical Egypt Travels</title>
         <meta name="description" content="Welcome to Mystical Egypt Travels Website"/>
         <link rel="icon" href="/icons/favicon.ico"/>
         <link rel="canonical" href="https://mystical-egypt-travels.online/"/>
