@@ -110,7 +110,7 @@ const Tours = (props: ToursProps) => {
       <Head>
         <title>Tours | Mystical Egypt Travels</title>
         <meta name="description"
-              content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии: от легендарных пирамид до скрытых жемчужин для незабываемого путешествия."/>
+              content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии для незабываемого путешествия."/>
         <meta name="keywords" content={keywords}/>
         {/* Add JSON-LD structured data for tours */}
         <script
