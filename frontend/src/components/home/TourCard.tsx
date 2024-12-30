@@ -107,6 +107,32 @@ const TourCard: React.FC<{ tour: Tour }> = ({tour}) => {
               {tour.is_available ? t("available") : t("not-available")}
             </Typography>
           </Box>
+          {/* Types Section */}
+          <Box
+            sx={{
+              mt: 2,
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 1,
+            }}
+          >
+            {tour.types.map((type) => (
+              <Typography
+                key={type.id}
+                variant="body2"
+                sx={{
+                  px: 0.5,
+                  py: 0.2,
+                  backgroundColor: "background.default",
+                  borderRadius: "4px",
+                  border: "solid 1px gray",
+                  fontSize: "0.700rem",
+                }}
+              >
+                {type.name}
+              </Typography>
+            ))}
+          </Box>
         </CardContent>
 
         {/* Actions Section */}
