@@ -150,6 +150,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://mystical-egypt-travels.online",
+    "https://www.mystical-egypt-travels.online",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
