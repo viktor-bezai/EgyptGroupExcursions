@@ -180,7 +180,6 @@ const Tours = (props: ToursProps) => {
                     item
                     xs={12}
                     sm={6}
-                    lg={6}
                     xl={4}
                     key={tour.id}
                     sx={{
