@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
   Box,
   Button,
@@ -10,16 +10,24 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
+import {Tour} from "@/pages/tours";
 
-const ContactForm: React.FC = () => {
-  const { t } = useTranslation("common");
+interface ContactFormProps {
+  tour?: Tour;
+  onClose?: () => void;
+}
+
+const ContactForm = (props: ContactFormProps) => {
+  const {tour, onClose} = props
+  const {t} = useTranslation("common");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     preferredContact: "",
     contactLink: "",
     message: "",
+    tour: tour
   });
   const [errors, setErrors] = useState({
     firstName: "",
@@ -33,7 +41,7 @@ const ContactForm: React.FC = () => {
   const [success, setSuccess] = useState("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = event.target;
+    const {name, value} = event.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -119,6 +127,7 @@ const ContactForm: React.FC = () => {
         preferredContact: "",
         contactLink: "",
         message: "",
+        tour: tour
       });
     } catch {
       setError(t("message-send-error"));
@@ -128,10 +137,19 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ padding: 3, maxWidth: 900, mx: "auto" }}>
-      <Typography variant="h5" sx={{ fontWeight: 500, mb: 2 }}>
+    <Paper elevation={3} sx={{padding: 3}}>
+      {!onClose && (
+        <Typography variant="h5" sx={{fontWeight: 500, mb: 2}}>
         {t("contact-form")}
       </Typography>
+      )}
+
+      {tour && (
+        <Box sx={{mb: 2}}>
+          <Typography variant="h6">{tour.title}</Typography>
+        </Box>
+      )}
+
       <form onSubmit={handleSubmit} noValidate>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
@@ -145,7 +163,7 @@ const ContactForm: React.FC = () => {
               onChange={handleInputChange}
               error={!!errors.firstName}
               helperText={errors.firstName}
-              sx={{ width: "100%" }}
+              sx={{width: "100%"}}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -159,7 +177,7 @@ const ContactForm: React.FC = () => {
               onChange={handleInputChange}
               error={!!errors.lastName}
               helperText={errors.lastName}
-              sx={{ width: "100%" }}
+              sx={{width: "100%"}}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -172,7 +190,7 @@ const ContactForm: React.FC = () => {
               variant="outlined"
               required
               error={!!errors.preferredContact}
-              sx={{ width: "100%" }}
+              sx={{width: "100%"}}
             >
               <MenuItem value="" disabled>
                 {t("select-contact-type")}
@@ -201,7 +219,7 @@ const ContactForm: React.FC = () => {
               required
               error={!!errors.contactLink}
               helperText={errors.contactLink}
-              sx={{ width: "100%" }}
+              sx={{width: "100%"}}
             />
           </Grid>
           <Grid item xs={12}>
@@ -217,11 +235,11 @@ const ContactForm: React.FC = () => {
               onChange={handleInputChange}
               error={!!errors.message}
               helperText={errors.message}
-              sx={{ width: "100%" }}
+              sx={{width: "100%"}}
             />
           </Grid>
         </Grid>
-        <Box sx={{ mt: 3, textAlign: "center" }}>
+        <Box sx={{mt: 3, textAlign: "center"}}>
           {error && <Typography mb={1} color="error">{error}</Typography>}
           {success && <Typography mb={1} color="success.main">{success}</Typography>}
           <Button variant="contained" color="primary" size="large" type="submit" disabled={isSubmitting}>
@@ -229,6 +247,14 @@ const ContactForm: React.FC = () => {
           </Button>
         </Box>
       </form>
+
+      <Box sx={{mt: 2, textAlign: "center"}}>
+        {onClose && (
+          <Button variant="outlined" size="large" onClick={onClose}>
+            {t("cancel")}
+          </Button>
+        )}
+      </Box>
     </Paper>
   );
 };
