@@ -33,14 +33,14 @@ export interface Tour {
   slug: string
 }
 
-interface HomeProps {
+interface ToursProps {
   tours: Tour[];
   tourCategories: tourCategory[];
   tourTypes: tourType[];
   lang: string;
 }
 
-export const getServerSideProps: GetServerSideProps<HomeProps> = async (context) => {
+export const getServerSideProps: GetServerSideProps<ToursProps> = async (context) => {
   const lang = context.locale || "ru";
   const {tours, tourCategories, tourTypes} = await fetchHomePageData(lang);
 
@@ -49,7 +49,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async (context)
   };
 };
 
-const Home = (props: HomeProps) => {
+const Tours = (props: ToursProps) => {
   const {tours, tourCategories, tourTypes, lang} = props;
   const {notifications} = useNotifications();
 
@@ -79,11 +79,48 @@ const Home = (props: HomeProps) => {
     return filtered;
   }, [tours, selectedCategory, selectedType]);
 
+  // Generate dynamic keywords
+  const keywords = useMemo(() => {
+    const pre_setup_keywords = "Мистические туры по Египту, путешествия по Египту, экскурсии, туры к пирамидам, круизы по Нилу, достопримечательности Каира, Луксор и Асуан, сафари в пустыне, туры по Египту, исторические экскурсии";
+    const tourTitles = filteredTours.map((tour) => tour.title);
+    const categoryNames = tourCategories.map((category) => category.name);
+    const typeNames = tourTypes.map((type) => type.name);
+
+    // Combine pre-setup keywords with dynamically generated ones
+    const dynamicKeywords = [...tourTitles, ...categoryNames, ...typeNames].join(', ');
+
+    return `${pre_setup_keywords}, ${dynamicKeywords}`;
+  }, [filteredTours, tourCategories, tourTypes]);
+
+
+  const toursJSONLD = filteredTours.map((tour) => ({
+    "@context": "https://schema.org",
+    "@type": "TouristAttraction",
+    name: tour.title,
+    description: tour.description,
+    image: tour.image,
+    url: `https://mystical-egypt-travels.online/tours/${tour.slug}`,
+    priceRange: `$${tour.cost_from} - $${tour.cost_to}`,
+    isAccessibleForFree: false,
+    available: tour.is_available,
+  }));
+
   return (
     <>
       <Head>
-        <title>Home | Mystical Egypt Travels</title>
+        <title>Tours | Mystical Egypt Travels</title>
+        <meta name="description"
+              content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии: от легендарных пирамид до скрытых жемчужин для незабываемого путешествия."/>
+        <meta name="keywords" content={keywords}/>
+        {/* Add JSON-LD structured data for tours */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(toursJSONLD),
+          }}
+        />
       </Head>
+
 
       <Box mb={6} position="relative">
         {/* Filters for Mobile */}
@@ -180,4 +217,4 @@ const Home = (props: HomeProps) => {
   );
 };
 
-export default Home;
+export default Tours;

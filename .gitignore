@@ -58,3 +58,6 @@ yarn-error.log*
 /connection.txt
 /backend/django_debug.log
 /backend/debug.log
+/frontend/public/robots.txt
+/frontend/public/sitemap.xml
+/frontend/public/sitemap-0.xml
