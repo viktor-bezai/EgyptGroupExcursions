@@ -79,59 +79,71 @@ const TourCard: React.FC<{ tour: Tour }> = ({tour}) => {
           <Typography variant="h5" component="div" gutterBottom>
             {tour.title}
           </Typography>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{mb: 1, minHeight: 65}}
-          >
-            {truncateText(tour.description, 100, t("default-description"))}
-          </Typography>
+
+          {/* Content Section */}
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mt: 1, // Optional spacing
+              flexDirection: "column",
+              justifyContent: "flex-end",
             }}
           >
-            <Typography variant="body2" color="text.primary">
-              {t("cost")}: <strong>${tour.cost_from} - ${tour.cost_to}</strong>
-            </Typography>
             <Typography
               variant="body2"
+              color="text.secondary"
+              sx={{mb: 1, minHeight: 65}}
+            >
+              {truncateText(tour.description, 100, t("default-description"))}
+            </Typography>
+            <Box
               sx={{
-                color: tour.is_available ? "success.main" : "error.main",
-                fontWeight: "bold",
+                flexGrow: 1, // Push this section to the bottom
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mt: 1,
               }}
             >
-              {tour.is_available ? t("available") : t("not-available")}
-            </Typography>
-          </Box>
-          {/* Types Section */}
-          <Box
-            sx={{
-              mt: 2,
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 1,
-            }}
-          >
-            {tour.types.map((type) => (
+              <Typography variant="body2" color="text.primary">
+                {t("cost")}: <strong>${tour.cost_from} - ${tour.cost_to}</strong>
+              </Typography>
               <Typography
-                key={type.id}
                 variant="body2"
                 sx={{
-                  px: 0.5,
-                  py: 0.2,
-                  backgroundColor: "background.default",
-                  borderRadius: "4px",
-                  border: "solid 1px gray",
-                  fontSize: "0.700rem",
+                  color: tour.is_available ? "success.main" : "error.main",
+                  fontWeight: "bold",
                 }}
               >
-                {type.name}
+                {tour.is_available ? t("available") : t("not-available")}
               </Typography>
-            ))}
+            </Box>
+
+            {/* Types Section */}
+            <Box
+              sx={{
+                mt: 2,
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 1,
+              }}
+            >
+              {tour.types.map((type) => (
+                <Typography
+                  key={type.id}
+                  variant="body2"
+                  sx={{
+                    px: 0.5,
+                    py: 0.2,
+                    backgroundColor: "background.default",
+                    borderRadius: "4px",
+                    border: "solid 1px gray",
+                    fontSize: "0.700rem",
+                  }}
+                >
+                  {type.name}
+                </Typography>
+              ))}
+            </Box>
           </Box>
         </CardContent>
 

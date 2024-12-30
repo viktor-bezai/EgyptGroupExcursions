@@ -56,7 +56,7 @@ const Tours = (props: ToursProps) => {
   const {t, i18n} = useTranslation("common");
 
   const [selectedCategory, setSelectedCategory] = useState<tourCategory | null>(null);
-  const [selectedType, setSelectedType] = useState<tourType | null>(null);
+  const [selectedTypes, setSelectedTypes] = useState<tourType[]>([]);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -72,12 +72,16 @@ const Tours = (props: ToursProps) => {
       filtered = filtered.filter((tour) => tour.category.id === selectedCategory.id);
     }
 
-    if (selectedType) {
-      filtered = filtered.filter((tour) => tour.types.some((type) => type.id === selectedType.id));
+    if (selectedTypes.length > 0) {
+      filtered = filtered.filter((tour) =>
+        selectedTypes.every((selectedType) =>
+          tour.types.some((type) => type.id === selectedType.id)
+        )
+      );
     }
 
     return filtered;
-  }, [tours, selectedCategory, selectedType]);
+  }, [tours, selectedCategory, selectedTypes]);
 
   // Generate dynamic keywords
   const keywords = useMemo(() => {
@@ -133,8 +137,8 @@ const Tours = (props: ToursProps) => {
             />
             <TypeFilter
               tourTypes={tourTypes}
-              selectedType={selectedType}
-              onSelectType={setSelectedType}
+              selectedTypes={selectedTypes}
+              onSelectTypes={setSelectedTypes}
             />
           </Box>
         )}
@@ -176,7 +180,6 @@ const Tours = (props: ToursProps) => {
                     item
                     xs={12}
                     sm={6}
-                    lg={6}
                     xl={4}
                     key={tour.id}
                     sx={{
@@ -188,26 +191,37 @@ const Tours = (props: ToursProps) => {
                   </Grid>
                 ))
               ) : (
-                <Typography
-                  variant="h6"
-                  color="text.secondary"
-                  textAlign="center"
-                  sx={{mt: 4}}
-                >
-                  {t("no-tours")}
-                </Typography>
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  key={"no-tours"}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}>
+                  <Typography
+                    variant="h6"
+                    color="text.secondary"
+                    textAlign="center"
+                    sx={{
+                      mt: {xs: 2, md: 4},
+                    }}
+                  >
+                    {t("no-tours")}
+                  </Typography>
+                </Grid>
               )}
             </Grid>
           </Grid>
-
 
           {/* Right Area - TypeFilter (Hidden on Mobile) */}
           {!isMobile && (
             <Grid item xs={12} md={2}>
               <TypeFilter
                 tourTypes={tourTypes}
-                selectedType={selectedType}
-                onSelectType={setSelectedType}
+                selectedTypes={selectedTypes}
+                onSelectTypes={setSelectedTypes}
               />
             </Grid>
           )}
