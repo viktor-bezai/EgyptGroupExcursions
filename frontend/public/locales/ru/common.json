@@ -27,6 +27,7 @@
   "select-contact-type": "Выберите ваш тип связи",
   "your-contact": "Ваш контакт",
   "submit": "Отправить",
+  "sending": "Отправка",
   "message-sent-successfully": "Ваше сообщение успешно отправлено!",
   "message-send-error": "Что-то пошло не так. Попробуйте еще раз.",
   "first-name-required": "Имя обязательно",
@@ -34,5 +35,6 @@
   "contact-type-required": "Тип связи обязателен",
   "valid-email-required": "Требуется действующий email",
   "contact-link-required": "Требуется контактная ссылка",
-  "message-required": "Сообщение обязательно"
+  "message-required": "Сообщение обязательно",
+  "cancel": "Отмена"
 }

@@ -42,7 +42,7 @@ const ContactInfo: React.FC = () => {
   ];
 
   return (
-    <Paper elevation={3} sx={{padding: 3, mb: 4}}>
+    <Paper elevation={3} sx={{padding: 3, mb: 4, maxWidth: 900}}>
       <Typography variant="h5" sx={{fontWeight: 500, mb: 2}}>
         {t("contact-information")}
       </Typography>
