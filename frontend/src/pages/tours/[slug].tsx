@@ -1,12 +1,13 @@
-import React, {useEffect, useMemo} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {GetServerSideProps} from "next";
-import {Box, Button, Typography} from "@mui/material";
+import {Box, Button, Dialog, DialogContent, Typography} from "@mui/material";
 import Image from "next/image";
 import {useTranslation} from "react-i18next";
 import {DescriptionRenderer} from "@/utils/textUtils";
 import {Tour} from "@/pages/tours/index";
 import {fetchTourBySlug} from "@/pages/api/tours";
 import Head from "next/head";
+import ContactForm from "@/components/contacts/ContactForm";
 
 interface TourDetailProps {
   tour: Tour;
@@ -34,6 +35,15 @@ export const getServerSideProps: GetServerSideProps = async ({params, locale}) =
 const TourDetail = (props: TourDetailProps) => {
   const {tour, lang} = props
   const {t, i18n} = useTranslation("common");
+
+  const [isContactFormOpen, setContactFormOpen] = useState(false);
+  const handleBookNowClick = useCallback(() => {
+    setContactFormOpen(true);
+  }, []);
+
+  const handleCloseContactForm = useCallback(() => {
+    setContactFormOpen(false);
+  }, []);
 
   useEffect(() => {
     if (i18n.language !== lang) {
@@ -114,11 +124,31 @@ const TourDetail = (props: TourDetailProps) => {
 
         {/* Book Button */}
         <Box sx={{display: "flex", gap: 2}}>
-          <Button variant="contained" color="primary" fullWidth>
+          <Button variant="contained" color="primary" fullWidth onClick={handleBookNowClick}>
             {t("book-now")}
           </Button>
         </Box>
       </Box>
+
+      {/* Contact Form Modal */}
+      <Dialog
+        open={isContactFormOpen}
+        onClose={handleCloseContactForm}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogContent
+          sx={{
+            padding: 0,
+            overflow: "hidden",
+          }}
+        >
+          <ContactForm
+            tour={tour}
+            onClose={handleCloseContactForm}
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
