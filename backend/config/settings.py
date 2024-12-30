@@ -33,7 +33,7 @@ IS_PROD = ENVIRONMENT != 'local'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True if IS_LOCAL else False
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "mystical-egypt-travels.online",

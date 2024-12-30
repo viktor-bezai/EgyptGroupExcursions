@@ -7,19 +7,26 @@ const nextConfig = {
   },
   images: {
     remotePatterns: [
+      // Local development media URL
       {
         protocol: "http",
         hostname: "127.0.0.1",
         port: "8000",
         pathname: "/media/tours/**",
       },
+      // Production media URL
       {
-        protocol: "http",
-        hostname: "64.227.119.29",
-        port: "8000",
+        protocol: "https",
+        hostname: "mystical-egypt-travels.online",
         pathname: "/media/tours/**",
       },
     ],
+  },
+  // Dynamically set the trailing slash or basePath for deployments
+  trailingSlash: true,
+  reactStrictMode: true,
+  env: {
+    NEXT_PUBLIC_MEDIA_URL: process.env.NEXT_PUBLIC_MEDIA_URL || "http://127.0.0.1:8000/media/",
   },
 };
 
