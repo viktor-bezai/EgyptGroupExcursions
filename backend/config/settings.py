@@ -25,17 +25,38 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!o3b1(l26g2siw&-^zvhk#c06+w3*x-^@sh1jjmgffkfqlv9wb'
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+ENVIRONMENT = os.getenv('ENVIRONMENT')
+IS_LOCAL = ENVIRONMENT == 'local'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if IS_LOCAL else False
+if not IS_LOCAL:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
     "mystical-egypt-travels.online",
     "www.mystical-egypt-travels.online",
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    "https://mystical-egypt-travels.online",
+    "https://www.mystical-egypt-travels.online",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://mystical-egypt-travels.online",
+    "https://www.mystical-egypt-travels.online"
+]
+if IS_LOCAL:
+    ALLOWED_HOSTS.append('localhost')
+    ALLOWED_HOSTS.append('127.0.0.1')
+    CORS_ALLOWED_ORIGINS.append("http://localhost:3000")
+    CSRF_TRUSTED_ORIGINS.append('http://localhost:8000/')
 
 # Application definition
 
@@ -146,17 +167,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "https://mystical-egypt-travels.online",
-    "https://www.mystical-egypt-travels.online",
-]
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://mystical-egypt-travels.online",
-    "https://www.mystical-egypt-travels.online"
-]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
