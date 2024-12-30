@@ -29,6 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 ENVIRONMENT = os.getenv('ENVIRONMENT')
 IS_LOCAL = ENVIRONMENT == 'local'
+IS_PROD = ENVIRONMENT != 'local'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True if IS_LOCAL else False
@@ -53,6 +54,15 @@ if IS_LOCAL:
     ALLOWED_HOSTS.append('127.0.0.1')
     CORS_ALLOWED_ORIGINS.append("http://localhost:3000")
     CSRF_TRUSTED_ORIGINS.append('http://localhost:8000/')
+if IS_PROD:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SWAGGER_SETTINGS = {
+        'USE_SESSION_AUTH': False,
+        'DEFAULT_API_URL': 'https://mystical-egypt-travels.online',
+    }
 
 # Application definition
 
