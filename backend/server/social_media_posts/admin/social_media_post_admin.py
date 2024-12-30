@@ -36,7 +36,10 @@ class SocialMediaPostAdmin(admin.ModelAdmin):
         username = "anna_egypt_"
         social_media_post_dto_list = scrape_instagram_posts(username)
 
-        SocialMediaPost.create_if_not_exists(social_media_post_dto_list=social_media_post_dto_list)
+        SocialMediaPost.update_last_posts(
+            social_media_post_dto_list=social_media_post_dto_list,
+            social_media=SocialMediaPost.INSTAGRAM,
+        )
 
         self.message_user(request, "Instagram Posts updated successfully!")
 
@@ -44,9 +47,12 @@ class SocialMediaPostAdmin(admin.ModelAdmin):
 
     def update_tiktok_posts(self, request):
         scraper = TikTokScraper("assis_travel", headless=False)
-        social_media_post_dto_list = scraper.scrape_posts(max_posts=10)
+        social_media_post_dto_list = scraper.scrape_posts_urls(max_posts=10)
 
-        SocialMediaPost.create_if_not_exists(social_media_post_dto_list=social_media_post_dto_list)
+        SocialMediaPost.update_last_posts(
+            social_media_post_dto_list=social_media_post_dto_list,
+            social_media=SocialMediaPost.TIKTOK,
+        )
 
         self.message_user(request, "TikTok Posts updated successfully!")
         return HttpResponseRedirect("../")

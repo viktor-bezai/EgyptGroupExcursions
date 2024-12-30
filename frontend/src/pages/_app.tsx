@@ -34,7 +34,7 @@ function MyApp({Component, pageProps}: AppProps) {
         {/* Open Graph meta tags */}
         <meta property="og:title" content="Home | Mystical Egypt Travels"/>
         <meta property="og:description" content="Welcome to Mystical Egypt Travels Website"/>
-        <meta property="og:image" content="https://mystical-egypt-travels.online/images/thumbnail.jpg"/>
+        <meta property="og:image" content="https://mystical-egypt-travels.online/images/thumbnail.png"/>
         <meta property="og:image:width" content="1200"/>
         <meta property="og:image:height" content="630"/>
         <meta property="og:url" content="https://mystical-egypt-travels.online/"/>
@@ -48,7 +48,7 @@ function MyApp({Component, pageProps}: AppProps) {
         <meta name="twitter:card" content="summary_large_image"/>
         <meta name="twitter:title" content="Home | Mystical Egypt Travels"/>
         <meta name="twitter:description" content="Welcome to Mystical Egypt Travels Website"/>
-        <meta name="twitter:image" content="https://mystical-egypt-travels.online/images/thumbnail.jpg"/>
+        <meta name="twitter:image" content="https://mystical-egypt-travels.online/images/thumbnail.png"/>
 
         {/* Favicons */}
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png"/>
