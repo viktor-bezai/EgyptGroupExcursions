@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useCallback} from "react";
 import {
   Box,
   Button,
@@ -18,8 +18,7 @@ interface ContactFormProps {
   onClose?: () => void;
 }
 
-const ContactForm = (props: ContactFormProps) => {
-  const {tour, onClose} = props
+const ContactForm: React.FC<ContactFormProps> = ({tour, onClose}) => {
   const {t} = useTranslation("common");
   const [formData, setFormData] = useState({
     firstName: "",
@@ -27,50 +26,31 @@ const ContactForm = (props: ContactFormProps) => {
     preferredContact: "",
     contactLink: "",
     message: "",
-    tour: tour
+    tour,
   });
-  const [errors, setErrors] = useState({
-    firstName: "",
-    lastName: "",
-    preferredContact: "",
-    contactLink: "",
-    message: "",
-  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [feedbackMessage, setFeedbackMessage] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const {name, value} = event.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    setErrors((prev) => ({
-      ...prev,
-      [name]: "",
-    }));
-  };
+  const handleInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const {name, value} = event.target;
+      setFormData((prev) => ({...prev, [name]: value}));
+      setErrors((prev) => ({...prev, [name]: ""}));
+    },
+    []
+  );
 
-  const handlePreferredContactChange = (event: SelectChangeEvent<string>) => {
-    setFormData((prev) => ({
-      ...prev,
-      preferredContact: event.target.value,
-    }));
-    setErrors((prev) => ({
-      ...prev,
-      preferredContact: "",
-    }));
-  };
+  const handlePreferredContactChange = useCallback(
+    (event: SelectChangeEvent<string>) => {
+      setFormData((prev) => ({...prev, preferredContact: event.target.value}));
+      setErrors((prev) => ({...prev, preferredContact: ""}));
+    },
+    []
+  );
 
-  const validateForm = () => {
-    const newErrors: typeof errors = {
-      firstName: "",
-      lastName: "",
-      preferredContact: "",
-      contactLink: "",
-      message: "",
-    };
+  const validateForm = useCallback(() => {
+    const newErrors: Record<string, string> = {};
 
     if (!formData.firstName.trim()) {
       newErrors.firstName = t("first-name-required");
@@ -81,7 +61,10 @@ const ContactForm = (props: ContactFormProps) => {
     if (!formData.preferredContact) {
       newErrors.preferredContact = t("contact-type-required");
     }
-    if (formData.preferredContact === "email" && !/^\S+@\S+\.\S+$/.test(formData.contactLink)) {
+    if (
+      formData.preferredContact === "email" &&
+      !/^[\w-.]+@[\w-]+\.[a-z]{2,}$/i.test(formData.contactLink)
+    ) {
       newErrors.contactLink = t("valid-email-required");
     } else if (!formData.contactLink.trim()) {
       newErrors.contactLink = t("contact-link-required");
@@ -91,57 +74,55 @@ const ContactForm = (props: ContactFormProps) => {
     }
 
     setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [formData, t]);
 
-    return Object.values(newErrors).every((error) => !error);
-  };
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      setFeedbackMessage(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
-
-    if (!validateForm()) {
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to send message.");
+      if (!validateForm()) {
+        return;
       }
 
-      setSuccess(t("message-sent-successfully"));
-      setFormData({
-        firstName: "",
-        lastName: "",
-        preferredContact: "",
-        contactLink: "",
-        message: "",
-        tour: tour
-      });
-    } catch {
-      setError(t("message-send-error"));
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+      setIsSubmitting(true);
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || t("message-send-error"));
+        }
+
+        setFeedbackMessage({type: "success", message: t("message-sent-successfully")});
+        setFormData((prev) => ({
+          ...prev,
+          firstName: "",
+          lastName: "",
+          preferredContact: "",
+          contactLink: "",
+          message: "",
+        }));
+      } catch (err: any) {
+        setFeedbackMessage({type: "error", message: err.message});
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [formData, t, validateForm]
+  );
 
   return (
-    <Paper elevation={3} sx={{padding: 3}}>
+    <Paper elevation={3} sx={{padding: 3, maxWidth: 900}}>
       {!onClose && (
         <Typography variant="h5" sx={{fontWeight: 500, mb: 2}}>
-        {t("contact-form")}
-      </Typography>
+          {t("contact-form")}
+        </Typography>
       )}
 
       {tour && (
@@ -163,7 +144,7 @@ const ContactForm = (props: ContactFormProps) => {
               onChange={handleInputChange}
               error={!!errors.firstName}
               helperText={errors.firstName}
-              sx={{width: "100%"}}
+              sx={{boxSizing: "border-box"}}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -177,7 +158,7 @@ const ContactForm = (props: ContactFormProps) => {
               onChange={handleInputChange}
               error={!!errors.lastName}
               helperText={errors.lastName}
-              sx={{width: "100%"}}
+              sx={{boxSizing: "border-box"}}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -187,26 +168,21 @@ const ContactForm = (props: ContactFormProps) => {
               onChange={handlePreferredContactChange}
               displayEmpty
               fullWidth
-              variant="outlined"
               required
               error={!!errors.preferredContact}
-              sx={{width: "100%"}}
+              sx={{
+                boxSizing: "border-box",
+              }}
             >
               <MenuItem value="" disabled>
                 {t("select-contact-type")}
               </MenuItem>
-              <MenuItem value="email">Email</MenuItem>
-              <MenuItem value="viber">Viber</MenuItem>
-              <MenuItem value="whatsapp">WhatsApp</MenuItem>
-              <MenuItem value="telegram">Telegram</MenuItem>
-              <MenuItem value="instagram">Instagram</MenuItem>
-              <MenuItem value="tiktok">TikTok</MenuItem>
+              {["Email", "Viber", "Whatsapp", "Telegram", "Instagram", "Tiktok"].map((option) => (
+                <MenuItem key={option} value={option}>
+                  {t(option)}
+                </MenuItem>
+              ))}
             </Select>
-            {errors.preferredContact && (
-              <Typography color="error" variant="caption">
-                {errors.preferredContact}
-              </Typography>
-            )}
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -214,12 +190,12 @@ const ContactForm = (props: ContactFormProps) => {
               label={t("your-contact")}
               fullWidth
               variant="outlined"
+              required
               value={formData.contactLink}
               onChange={handleInputChange}
-              required
               error={!!errors.contactLink}
               helperText={errors.contactLink}
-              sx={{width: "100%"}}
+              sx={{boxSizing: "border-box"}}
             />
           </Grid>
           <Grid item xs={12}>
@@ -230,31 +206,37 @@ const ContactForm = (props: ContactFormProps) => {
               variant="outlined"
               required
               multiline
-              rows={4}
+              rows={6}
               value={formData.message}
               onChange={handleInputChange}
               error={!!errors.message}
               helperText={errors.message}
-              sx={{width: "100%"}}
+              sx={{
+                boxSizing: "border-box",
+                maxWidth: "100%",
+              }}
             />
           </Grid>
         </Grid>
         <Box sx={{mt: 3, textAlign: "center"}}>
-          {error && <Typography mb={1} color="error">{error}</Typography>}
-          {success && <Typography mb={1} color="success.main">{success}</Typography>}
+          {feedbackMessage && (
+            <Typography
+              mb={2}
+              color={feedbackMessage.type === "success" ? "success.main" : "error"}
+            >
+              {feedbackMessage.message}
+            </Typography>
+          )}
           <Button variant="contained" color="primary" size="large" type="submit" disabled={isSubmitting}>
             {isSubmitting ? t("sending") : t("submit")}
           </Button>
+          {onClose && (
+            <Button variant="outlined" size="large" onClick={onClose} sx={{ml: 2}}>
+              {t("cancel")}
+            </Button>
+          )}
         </Box>
       </form>
-
-      <Box sx={{mt: 2, textAlign: "center"}}>
-        {onClose && (
-          <Button variant="outlined" size="large" onClick={onClose}>
-            {t("cancel")}
-          </Button>
-        )}
-      </Box>
     </Paper>
   );
 };

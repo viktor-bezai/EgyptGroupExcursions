@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, {useCallback, useState} from "react";
 import {
   Box,
   Button,
@@ -10,15 +10,15 @@ import {
   Typography,
 } from "@mui/material";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { useTranslation } from "react-i18next";
-import { truncateText } from "@/utils/textUtils";
-import { Tour } from "@/pages/tours";
+import {useRouter} from "next/router";
+import {useTranslation} from "react-i18next";
+import {truncateText} from "@/utils/textUtils";
+import {Tour} from "@/pages/tours";
 import ContactForm from "@/components/contacts/ContactForm";
 
-const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
+const TourCard: React.FC<{ tour: Tour }> = ({tour}) => {
   const mediaUrl = process.env.NEXT_PUBLIC_MEDIA_URL || "";
-  const { t } = useTranslation("common");
+  const {t} = useTranslation("common");
   const router = useRouter();
   const [isContactFormOpen, setContactFormOpen] = useState(false);
 
@@ -51,7 +51,7 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
       >
         {/* Image Section */}
         <CardMedia>
-          <Box position="relative" sx={{ width: "100%", height: 150 }}>
+          <Box position="relative" sx={{width: "100%", height: 150}}>
             <Image
               src={tour.image ? `${mediaUrl}${tour.image}` : "/images/placeholder.jpg"}
               alt={tour.title || t("tour-placeholder-alt")}
@@ -82,7 +82,7 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
           <Typography
             variant="body2"
             color="text.secondary"
-            sx={{ mb: 1, minHeight: 65 }}
+            sx={{mb: 1, minHeight: 65}}
           >
             {truncateText(tour.description, 100, t("default-description"))}
           </Typography>
@@ -140,9 +140,22 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
       </Card>
 
       {/* Contact Form Modal */}
-      <Dialog open={isContactFormOpen} onClose={handleCloseContactForm} fullWidth maxWidth="sm">
-        <DialogContent>
-          <ContactForm tour={tour} onClose={handleCloseContactForm} />
+      <Dialog
+        open={isContactFormOpen}
+        onClose={handleCloseContactForm}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogContent
+          sx={{
+            padding: 0,
+            overflow: "hidden",
+          }}
+        >
+          <ContactForm
+            tour={tour}
+            onClose={handleCloseContactForm}
+          />
         </DialogContent>
       </Dialog>
     </>
