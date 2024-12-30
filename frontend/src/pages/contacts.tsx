@@ -38,7 +38,7 @@ const Contacts = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
         sx={{
           width: "100%",
           mx: "auto",
-          py: 8,
+          pb: 8,
           px: 2,
           display: "flex",
           flexDirection: "column",
