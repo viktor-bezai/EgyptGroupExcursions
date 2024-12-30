@@ -33,11 +33,11 @@ const ContactInfo: React.FC = () => {
     },
     {
       icon: <img src={"/icons/whatsapp.svg"} alt="Whatsupp" style={{width: 25, height: 25}}/>,
-      href: "https://wa.me/380672568488",
+      href: "https://wa.me/201275816675",
     },
     {
       icon: <img src={"/icons/viber.svg"} alt="Viber" style={{width: 19, height: 19}}/>,
-      href: "viber://chat?number=+380672568488",
+      href: "viber://chat?number=+201275816675",
     },
   ];
 
