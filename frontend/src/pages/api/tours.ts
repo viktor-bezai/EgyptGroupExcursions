@@ -15,3 +15,20 @@ export const fetchTourBySlug = async (slug: string, lang: string): Promise<Tour>
     throw error;
   }
 };
+
+export const fetchAllTours = async (lang: string = 'ru'): Promise<Tour[]> => {
+  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  try {
+    const response = await fetch(`${apiUrl}/tours/?lang=${lang}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch tours: ${response.statusText}`);
+    }
+
+    const tours = await response.json();
+    return Array.isArray(tours) ? tours : [];
+  } catch (error) {
+    console.error('Error fetching tours:', error);
+    return [];
+  }
+};
