@@ -1,17 +1,32 @@
 import React from "react";
-import {Box, Button, Typography} from "@mui/material";
-import {tourType} from "@/pages/tours";
-import {useTranslation} from "react-i18next";
+import { Box, Button, Typography } from "@mui/material";
+import { tourType } from "@/pages/tours";
+import { useTranslation } from "react-i18next";
 
 interface TypeFilterProps {
   tourTypes: tourType[];
-  selectedType: tourType | null;
-  onSelectType: (type: tourType | null) => void;
+  selectedTypes: tourType[];
+  onSelectTypes: (types: tourType[]) => void;
 }
 
 const TypeFilter: React.FC<TypeFilterProps> = (props) => {
-  const {tourTypes, selectedType, onSelectType} = props;
-  const {t} = useTranslation("common");
+  const { tourTypes, selectedTypes, onSelectTypes } = props;
+  const { t } = useTranslation("common");
+
+  const handleTypeToggle = (type: tourType) => {
+    const isSelected = selectedTypes.some((selectedType) => selectedType.id === type.id);
+
+    if (isSelected) {
+      // Remove the type from selectedTypes
+      onSelectTypes(selectedTypes.filter((selectedType) => selectedType.id !== type.id));
+    } else {
+      // Add the type to selectedTypes
+      onSelectTypes([...selectedTypes, type]);
+    }
+  };
+
+  const isTypeSelected = (type: tourType) =>
+    selectedTypes.some((selectedType) => selectedType.id === type.id);
 
   return (
     <Box
@@ -35,9 +50,9 @@ const TypeFilter: React.FC<TypeFilterProps> = (props) => {
     >
       <Button
         key={"all"}
-        onClick={() => onSelectType(null)}
+        onClick={() => onSelectTypes([])} // Clear all selections
         variant="outlined"
-        color={!selectedType ? "primary" : "inherit"}
+        color={selectedTypes.length === 0 ? "primary" : "inherit"}
         sx={{
           minWidth: "auto", // Adjust width to fit the text
           textTransform: "none", // Preserve text case
@@ -45,7 +60,7 @@ const TypeFilter: React.FC<TypeFilterProps> = (props) => {
       >
         <Typography
           sx={{
-            fontSize: {xs: "0.8rem", sm: "1rem"},
+            fontSize: { xs: "0.8rem", sm: "1rem" },
           }}
         >
           {t("all-types")}
@@ -54,9 +69,9 @@ const TypeFilter: React.FC<TypeFilterProps> = (props) => {
       {tourTypes.map((type) => (
         <Button
           key={type.id}
-          onClick={() => onSelectType(type)}
+          onClick={() => handleTypeToggle(type)}
           variant="outlined"
-          color={selectedType?.id === type.id ? "primary" : "inherit"}
+          color={isTypeSelected(type) ? "primary" : "inherit"}
           sx={{
             minWidth: "auto", // Adjust width to fit the text
             textTransform: "none", // Preserve text case
@@ -64,7 +79,7 @@ const TypeFilter: React.FC<TypeFilterProps> = (props) => {
         >
           <Typography
             sx={{
-              fontSize: {xs: "0.8rem", sm: "1rem"},
+              fontSize: { xs: "0.8rem", sm: "1rem" },
             }}
           >
             {type.name}
