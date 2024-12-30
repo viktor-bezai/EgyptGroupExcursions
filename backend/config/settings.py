@@ -31,12 +31,8 @@ ENVIRONMENT = os.getenv('ENVIRONMENT')
 IS_LOCAL = ENVIRONMENT == 'local'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if IS_LOCAL else False
-if not IS_LOCAL:
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+# DEBUG = True if IS_LOCAL else False
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "mystical-egypt-travels.online",
