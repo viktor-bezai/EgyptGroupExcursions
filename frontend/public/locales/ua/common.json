@@ -27,6 +27,7 @@
   "select-contact-type": "Виберіть ваш тип зв'язку",
   "your-contact": "Ваш контакт",
   "submit": "Відправити",
+  "sending": "Надсилання",
   "message-sent-successfully": "Ваше повідомлення успішно надіслано!",
   "message-send-error": "Щось пішло не так. Спробуйте ще раз.",
   "first-name-required": "Ім'я обов'язкове",
@@ -34,5 +35,6 @@
   "contact-type-required": "Тип зв'язку обов'язковий",
   "valid-email-required": "Потрібен дійсний email",
   "contact-link-required": "Потрібне контактне посилання",
-  "message-required": "Повідомлення обов'язкове"
+  "message-required": "Повідомлення обов'язкове",
+  "cancel": "Скасування"
 }
