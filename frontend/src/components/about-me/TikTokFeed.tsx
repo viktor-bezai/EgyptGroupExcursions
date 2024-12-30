@@ -31,7 +31,7 @@ const TikTokFeed: React.FC<TikTokFeedProps> = ({ posts }) => {
                   alt={post.description || t("tiktok-thumbnail-alt") || "TikTok Post"}
                   onError={(e) => {
                     const imgElement = e.target as HTMLImageElement;
-                    imgElement.src = "/images/placeholder.jpg";
+                    imgElement.src = "/images/placeholder_tiktok.webp";
                   }}
                   sx={{ objectFit: "cover" }}
                 />
