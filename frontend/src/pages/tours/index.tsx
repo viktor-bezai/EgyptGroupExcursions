@@ -81,7 +81,7 @@ const Tours = (props: ToursProps) => {
 
   // Generate dynamic keywords
   const keywords = useMemo(() => {
-    const pre_setup_keywords = "Egypt tours, Egypt travel, Egypt excursions, pyramids tour, Nile cruise, Cairo attractions, Luxor and Aswan tours, desert safari, Egypt travel packages, historical Egypt tours";
+    const pre_setup_keywords = "Мистические туры по Египту, путешествия по Египту, экскурсии, туры к пирамидам, круизы по Нилу, достопримечательности Каира, Луксор и Асуан, сафари в пустыне, туры по Египту, исторические экскурсии";
     const tourTitles = filteredTours.map((tour) => tour.title);
     const categoryNames = tourCategories.map((category) => category.name);
     const typeNames = tourTypes.map((type) => type.name);
@@ -110,17 +110,17 @@ const Tours = (props: ToursProps) => {
       <Head>
         <title>Tours | Mystical Egypt Travels</title>
         <meta name="description"
-              content="Explore the wonders of Egypt with Mystical Egypt Travels. Discover the best excursions and tours, from iconic landmarks to hidden gems, for an unforgettable adventure in Egypt."/>
+              content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии: от легендарных пирамид до скрытых жемчужин для незабываемого путешествия."/>
         <meta name="keywords" content={keywords}/>
+        {/* Add JSON-LD structured data for tours */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(toursJSONLD),
+          }}
+        />
       </Head>
 
-      {/* Add JSON-LD structured data for tours */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(toursJSONLD),
-        }}
-      />
 
       <Box mb={6} position="relative">
         {/* Filters for Mobile */}
