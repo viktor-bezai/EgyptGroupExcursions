@@ -1,14 +1,17 @@
 from typing import List
 
 from django.db import models
+from django.db import transaction
 
 from server.social_media_posts.dtos.social_media_post_dto import SocialMediaPostDTO
 
 
 class SocialMediaPost(models.Model):
+    INSTAGRAM = "Instagram"
+    TIKTOK = "TikTok"
     SOCIAL_MEDIA_CHOICES = [
-        ("Instagram", "Instagram"),
-        ("TikTok", "TikTok"),
+        (INSTAGRAM, INSTAGRAM),
+        (TIKTOK, TIKTOK),
     ]
 
     image_url = models.TextField()
@@ -28,19 +31,23 @@ class SocialMediaPost(models.Model):
         return self.url
 
     @classmethod
-    def create_if_not_exists(cls, social_media_post_dto_list: List[SocialMediaPostDTO]):
-        existing_urls = cls.objects.all().values_list('url', flat=True)
-        social_media_posts_to_create = []
-        for social_media_post_dto in social_media_post_dto_list:
-            if social_media_post_dto.url not in existing_urls:
-                social_media_posts_to_create.append(
-                    cls(
-                        image_url=social_media_post_dto.image_url,
-                        description=social_media_post_dto.description,
-                        url=social_media_post_dto.url,
-                        post_date=social_media_post_dto.post_date,
-                        social_media=social_media_post_dto.social_media,
-                    )
-                )
-        cls.objects.bulk_create(social_media_posts_to_create)
+    @transaction.atomic
+    def update_last_posts(cls, social_media_post_dto_list: List[SocialMediaPostDTO], social_media: str):
+        # Extract URLs from the incoming DTO list
+        incoming_urls = {dto.url for dto in social_media_post_dto_list}
 
+        # Get all posts with the given social_media and not in the incoming URLs
+        existing_posts = cls.objects.filter(social_media=social_media).exclude(url__in=incoming_urls)
+        existing_posts.delete()
+
+        # Update or create posts
+        for dto in social_media_post_dto_list:
+            post, created = cls.objects.update_or_create(
+                social_media=social_media,
+                url=dto.url,
+                defaults={
+                    "image_url": dto.image_url,
+                    "description": dto.description,
+                    "post_date": dto.post_date,
+                }
+            )

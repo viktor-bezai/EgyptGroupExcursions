@@ -1,4 +1,5 @@
 import time
+from typing import List
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -12,43 +13,54 @@ from server.social_media_posts.dtos.social_media_post_dto import SocialMediaPost
 
 
 class TikTokScraper:
-    def __init__(self, username, headless=True):
+    def __init__(self, username: str, headless: bool = True):
         self.username = username
         self.base_url = f"https://www.tiktok.com/@{username}"
-        self.options = Options()
-        if headless:
-            self.options.add_argument("--headless")
-        self.options.add_argument("--disable-gpu")
-        self.options.add_argument("--no-sandbox")
-        self.options.add_argument("--disable-dev-shm-usage")
-        self.driver = webdriver.Chrome(service=Service(), options=self.options)
+        self.headless = headless
+        self.driver = self._initialize_driver()
+        self.social_media_post_dto_list: List[SocialMediaPostDTO] = []
 
-    def scrape_posts(self, max_posts=10):
+    def _initialize_driver(self) -> webdriver.Chrome:
+        """Initialize and configure the Selenium WebDriver."""
+        options = Options()
+        if self.headless:
+            options.add_argument("--headless")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        return webdriver.Chrome(service=Service(), options=options)
+
+    def scrape_posts_urls(self, max_posts: int = 10) -> List[SocialMediaPostDTO]:
+        """Scrape TikTok post URLs and return a list of SocialMediaPostDTO objects."""
         try:
             self.driver.get(self.base_url)
             WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 
-            time.sleep(10)  # Allow time for the page to load fully
+            self._load_all_posts(max_posts)
+            self._scrape_images_urls()
 
-            # Initialize variables
-            social_media_post_dto_list = []
-            scroll_attempts = 0
+            return self.social_media_post_dto_list
+        finally:
+            self.driver.quit()
 
-            while len(social_media_post_dto_list) < max_posts and scroll_attempts < 5:
-                soup = BeautifulSoup(self.driver.page_source, "html.parser")
-                posts = soup.find_all(attrs={"data-e2e": "user-post-item"})
+    def _load_all_posts(self, max_posts: int):
+        """Scroll and load TikTok posts until the desired number of posts are collected."""
+        scroll_attempts = 0
+        max_scroll_attempts = 5
 
-                for post in posts:
-                    if len(social_media_post_dto_list) >= max_posts:
-                        break
+        while len(self.social_media_post_dto_list) < max_posts and scroll_attempts < max_scroll_attempts:
+            soup = BeautifulSoup(self.driver.page_source, "html.parser")
+            posts = soup.find_all(attrs={"data-e2e": "user-post-item"})
 
-                    img_tag = post.find("img")
-                    preview_image = img_tag["src"] if img_tag and "src" in img_tag.attrs else None
-                    post_url = post.find("a")["href"]
+            for post in posts:
+                if len(self.social_media_post_dto_list) >= max_posts:
+                    break
 
-                    social_media_post_dto_list.append(
+                post_url = post.find("a")["href"]
+                if post_url not in [dto.url for dto in self.social_media_post_dto_list]:
+                    self.social_media_post_dto_list.append(
                         SocialMediaPostDTO(
-                            image_url=preview_image,
+                            image_url="",
                             description=None,
                             url=post_url,
                             post_date=None,
@@ -56,11 +68,30 @@ class TikTokScraper:
                         )
                     )
 
-                # Scroll to load more posts
-                self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                time.sleep(3)
-                scroll_attempts += 1
+            # Scroll to load more posts
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(3)
+            scroll_attempts += 1
 
-            return social_media_post_dto_list
-        finally:
+    def _scrape_images_urls(self):
+        """Scrape image URLs for each post."""
+        for post in self.social_media_post_dto_list:
+            self.driver.get(post.url)
+            WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+
+            soup = BeautifulSoup(self.driver.page_source, "html.parser")
+            image_element = soup.find("picture")
+
+            if image_element and (img_tag := image_element.find("img")):
+                post.image_url = img_tag.get("src", "")
+
+    def __del__(self):
+        """Ensure the driver quits if the object is deleted."""
+        if self.driver:
             self.driver.quit()
+
+# Example usage:
+# scraper = TikTokScraper("username")
+# posts = scraper.scrape_posts_urls(max_posts=10)
+# for post in posts:
+#     print(post)
