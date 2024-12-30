@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Box, Button, ButtonGroup} from "@mui/material";
 import {Instagram} from "@mui/icons-material";
 import {TikTokIconWithBackground} from "@/components/common/TikTokIcon";
@@ -7,6 +7,7 @@ import InstagramFeed from "@/components/about-me/InstagramFeed";
 import {GetServerSideProps} from "next";
 import {fetchAboutMePageData} from "@/utils/api";
 import Head from "next/head";
+import {useTranslation} from "react-i18next";
 
 export interface SocialMediaPostInterface {
   id: number;
@@ -19,20 +20,23 @@ export interface SocialMediaPostInterface {
 
 interface AboutMeProps {
   socialMediaPosts: SocialMediaPostInterface[];
+  lang: string
 }
 
-export const getServerSideProps: GetServerSideProps<AboutMeProps> = async () => {
+export const getServerSideProps: GetServerSideProps<AboutMeProps> = async (context) => {
+  const lang = context.locale || "ru";
   const data = await fetchAboutMePageData();
 
   const socialMediaPosts: SocialMediaPostInterface[] = data?.socialMediaPosts || [];
 
   return {
-    props: {socialMediaPosts},
+    props: {socialMediaPosts, lang},
   };
 };
 
 const AboutMe = (props: AboutMeProps) => {
-  const {socialMediaPosts} = props;
+  const {socialMediaPosts, lang} = props;
+  const { i18n} = useTranslation("common");
 
   const instagramPosts = socialMediaPosts.filter(
     (post) => post.socialMedia.toLowerCase() === "instagram"
@@ -42,6 +46,10 @@ const AboutMe = (props: AboutMeProps) => {
   );
 
   const [selectedPlatform, setSelectedPlatform] = useState("instagram");
+
+  useEffect(() => {
+    i18n.changeLanguage(lang);
+  }, [lang, i18n]);
 
   return (
     <>
