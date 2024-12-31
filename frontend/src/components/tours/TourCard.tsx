@@ -128,6 +128,7 @@ const TourCard: React.FC<{ tour: Tour }> = ({tour}) => {
           <Typography variant="h5" component="div" gutterBottom>
             {tour.title}
           </Typography>
+
           <Typography
             variant="body2"
             color="text.secondary"
