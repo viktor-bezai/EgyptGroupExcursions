@@ -2,12 +2,12 @@ import React, {useEffect, useMemo, useState} from "react";
 import {GetServerSideProps} from "next";
 import {Box, Grid, Typography, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
-import TourCard from "@/components/home/TourCard";
+import TourCard from "@/components/tours/TourCard";
 import {fetchHomePageData} from "@/utils/api";
-import CategoryFilter from "@/components/home/CategoryFilter";
-import TypeFilter from "@/components/home/TypeFilter";
+import CategoryFilter from "@/components/tours/CategoryFilter";
+import TypeFilter from "@/components/tours/TypeFilter";
 import Head from 'next/head';
-import NotificationsPanel from "@/components/home/NotificationsPanel";
+import NotificationsPanel from "@/components/tours/NotificationsPanel";
 import {useNotifications} from "@/context/NotificationsContext";
 
 export interface tourCategory {

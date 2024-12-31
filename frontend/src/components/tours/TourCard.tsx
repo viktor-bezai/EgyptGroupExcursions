@@ -34,6 +34,26 @@ const TourCard: React.FC<{ tour: Tour }> = ({tour}) => {
     setContactFormOpen(false);
   }, []);
 
+  // Determine the icon based on tour.category
+  const getCategoryIcon = () => {
+    switch (tour.category.name.toLowerCase()) {
+      case "групповые":
+      case "групові":
+      case "group":
+        return "/icons/group_tour_logo.png";
+      case "индивидуальные":
+      case "індивідуальні":
+      case "individual":
+        return "/icons/individual_tour_logo.png";
+      case "трансфер":
+      case "transfer":
+        return "/icons/transfer_logo.png";
+      default:
+        return "/icons/logo.png";
+    }
+  };
+
+
   return (
     <>
       <Card
@@ -47,8 +67,37 @@ const TourCard: React.FC<{ tour: Tour }> = ({tour}) => {
           justifyContent: "space-between",
           boxShadow: 3,
           borderRadius: 2,
+          position: "relative",
         }}
       >
+        {/* Circle with Icon */}
+        <Box
+          sx={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            zIndex: 2,
+            width: "35px",
+            height: "35px",
+            backgroundColor: "white",
+            borderRadius: "50%",
+            border: "2px solid",
+            borderColor: "primary.main",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            boxShadow: 2,
+          }}
+        >
+          <Image
+            src={getCategoryIcon()}
+            alt={`${tour.category.name}-icon`}
+            width={25}
+            height={25}
+            style={{objectFit: "contain"}}
+          />
+        </Box>
+
         {/* Image Section */}
         <CardMedia>
           <Box position="relative" sx={{width: "100%", height: 150}}>

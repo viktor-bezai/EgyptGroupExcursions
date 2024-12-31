@@ -1,7 +1,7 @@
 import {Badge, Box, IconButton, Menu, MenuItem, Typography} from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import React from "react";
-import {Notification} from "@/components/home/NotificationsPanel";
+import {Notification} from "@/components/tours/NotificationsPanel";
 import {DescriptionRenderer} from "@/utils/textUtils";
 
 interface HeaderNotificationsProps {
