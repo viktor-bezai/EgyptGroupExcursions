@@ -26,7 +26,7 @@ class TourTypeView(APIView):
 
         lang = category_query_serializer.validated_data.get("lang")
 
-        tour_types = TourType.objects.all()
+        tour_types = TourType.objects.all().order_by("ordering")
 
         serializer = TourTypeSerializer(instance=tour_types, many=True, context={"lang": lang})
 
