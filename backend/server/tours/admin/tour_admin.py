@@ -25,6 +25,9 @@ class TourAdmin(admin.ModelAdmin):
     list_display_links = ["id", "title_ru"]
     readonly_fields = ["image_preview"]
     save_on_top = True
+    ordering = ["id"]
+    search_fields = ["title_ru"]
+    list_filter = ["category", "is_available"]
 
     # Define the layout for the detail page
     fieldsets = (

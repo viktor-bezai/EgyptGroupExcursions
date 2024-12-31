@@ -5,6 +5,7 @@ class TourType(models.Model):
     name_ru = models.CharField(max_length=200, verbose_name="Название (Русский)")
     name_ua = models.CharField(max_length=200, verbose_name="Назва (Украiнська)")
     name_en = models.CharField(max_length=200, verbose_name="Name (English)")
+    ordering = models.IntegerField(default=0, verbose_name="Порядковый номер")
 
     class Meta:
         verbose_name = 'Тип Тура'
