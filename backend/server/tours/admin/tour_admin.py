@@ -14,13 +14,14 @@ class TourAdminForm(forms.ModelForm):
 
     types = forms.ModelMultipleChoiceField(
         queryset=TourType.objects.all(),
-        widget=FilteredSelectMultiple("Types", is_stacked=False),
+        widget=FilteredSelectMultiple("Типы тура", is_stacked=False),
         required=False,  # Allow empty selection
     )
 
 
 class TourAdmin(admin.ModelAdmin):
     form = TourAdminForm  # Use the custom form
+    change_form_template = "admin/tours/tour_change_form.html"
     list_display = ["id", "title_ru", "category", "cost_from", "cost_to", "is_available"]
     list_display_links = ["id", "title_ru"]
     readonly_fields = ["image_preview"]
