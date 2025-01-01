@@ -1,0 +1,50 @@
+{% extends "admin/change_form.html" %}
+
+{% block content %}
+<style>
+    /* Custom style to move the label above the input */
+    {#description_ru#}
+    .form-row.field-description_ru .flex-container {
+        display: block;
+        margin-bottom: 5px;
+        float: none;
+        clear: both;
+    }
+    
+    .form-row.field-description_ru label {
+        margin-left: 5px;
+        margin-bottom: 5px;
+    }
+    {#description_ua#}
+    .form-row.field-description_ua .flex-container {
+        display: block;
+        margin-bottom: 5px;
+        float: none;
+        clear: both;
+    }
+    
+    .form-row.field-description_ua label {
+        margin-left: 5px;
+        margin-bottom: 5px;
+    }
+    {#description_en#}
+    .form-row.field-description_en .flex-container {
+        display: block;
+        margin-bottom: 5px;
+        float: none;
+        clear: both;
+    }
+    
+    .form-row.field-description_en label {
+        margin-left: 5px;
+        margin-bottom: 5px;
+    }
+    {#Hide label for Types#}
+    .form-row.field-types label {
+        display: none;
+    }
+
+</style>
+
+{{ block.super }}
+{% endblock %}

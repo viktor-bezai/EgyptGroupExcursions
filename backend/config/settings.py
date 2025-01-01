@@ -32,8 +32,7 @@ IS_LOCAL = ENVIRONMENT == 'local'
 IS_PROD = ENVIRONMENT != 'local'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True if IS_LOCAL else False
-DEBUG = True
+DEBUG = True if IS_LOCAL else False
 
 ALLOWED_HOSTS = [
     "mystical-egypt-travels.online",
@@ -167,6 +166,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
@@ -181,6 +181,8 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB
 # CKEditor 5 Configuration
 CKEDITOR_5_CONFIGS = {
     'default': {
+        'height': '200px',
+        'width': 'auto',
         'toolbar': [
             'heading', '|', 'bold', 'italic', 'link', '|',
             'bulletedList', 'numberedList', '|', 'blockQuote',
