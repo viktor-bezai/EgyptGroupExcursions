@@ -62,7 +62,9 @@ const Tours = (props: ToursProps) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
-    i18n.changeLanguage(lang);
+    if (i18n.language !== lang) {
+      i18n.changeLanguage(lang);
+    }
   }, [lang, i18n]);
 
   const filteredTours = useMemo(() => {
