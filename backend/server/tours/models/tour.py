@@ -18,8 +18,8 @@ class Tour(models.Model):
     description_ru = CKEditor5Field(verbose_name="Описание (Русский)")
     description_ua = CKEditor5Field(verbose_name="Опис (Украiнська)")
     description_en = CKEditor5Field(verbose_name="Description (English)")
-    cost_from = models.IntegerField()
-    cost_to = models.IntegerField()
+    cost_from = models.IntegerField(verbose_name="Стоимость от")
+    cost_to = models.IntegerField(verbose_name="Стоимость до")
     is_available = models.BooleanField(default=False)
 
     class Meta:
