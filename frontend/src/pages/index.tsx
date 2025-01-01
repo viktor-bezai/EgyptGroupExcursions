@@ -29,26 +29,26 @@ const HomePage = ({lang}: HomePageProps) => {
 
   const homeTiles: HomeTilesInterface[] = [
     {
-      title: "tours",
-      description: "tours-description",
+      title: t("tours"),
+      description: t("tours-description"),
       image: "/images/egypt_excursions.webp",
       link: "/tours",
     },
     {
-      title: "about-me",
-      description: "about-me-description",
+      title: t("about-me"),
+      description: t("about-me-description"),
       image: "/images/about_me.webp",
       link: "/about-me",
     },
     {
-      title: "contacts",
-      description: "contacts-description",
+      title: t("contacts"),
+      description: t("contacts-description"),
       image: "/images/contacts.webp",
       link: "/contacts",
     },
     {
-      title: "travelers-assistant",
-      description: "travelers-assistant-description",
+      title: t("travelers-assistant"),
+      description: t("travelers-assistant-description"),
       image: "/images/tools.webp",
       link: "/travelers-assistant",
     },
@@ -77,7 +77,6 @@ const HomePage = ({lang}: HomePageProps) => {
       <Box
         sx={{
           width: {xs: "95%", md: "90%"},
-          maxWidth: "1200px",
           mx: "auto",
           px: 2,
           pt: 2,

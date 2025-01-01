@@ -8,8 +8,7 @@ interface HomeTileMainProps {
   link: string;
 }
 
-const HomeTileMain = (props: HomeTileMainProps) => {
-  const {title, description, image, link} = props
+const HomeTileMain = ({title, description, image, link}: HomeTileMainProps) => {
 
   return (
     <Link href={link} passHref>
@@ -17,18 +16,18 @@ const HomeTileMain = (props: HomeTileMainProps) => {
         sx={{
           mx: "auto",
           position: "relative",
-          minHeight: 450,
-          minWidth: 200,
-          borderRadius: 2,
+          minHeight: {xs: 350, md: 450, lg: 500, xl: 700},
+          minWidth: {md: 150, xl: 250},
+          borderRadius: 1,
           overflow: "hidden",
           backgroundImage: `url(${image})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           cursor: "pointer",
           transition: "filter 0.3s, background-color 0.3s",
-          filter: "brightness(0.5)",
+          filter: {md: "brightness(0.5)"},
           "&:hover": {
-            filter: "brightness(0.9)",
+            filter: "brightness(1)",
           },
         }}
       >
@@ -39,17 +38,18 @@ const HomeTileMain = (props: HomeTileMainProps) => {
             top: 0,
             left: 0,
             right: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
           <Typography
-            variant="h5"
             sx={{
               color: "white",
               fontWeight: "bold",
               textAlign: "center",
+              fontSize: {xs: "1.1rem", md: "0.9rem", lg: "0.9rem", xl: "1.5rem"}
             }}
           >
             {title}
@@ -67,15 +67,22 @@ const HomeTileMain = (props: HomeTileMainProps) => {
             alignItems: "center",
           }}
         >
-          <Typography
-            variant="body1"
+          <Box
             sx={{
-              color: "white",
-              textAlign: "center",
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
+              p: 2,
             }}
           >
-            {description}
-          </Typography>
+            <Typography
+              sx={{
+                color: "white",
+                textAlign: "center",
+                fontSize: {xs: "0.9rem", sm: "0.75rem", lg: "0.9rem", xl: "1rem"}
+              }}
+            >
+              {description}
+            </Typography>
+          </Box>
         </Box>
       </Box>
     </Link>
