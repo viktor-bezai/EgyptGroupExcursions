@@ -49,7 +49,7 @@ const HomeTileMain = ({title, description, image, link}: HomeTileMainProps) => {
               color: "white",
               fontWeight: "bold",
               textAlign: "center",
-              fontSize: {xs: "1.1rem", md: "0.9rem", lg: "0.9rem", xl: "1.5rem"}
+              fontSize: {xs: "1.1rem", sm: "1rem", md: "0.7rem", lg: "0.9rem", xl: "1.25rem"}
             }}
           >
             {title}
