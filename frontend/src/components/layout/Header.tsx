@@ -28,7 +28,7 @@ const Header: React.FC = () => {
   const router = useRouter();
 
   const navItems = [
-    {label: t("tours"), href: "/"},
+    {label: t("tours"), href: "/tours"},
     {label: t("about-me"), href: "/about-me"},
     {label: t("contacts"), href: "/contacts"},
   ];
