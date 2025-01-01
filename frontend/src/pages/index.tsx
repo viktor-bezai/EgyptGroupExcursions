@@ -1,10 +1,12 @@
 import {GetServerSideProps} from "next";
 import Head from 'next/head';
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const lang = context.locale || "ru";
+
   return {
     redirect: {
-      destination: "/tours",
+      destination: `/${lang}/tours`,
       permanent: true,
     },
   };
