@@ -24,7 +24,7 @@ function MyApp({Component, pageProps}: AppProps) {
     <>
       <Head>
         <title>Mystical Egypt Travels</title>
-        <meta name="description" content="Welcome to Mystical Egypt Travels Website"/>
+        <meta name="description" content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии для незабываемого путешествия."/>
         <link rel="icon" href="/icons/favicon.ico"/>
         <link rel="canonical" href="https://mystical-egypt-travels.online/"/>
         <meta charSet="UTF-8"/>
@@ -33,7 +33,7 @@ function MyApp({Component, pageProps}: AppProps) {
 
         {/* Open Graph meta tags */}
         <meta property="og:title" content="Home | Mystical Egypt Travels"/>
-        <meta property="og:description" content="Welcome to Mystical Egypt Travels Website"/>
+        <meta property="og:description" content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии для незабываемого путешествия."/>
         <meta property="og:image" content="https://mystical-egypt-travels.online/images/thumbnail.png"/>
         <meta property="og:image:width" content="1200"/>
         <meta property="og:image:height" content="630"/>
@@ -47,7 +47,7 @@ function MyApp({Component, pageProps}: AppProps) {
         {/* Twitter meta tags */}
         <meta name="twitter:card" content="summary_large_image"/>
         <meta name="twitter:title" content="Home | Mystical Egypt Travels"/>
-        <meta name="twitter:description" content="Welcome to Mystical Egypt Travels Website"/>
+        <meta name="twitter:description" content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии для незабываемого путешествия."/>
         <meta name="twitter:image" content="https://mystical-egypt-travels.online/images/thumbnail.png"/>
 
         {/* Favicons */}
