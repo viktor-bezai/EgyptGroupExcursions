@@ -62,3 +62,4 @@ yarn-error.log*
 /frontend/public/sitemap.xml
 /frontend/public/sitemap-0.xml
 /frontend/package-lock.json
+/debug.log
