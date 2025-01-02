@@ -66,11 +66,11 @@ const HomePage = ({lang}: HomePageProps) => {
         <title>Home | Mystical Egypt Travels</title>
         <meta
           name="description"
-          content="Discover the wonders of Egypt with Mystical Egypt Travels. Unique tours and excursions for an unforgettable journey."
+          content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии для незабываемого путешествия."
         />
         <meta
           name="keywords"
-          content="Mystical Egypt tours, travel Egypt, pyramid tours, Nile cruises, Cairo sightseeing, Luxor and Aswan, desert safari, Egypt excursions"
+          content="Экскурсии Египет, Экскурсии Хургада, Экскурсии Шарм эль Шейх, экскурсия к пирамидам, экскурсия к сфинксу, Морские экскурсии Египет, Морские экскурсии Хургада, Морские экскурсии Шарм эль Шейх, дайвинг в Египте, Красное море дайвинг, Отдых Египет, Отели Египет, сафари в пустыне, сафари на квадроциклах, экскурсия в Луксор, экскурсия в Каир"
         />
       </Head>
 

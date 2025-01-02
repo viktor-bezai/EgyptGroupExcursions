@@ -54,7 +54,7 @@ const TourDetail = (props: TourDetailProps) => {
   // Generate dynamic keywords
   const keywords = useMemo(() => {
     const typeNames = tour.types.map((type) => type.name);
-    return [tour.title, tour.category.name, ...typeNames].join(', ');
+    return [tour.title, `${tour.category.name} экскурсии`, ...typeNames].join(', ');
   }, [tour]);
 
 
