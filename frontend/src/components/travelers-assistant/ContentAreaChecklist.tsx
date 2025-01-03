@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Box, Typography, Button, TextField, Alert } from "@mui/material";
+import {useState} from "react";
+import {Alert, Box, Button, Card, CardContent, Divider, TextField, Typography} from "@mui/material";
 import {useTranslation} from "react-i18next";
 
 const ContentAreaChecklist = () => {
-  const { t } = useTranslation("common");
+  const {t} = useTranslation("common");
   const [email, setEmail] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
 
@@ -105,47 +105,64 @@ const ContentAreaChecklist = () => {
   };
 
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom>
+    <Box sx={{maxWidth: "800px", mx: "auto", p: 2}}>
+      <Typography variant="h4" gutterBottom sx={{fontWeight: "bold", textAlign: "center", mb: 4}}>
         {t("checklist")}
       </Typography>
       {checklistItems.map((section, index) => (
-        <Box key={index} sx={{ mb: 3 }}>
-          <Typography variant="h5" gutterBottom>
-            {section.category}
-          </Typography>
-          <ul>
-            {section.items.map((item, idx) => (
-              <li key={idx}>
-                <Typography>{item}</Typography>
-              </li>
-            ))}
-          </ul>
-        </Box>
+        <Card key={index} variant="outlined" sx={{mb: 3, boxShadow: 2}}>
+          <CardContent>
+            <Typography variant="h5" gutterBottom sx={{fontWeight: "bold", color: "primary.main"}}>
+              {section.category}
+            </Typography>
+            <Divider sx={{mb: 2}}/>
+            <ul style={{paddingLeft: "1.5rem"}}>
+              {section.items.map((item, idx) => (
+                <li key={idx} style={{marginBottom: "0.5rem"}}>
+                  <Typography>{item}</Typography>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
       ))}
 
-      <Box sx={{ mt: 4 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: {xs: "column", sm: "row"},
+          alignItems: "center",
+          gap: 2,
+          mt: 4,
+        }}
+      >
         <TextField
-          label="Введите ваш email"
+          label={t("enter-your-email")}
           variant="outlined"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          sx={{ mr: 2 }}
+          fullWidth
+          sx={{flex: 1}}
         />
         <Button
           variant="contained"
           color="primary"
           onClick={handleSendEmail}
           disabled={!email}
+          sx={{
+            whiteSpace: "nowrap",
+            px: 4,
+          }}
         >
-          Отправить чеклист
+          {t("send-checklist")}
         </Button>
-        {successMessage && (
-          <Alert severity="success" sx={{ mt: 2 }}>
-            {successMessage}
-          </Alert>
-        )}
       </Box>
+
+      {successMessage && (
+        <Alert severity="success" sx={{mt: 4}}>
+          {successMessage}
+        </Alert>
+      )}
     </Box>
   );
 };
