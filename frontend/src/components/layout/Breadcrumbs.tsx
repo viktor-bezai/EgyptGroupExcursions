@@ -22,6 +22,7 @@ const Breadcrumbs: React.FC = () => {
     "about-me": t("about-me"),
     contacts: t("contacts"),
     tours: t("tours"),
+    "travelers-assistant": t("travelers-assistant"),
   };
 
   const capitalizeWords = (str: string): string =>
