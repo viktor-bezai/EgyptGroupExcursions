@@ -1,11 +1,8 @@
-import {useState} from "react";
-import {Alert, Box, Button, Card, CardContent, Divider, Typography} from "@mui/material";
+import {Box, Card, CardContent, Divider, Typography} from "@mui/material";
 import {useTranslation} from "react-i18next";
-import {generatePagePDF} from "@/utils/generatePagePDF";
 
 const ContentAreaChecklist = () => {
   const {t} = useTranslation("common");
-  const [successMessage, setSuccessMessage] = useState<string>("");
   const thisPageId = "checklist-page"
 
   const checklistItems = [
@@ -97,15 +94,6 @@ const ContentAreaChecklist = () => {
     },
   ];
 
-  const handleDownloadPDF = async () => {
-  try {
-    await generatePagePDF(thisPageId, "mystical-egypt-travels.online_checklist.pdf");
-    setSuccessMessage(t("checklist-downloaded-success"));
-  } catch (error) {
-    console.error("Error downloading PDF:", error);
-  }
-};
-
   return (
     <Box id={thisPageId} sx={{maxWidth: "800px", mx: "auto", px: 2}}>
       <Typography variant="h4" gutterBottom sx={{fontWeight: "bold", textAlign: "center", mb: 4}}>
@@ -128,25 +116,6 @@ const ContentAreaChecklist = () => {
           </CardContent>
         </Card>
       ))}
-
-      <Box sx={{display: "flex", justifyContent: "center", mt: 4}}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleDownloadPDF}
-          sx={{
-            px: 4,
-          }}
-        >
-          {t("download-pdf")}
-        </Button>
-      </Box>
-
-      {successMessage && (
-        <Alert severity="success" sx={{mt: 4}}>
-          {successMessage}
-        </Alert>
-      )}
     </Box>
   );
 };
