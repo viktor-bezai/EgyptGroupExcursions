@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import {TravelersAssistantMenuOption} from "@/pages/travelers-assistant";
 import ContentAreaChecklist from "@/components/travelers-assistant/ContentAreaChecklist";
 import ContentAreaWeather from "@/components/travelers-assistant/ContentAreaWeather";
@@ -8,25 +8,22 @@ interface ContentAreaProps {
   activeMenu: TravelersAssistantMenuOption;
 }
 
-const ContentArea = ({ activeMenu }: ContentAreaProps) => {
+const ContentArea = ({activeMenu}: ContentAreaProps) => {
   const renderContent = () => {
     switch (activeMenu) {
       case "checklist":
-        return <ContentAreaChecklist />
+        return <ContentAreaChecklist/>
       case "weather":
-        return <ContentAreaWeather />
+        return <ContentAreaWeather/>
       case "calendar":
-        return <ContentAreaCalendar />
+        return <ContentAreaCalendar/>
       default:
         return <Typography>Выберите пункт меню, чтобы увидеть контент.</Typography>;
     }
   };
 
   return (
-    <Box sx={{ flex: 1, p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Контент
-      </Typography>
+    <Box sx={{flex: 1, p: 3}}>
       {renderContent()}
     </Box>
   );
