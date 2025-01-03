@@ -1,11 +1,12 @@
 import {useState} from "react";
-import {Alert, Box, Button, Card, CardContent, Divider, TextField, Typography} from "@mui/material";
+import {Alert, Box, Button, Card, CardContent, Divider, Typography} from "@mui/material";
 import {useTranslation} from "react-i18next";
+import {generatePagePDF} from "@/utils/generatePagePDF";
 
 const ContentAreaChecklist = () => {
   const {t} = useTranslation("common");
-  const [email, setEmail] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
+  const thisPageId = "checklist-page"
 
   const checklistItems = [
     {
@@ -96,16 +97,17 @@ const ContentAreaChecklist = () => {
     },
   ];
 
-  const handleSendEmail = () => {
-    if (email) {
-      // Simulate email sending
-      setSuccessMessage(`Чеклист отправлен на ${email}`);
-      setEmail(""); // Clear the email input
-    }
-  };
+  const handleDownloadPDF = async () => {
+  try {
+    await generatePagePDF(thisPageId, "mystical-egypt-travels.online_checklist.pdf");
+    setSuccessMessage(t("checklist-downloaded-success"));
+  } catch (error) {
+    console.error("Error downloading PDF:", error);
+  }
+};
 
   return (
-    <Box sx={{maxWidth: "800px", mx: "auto", p: 2}}>
+    <Box id={thisPageId} sx={{maxWidth: "800px", mx: "auto", px: 2}}>
       <Typography variant="h4" gutterBottom sx={{fontWeight: "bold", textAlign: "center", mb: 4}}>
         {t("checklist")}
       </Typography>
@@ -127,34 +129,16 @@ const ContentAreaChecklist = () => {
         </Card>
       ))}
 
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: {xs: "column", sm: "row"},
-          alignItems: "center",
-          gap: 2,
-          mt: 4,
-        }}
-      >
-        <TextField
-          label={t("enter-your-email")}
-          variant="outlined"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          fullWidth
-          sx={{flex: 1}}
-        />
+      <Box sx={{display: "flex", justifyContent: "center", mt: 4}}>
         <Button
           variant="contained"
           color="primary"
-          onClick={handleSendEmail}
-          disabled={!email}
+          onClick={handleDownloadPDF}
           sx={{
-            whiteSpace: "nowrap",
             px: 4,
           }}
         >
-          {t("send-checklist")}
+          {t("download-pdf")}
         </Button>
       </Box>
 

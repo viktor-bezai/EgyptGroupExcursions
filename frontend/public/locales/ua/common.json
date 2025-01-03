@@ -47,5 +47,7 @@
   "excursion-calendar": "Календар екскурсій",
   "tools": "Інструменти",
   "enter-your-email": "Введіть вашу електронну пошту",
-  "send-checklist": "Надіслати чекліст"
+  "send-checklist": "Надіслати чекліст",
+  "download-pdf": "Завантажити PDF",
+  "checklist-downloaded-success": "Чекліст успішно скачаний"
 }

@@ -47,5 +47,7 @@
   "excursion-calendar": "Excursion calendar",
   "tools": "Tools",
   "enter-your-email": "Enter Your Email",
-  "send-checklist": "Send checklist"
+  "send-checklist": "Send checklist",
+  "download-pdf": "Download PDF",
+  "checklist-downloaded-success": "Checklist download successfully"
 }
