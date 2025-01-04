@@ -49,5 +49,97 @@
   "enter-your-email": "Enter Your Email",
   "send-checklist": "Send checklist",
   "download-pdf": "Download PDF",
-  "checklist-downloaded-success": "Checklist download successfully"
+  "checklist-downloaded-success": "Checklist download successfully",
+  "checklistItems": [
+    {
+      "category": "Documents",
+      "list_to_do": [
+        "Passport (valid for at least 6 months from the date of entry).",
+        "Visa (if required, obtain it in advance or upon arrival).",
+        "Insurance (medical and accident coverage).",
+        "Tickets (round-trip tickets, electronic or printed).",
+        "Hotel booking confirmation.",
+        "Copies of all documents (passport, visa, insurance) in case of loss."
+      ]
+    },
+    {
+      "category": "Finance",
+      "list_to_do": [
+        "Bank card (ensure it can be used abroad).",
+        "Cash (USD, EUR, or Egyptian pounds).",
+        "Reserve funds for unforeseen expenses."
+      ]
+    },
+    {
+      "category": "Communication and Internet",
+      "list_to_do": [
+        "International roaming or a local SIM card.",
+        "Install messengers and communication apps (e.g., WhatsApp).",
+        "Download offline maps (Google Maps, MAPS.ME)."
+      ]
+    },
+    {
+      "category": "Clothing and Footwear",
+      "list_to_do": [
+        "Light clothing for a hot climate.",
+        "Swimwear, beach shoes.",
+        "Hat or cap for sun protection.",
+        "Comfortable footwear for excursions.",
+        "Scarf or shawl for visiting temples and mosques."
+      ]
+    },
+    {
+      "category": "Health and Medicine",
+      "list_to_do": [
+        "Personal medications (with enough for the entire trip).",
+        "Sunscreen and after-sun care.",
+        "Insect repellent.",
+        "Antiseptics and masks (for personal hygiene)."
+      ]
+    },
+    {
+      "category": "Electronics",
+      "list_to_do": [
+        "Chargers for phones, tablets, and cameras.",
+        "Power bank.",
+        "Plug adapter (if needed)."
+      ]
+    },
+    {
+      "category": "Planning and Entertainment",
+      "list_to_do": [
+        "Excursion schedule or a list of places to visit.",
+        "Download movies, books, or music for the flight.",
+        "Check the weather forecast for the trip days."
+      ]
+    },
+    {
+      "category": "Safety",
+      "list_to_do": [
+        "Information on local rules and regulations.",
+        "Contacts of the consulate and emergency services.",
+        "Avoid tap water, use bottled water only."
+      ]
+    },
+    {
+      "category": "Baggage Check",
+      "list_to_do": [
+        "Airline weight and size restrictions for baggage.",
+        "All sharp objects and liquids placed in checked luggage.",
+        "Carry-on complies with regulations (including liquids ≤100 ml)."
+      ]
+    },
+    {
+      "category": "On Departure Day",
+      "list_to_do": [
+        "Check that all documents are present.",
+        "Ensure transportation to the airport is arranged.",
+        "Arrive at the airport 2–3 hours before departure."
+      ]
+    }
+  ],
+  "today": "Today",
+  "this-week": "This Week",
+  "hurghada": "Hurghada",
+  "sharm": "Sharm El-Sheikh"
 }

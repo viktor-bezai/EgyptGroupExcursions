@@ -5,9 +5,9 @@ import {TikTokIconWithBackground} from "@/components/common/TikTokIcon";
 import TikTokFeed from "@/components/about-me/TikTokFeed";
 import InstagramFeed from "@/components/about-me/InstagramFeed";
 import {GetServerSideProps} from "next";
-import {fetchAboutMePageData} from "@/utils/api";
 import Head from "next/head";
 import {useTranslation} from "react-i18next";
+import {fetchAboutMePageData} from "@/utils/djangoApi";
 
 export interface SocialMediaPostInterface {
   id: number;
