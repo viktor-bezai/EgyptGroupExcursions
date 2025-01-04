@@ -3,12 +3,12 @@ import {GetServerSideProps} from "next";
 import {Box, Grid, Typography, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import TourCard from "@/components/tours/TourCard";
-import {fetchHomePageData} from "@/utils/api";
 import CategoryFilter from "@/components/tours/CategoryFilter";
 import TypeFilter from "@/components/tours/TypeFilter";
 import Head from 'next/head';
 import NotificationsPanel from "@/components/tours/NotificationsPanel";
 import {useNotifications} from "@/context/NotificationsContext";
+import {fetchHomePageData} from "@/utils/djangoApi";
 
 export interface tourCategory {
   id: number;
