@@ -137,5 +137,9 @@
         "Arrive at the airport 2–3 hours before departure."
       ]
     }
-  ]
+  ],
+  "today": "Today",
+  "this-week": "This Week",
+  "hurghada": "Hurghada",
+  "sharm": "Sharm El-Sheikh"
 }
