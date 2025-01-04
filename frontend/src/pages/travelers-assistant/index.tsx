@@ -1,9 +1,9 @@
-import {GetServerSideProps} from "next";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
-import {useTranslation} from "react-i18next";
-import {useEffect, useState} from "react";
-import {Box} from "@mui/material";
-import LeftMenu from "@/components/travelers-assistant/LeftMenu";
+import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
+import AssistantMenu from "@/components/travelers-assistant/AssistantMenu";
 import ContentArea from "@/components/travelers-assistant/ContentArea";
 
 interface TravelersAssistantPageProps {
@@ -16,13 +16,16 @@ export const getServerSideProps: GetServerSideProps<TravelersAssistantPageProps>
   const lang = context.locale || "ru";
 
   return {
-    props: {lang},
+    props: { lang },
   };
 };
 
-const TravelersAssistantPage = ({lang}: TravelersAssistantPageProps) => {
-  const {i18n} = useTranslation("common");
+const TravelersAssistantPage = ({ lang }: TravelersAssistantPageProps) => {
+  const { i18n } = useTranslation("common");
   const [activeMenu, setActiveMenu] = useState<TravelersAssistantMenuOption>("checklist");
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     if (i18n.language !== lang) {
@@ -43,11 +46,24 @@ const TravelersAssistantPage = ({lang}: TravelersAssistantPageProps) => {
           content="чеклист перед вылетом, полезная информация Египет, погода Египет, календарь экскурсий Египет"
         />
       </Head>
-      <Box sx={{display: "flex", minHeight: "50vh"}}>
-        {/* Left Menu */}
-        <LeftMenu activeMenu={activeMenu} setActiveMenu={setActiveMenu}/>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: isMobile ? "column" : "row", // Adjust layout based on screen size
+          minHeight: "50vh",
+        }}
+      >
+        {/* Assistant Menu */}
+        <AssistantMenu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
         {/* Content Area */}
-        <ContentArea activeMenu={activeMenu}/>
+        <Box
+          sx={{
+            flex: 1, // Take up remaining space
+            mt: isMobile ? 2 : 0, // Add margin-top for mobile layout
+          }}
+        >
+          <ContentArea activeMenu={activeMenu} />
+        </Box>
       </Box>
     </>
   );

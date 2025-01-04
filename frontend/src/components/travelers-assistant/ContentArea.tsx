@@ -23,7 +23,10 @@ const ContentArea = ({activeMenu}: ContentAreaProps) => {
   };
 
   return (
-    <Box sx={{flex: 1, p: 3}}>
+    <Box sx={{
+      flex: 1,
+      p: {xs: 0, md: 3}
+    }}>
       {renderContent()}
     </Box>
   );
