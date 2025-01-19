@@ -64,3 +64,4 @@ yarn-error.log*
 /frontend/package-lock.json
 /debug.log
 /deployment.txt
+/backend/staticfiles/
