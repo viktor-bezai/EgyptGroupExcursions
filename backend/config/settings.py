@@ -243,3 +243,12 @@ LOGGING = {
         },
     },
 }
+
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASSES': [
+        'server.throttling.MysticalEgyptThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'default': '2/s',  # Default rate for other clients
+    },
+}
