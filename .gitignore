@@ -65,3 +65,4 @@ yarn-error.log*
 /debug.log
 /deployment.txt
 /backend/staticfiles/
+/backend/venv/
