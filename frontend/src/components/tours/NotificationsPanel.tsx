@@ -1,7 +1,7 @@
 import React from "react";
-import {Box, Typography} from "@mui/material";
-import {useTranslation} from "react-i18next";
-import {DescriptionRenderer} from "@/utils/textUtils";
+import { Box, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { DescriptionRenderer } from "@/utils/textUtils";
 
 export interface Notification {
   id: number;
@@ -14,8 +14,14 @@ interface NotificationsPanelProps {
   notifications: Notification[];
 }
 
-const NotificationsPanel: React.FC<NotificationsPanelProps> = ({notifications}) => {
-  const {t} = useTranslation("common");
+const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
+  notifications,
+}) => {
+  const { t } = useTranslation("common");
+
+  if (notifications.length === 0) {
+    return null;
+  }
 
   return (
     <Box
@@ -30,47 +36,35 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({notifications}) 
         boxShadow: 3,
       }}
     >
-      <Typography
-        variant="h6"
-        sx={{marginBottom: 2, textAlign: "center"}}
-      >
+      <Typography variant="h6" sx={{ marginBottom: 2, textAlign: "center" }}>
         {t("notifications")}
       </Typography>
-      {notifications.length > 0 ? (
-        notifications.map((notification) => (
-          <Box
-            key={notification.id}
-            sx={{
-              marginBottom: 2,
-              padding: 1,
-              borderRadius: 1,
-              backgroundColor: "background.default",
-              boxShadow: 1,
-            }}
+      {notifications.map((notification) => (
+        <Box
+          key={notification.id}
+          sx={{
+            marginBottom: 2,
+            padding: 1,
+            borderRadius: 1,
+            backgroundColor: "background.default",
+            boxShadow: 1,
+          }}
+        >
+          <Typography variant="subtitle2" sx={{ marginBottom: 1 }}>
+            {notification.title}
+          </Typography>
+          <Typography component="div" variant="body2" color="text.secondary">
+            <DescriptionRenderer description={notification.description} />
+          </Typography>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ display: "block", marginTop: 1 }}
           >
-            <Typography
-              variant="subtitle2"
-              sx={{marginBottom: 1}}
-            >
-              {notification.title}
-            </Typography>
-            <Typography component="div" variant="body2" color="text.secondary">
-              <DescriptionRenderer description={notification.description}/>
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{display: "block", marginTop: 1}}
-            >
-              {new Date(notification.created_at).toLocaleString()}
-            </Typography>
-          </Box>
-        ))
-      ) : (
-        <Typography variant="body2" color="text.secondary" textAlign="center">
-          {t("no-notifications")}
-        </Typography>
-      )}
+            {new Date(notification.created_at).toLocaleString()}
+          </Typography>
+        </Box>
+      ))}
     </Box>
   );
 };

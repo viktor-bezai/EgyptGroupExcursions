@@ -5,7 +5,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const { firstName, lastName, preferredContact, contactLink, message, tour } = req.body;
+  const { firstName, lastName, preferredContact, contactLink, message, tour } =
+    req.body;
 
   // Validate data
   if (!firstName || !lastName || !preferredContact || !message) {
@@ -24,7 +25,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;
 
-    const formType = tour ? `Бронирование: ${tour.title}` : "Запрос на контакт"
+    const formType = tour ? `Бронирование: ${tour.title}` : "Запрос на контакт";
 
     const text = `
       ✉️ ${formType}
@@ -35,11 +36,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       📝 Сообщение: ${message}
     `;
 
-    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, text }),
-    });
+    const response = await fetch(
+      `https://api.telegram.org/bot${botToken}/sendMessage`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, text }),
+      },
+    );
 
     if (!response.ok) {
       throw new Error("Failed to send message to Telegram.");

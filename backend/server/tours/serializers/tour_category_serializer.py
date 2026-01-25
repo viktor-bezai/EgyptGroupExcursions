@@ -8,12 +8,12 @@ class TourCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = TourCategory
         fields = [
-            'id',
-            'name',
+            "id",
+            "name",
         ]
 
     def get_name(self, obj):
-        lang = self.context.get('lang', 'ru')
+        lang = self.context.get("lang", "ru")
         # Dynamically fetch the name field based on the language
         name_field = f"name_{lang}"
         return getattr(obj, name_field, obj.name_ru)

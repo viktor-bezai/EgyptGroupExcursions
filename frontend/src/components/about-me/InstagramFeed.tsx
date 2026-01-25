@@ -1,43 +1,62 @@
-import React from "react";
-import {Box, Card, CardContent, CardMedia, Link, Typography} from "@mui/material";
-import {SocialMediaPostInterface} from "@/pages/about-me";
-import {truncateText} from "@/utils/textUtils";
+import React, { useEffect } from "react";
+import { Box } from "@mui/material";
+import { SocialMediaPostInterface } from "@/pages/about-me";
 
 interface InstagramFeedProps {
   posts: SocialMediaPostInterface[];
 }
 
-const InstagramFeed: React.FC<InstagramFeedProps> = ({posts}) => {
+const InstagramFeed: React.FC<InstagramFeedProps> = ({ posts }) => {
+  useEffect(() => {
+    // Load Instagram embed script
+    const script = document.createElement("script");
+    script.src = "https://www.instagram.com/embed.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    // Process embeds when script loads
+    script.onload = () => {
+      if ((window as any).instgrm) {
+        (window as any).instgrm.Embeds.process();
+      }
+    };
+
+    return () => {
+      // Cleanup script on unmount
+      const existingScript = document.querySelector(
+        'script[src="https://www.instagram.com/embed.js"]',
+      );
+      if (existingScript) {
+        existingScript.remove();
+      }
+    };
+  }, [posts]);
+
+  // Re-process embeds when posts change
+  useEffect(() => {
+    if ((window as any).instgrm) {
+      (window as any).instgrm.Embeds.process();
+    }
+  }, [posts]);
+
   return (
-    <Box sx={{display: "flex", flexWrap: "wrap", gap: 4, justifyContent: "center"}}>
-      {posts.map((post, index) => (
-        <Link
+    <Box
+      sx={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 3,
+        justifyContent: "center",
+      }}
+    >
+      {posts.map((post) => (
+        <Box
           key={post.id}
-          href={post.url}
-          target="_blank"
-          rel="noopener"
-          sx={{textDecoration: "none"}}
-        >
-          <Card key={index} sx={{width: 300, display: "flex", flexDirection: "column", height: 300}}>
-            <CardMedia
-              component="img"
-              height="200"
-              image={`/api/proxy-image?url=${encodeURIComponent(post.imageUrl)}`}
-              alt={truncateText(post.description, 30, "Instagram post")}
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = "/images/placeholder.jpg";
-              }}
-            />
-            <CardContent
-              sx={{display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "space-between"}}
-            >
-              <Typography variant="body2" color="text.secondary" sx={{flexGrow: 1}}>
-                {truncateText(post.description, 80, "No description available")}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Link>
+          sx={{
+            maxWidth: 400,
+            width: "100%",
+          }}
+          dangerouslySetInnerHTML={{ __html: post.oembedHtml || "" }}
+        />
       ))}
     </Box>
   );

@@ -6,7 +6,9 @@ from rest_framework.views import APIView
 
 from server.lang_query_serializer import LangQuerySerializer
 from server.notifications.models import Notification
-from server.notifications.serializers.notification_serializer import NotificationSerializer
+from server.notifications.serializers.notification_serializer import (
+    NotificationSerializer,
+)
 
 
 class NotificationDetailView(APIView):
@@ -28,6 +30,8 @@ class NotificationDetailView(APIView):
         notification = get_object_or_404(Notification, id=id)
 
         # Serialize the tour
-        serializer = NotificationSerializer(instance=notification, context={"lang": lang})
+        serializer = NotificationSerializer(
+            instance=notification, context={"lang": lang}
+        )
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)

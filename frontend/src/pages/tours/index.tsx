@@ -1,14 +1,14 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {GetServerSideProps} from "next";
-import {Box, Grid, Typography, useMediaQuery, useTheme} from "@mui/material";
-import {useTranslation} from "react-i18next";
+import React, { useEffect, useMemo, useState } from "react";
+import { GetServerSideProps } from "next";
+import { Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import TourCard from "@/components/tours/TourCard";
+import { fetchHomePageData } from "@/utils/djangoApi";
 import CategoryFilter from "@/components/tours/CategoryFilter";
 import TypeFilter from "@/components/tours/TypeFilter";
-import Head from 'next/head';
+import Head from "next/head";
 import NotificationsPanel from "@/components/tours/NotificationsPanel";
-import {useNotifications} from "@/context/NotificationsContext";
-import {fetchHomePageData} from "@/utils/djangoApi";
+import { useNotifications } from "@/context/NotificationsContext";
 
 export interface tourCategory {
   id: number;
@@ -30,7 +30,7 @@ export interface Tour {
   is_available: boolean;
   category: tourCategory;
   types: tourType[];
-  slug: string
+  slug: string;
 }
 
 interface ToursProps {
@@ -40,22 +40,26 @@ interface ToursProps {
   lang: string;
 }
 
-export const getServerSideProps: GetServerSideProps<ToursProps> = async (context) => {
+export const getServerSideProps: GetServerSideProps<ToursProps> = async (
+  context,
+) => {
   const lang = context.locale || "ru";
-  const {tours, tourCategories, tourTypes} = await fetchHomePageData(lang);
+  const { tours, tourCategories, tourTypes } = await fetchHomePageData(lang);
 
   return {
-    props: {tours, tourCategories, tourTypes, lang},
+    props: { tours, tourCategories, tourTypes, lang },
   };
 };
 
 const Tours = (props: ToursProps) => {
-  const {tours, tourCategories, tourTypes, lang} = props;
-  const {notifications} = useNotifications();
+  const { tours, tourCategories, tourTypes, lang } = props;
+  const { notifications } = useNotifications();
 
-  const {t, i18n} = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
 
-  const [selectedCategory, setSelectedCategory] = useState<tourCategory | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<tourCategory | null>(
+    null,
+  );
   const [selectedTypes, setSelectedTypes] = useState<tourType[]>([]);
 
   const theme = useTheme();
@@ -71,14 +75,16 @@ const Tours = (props: ToursProps) => {
     let filtered = tours;
 
     if (selectedCategory) {
-      filtered = filtered.filter((tour) => tour.category.id === selectedCategory.id);
+      filtered = filtered.filter(
+        (tour) => tour.category.id === selectedCategory.id,
+      );
     }
 
     if (selectedTypes.length > 0) {
       filtered = filtered.filter((tour) =>
         selectedTypes.every((selectedType) =>
-          tour.types.some((type) => type.id === selectedType.id)
-        )
+          tour.types.some((type) => type.id === selectedType.id),
+        ),
       );
     }
 
@@ -87,17 +93,21 @@ const Tours = (props: ToursProps) => {
 
   // Generate dynamic keywords
   const keywords = useMemo(() => {
-    const pre_setup_keywords = "Мистические туры по Египту, путешествия по Египту, экскурсии, туры к пирамидам, круизы по Нилу, достопримечательности Каира, Луксор и Асуан, сафари в пустыне, туры по Египту, исторические экскурсии";
+    const pre_setup_keywords =
+      "Мистические туры по Египту, путешествия по Египту, экскурсии, туры к пирамидам, круизы по Нилу, достопримечательности Каира, Луксор и Асуан, сафари в пустыне, туры по Египту, исторические экскурсии";
     const tourTitles = filteredTours.map((tour) => tour.title);
     const categoryNames = tourCategories.map((category) => category.name);
     const typeNames = tourTypes.map((type) => type.name);
 
     // Combine pre-setup keywords with dynamically generated ones
-    const dynamicKeywords = [...tourTitles, ...categoryNames, ...typeNames].join(', ');
+    const dynamicKeywords = [
+      ...tourTitles,
+      ...categoryNames,
+      ...typeNames,
+    ].join(", ");
 
     return `${pre_setup_keywords}, ${dynamicKeywords}`;
   }, [filteredTours, tourCategories, tourTypes]);
-
 
   const toursJSONLD = filteredTours.map((tour) => ({
     "@context": "https://schema.org",
@@ -105,7 +115,7 @@ const Tours = (props: ToursProps) => {
     name: tour.title,
     description: tour.description,
     image: tour.image,
-    url: `https://mystical-egypt-travels.online/tours/${tour.slug}`,
+    url: `https://anna-egypt.com/tours/${tour.slug}`,
     priceRange: `$${tour.cost_from} - $${tour.cost_to}`,
     isAccessibleForFree: false,
     available: tour.is_available,
@@ -115,9 +125,11 @@ const Tours = (props: ToursProps) => {
     <>
       <Head>
         <title>Tours | Mystical Egypt Travels</title>
-        <meta name="description"
-              content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии для незабываемого путешествия."/>
-        <meta name="keywords" content={keywords}/>
+        <meta
+          name="description"
+          content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии для незабываемого путешествия."
+        />
+        <meta name="keywords" content={keywords} />
         {/* Add JSON-LD structured data for tours */}
         <script
           type="application/ld+json"
@@ -126,7 +138,6 @@ const Tours = (props: ToursProps) => {
           }}
         />
       </Head>
-
 
       <Box mb={6} position="relative">
         {/* Filters for Mobile */}
@@ -161,7 +172,7 @@ const Tours = (props: ToursProps) => {
           {/* Left Area - Notifications (Hidden on Mobile) */}
           {!isMobile && (
             <Grid item xs={12} md={2}>
-              <NotificationsPanel notifications={notifications}/>
+              <NotificationsPanel notifications={notifications} />
             </Grid>
           )}
 
@@ -173,7 +184,7 @@ const Tours = (props: ToursProps) => {
               justifyContent="center"
               sx={{
                 px: 2,
-                justifyContent: {xs: "center", sm: "center"},
+                justifyContent: { xs: "center", sm: "center" },
               }}
             >
               {filteredTours.length > 0 ? (
@@ -189,7 +200,7 @@ const Tours = (props: ToursProps) => {
                       justifyContent: "center",
                     }}
                   >
-                    <TourCard tour={tour}/>
+                    <TourCard tour={tour} />
                   </Grid>
                 ))
               ) : (
@@ -201,13 +212,14 @@ const Tours = (props: ToursProps) => {
                   sx={{
                     display: "flex",
                     justifyContent: "center",
-                  }}>
+                  }}
+                >
                   <Typography
                     variant="h6"
                     color="text.secondary"
                     textAlign="center"
                     sx={{
-                      mt: {xs: 2, md: 4},
+                      mt: { xs: 2, md: 4 },
                     }}
                   >
                     {t("no-tours")}

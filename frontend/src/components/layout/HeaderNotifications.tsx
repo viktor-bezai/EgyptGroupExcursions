@@ -1,24 +1,35 @@
-import {Badge, Box, IconButton, Menu, MenuItem, Typography} from "@mui/material";
+import {
+  Badge,
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import React from "react";
-import {Notification} from "@/components/tours/NotificationsPanel";
-import {DescriptionRenderer} from "@/utils/textUtils";
+import { Notification } from "@/components/tours/NotificationsPanel";
+import { DescriptionRenderer } from "@/utils/textUtils";
 
 interface HeaderNotificationsProps {
   notifications: Notification[];
-  notificationsAnchor: HTMLElement | null
+  notificationsAnchor: HTMLElement | null;
   handleNotificationsClick: (event: React.MouseEvent<HTMLElement>) => void;
   handleNotificationsClose: () => void;
-
 }
 
 const HeaderNotifications = (props: HeaderNotificationsProps) => {
-  const {notifications, notificationsAnchor, handleNotificationsClick, handleNotificationsClose} = props
+  const {
+    notifications,
+    notificationsAnchor,
+    handleNotificationsClick,
+    handleNotificationsClose,
+  } = props;
   return (
-    <Box sx={{display: "flex", alignItems: "center", gap: 1, pr: 1}}>
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1, pr: 1 }}>
       <IconButton color="inherit" onClick={handleNotificationsClick}>
         <Badge badgeContent={notifications.length} color="secondary">
-          <NotificationsIcon/>
+          <NotificationsIcon />
         </Badge>
       </IconButton>
 
@@ -26,7 +37,13 @@ const HeaderNotifications = (props: HeaderNotificationsProps) => {
         anchorEl={notificationsAnchor}
         open={Boolean(notificationsAnchor)}
         onClose={handleNotificationsClose}
-        sx={{"& .MuiPaper-root": {width: "100%", maxHeight: 400, overflowY: "auto"}}}
+        sx={{
+          "& .MuiPaper-root": {
+            width: "100%",
+            maxHeight: 400,
+            overflowY: "auto",
+          },
+        }}
       >
         {notifications.length > 0 ? (
           notifications.map((notification) => (
@@ -42,8 +59,9 @@ const HeaderNotifications = (props: HeaderNotificationsProps) => {
                   sx={{
                     wordWrap: "break-word",
                     whiteSpace: "normal",
-                  }}>
-                  <DescriptionRenderer description={notification.description}/>
+                  }}
+                >
+                  <DescriptionRenderer description={notification.description} />
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
                   {new Date(notification.created_at).toLocaleString()}
@@ -60,7 +78,7 @@ const HeaderNotifications = (props: HeaderNotificationsProps) => {
         )}
       </Menu>
     </Box>
-  )
-}
+  );
+};
 
 export default HeaderNotifications;

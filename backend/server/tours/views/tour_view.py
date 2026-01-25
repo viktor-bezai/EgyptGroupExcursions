@@ -17,7 +17,7 @@ class TourView(APIView):
         responses={200: TourSerializer(many=True)},
         operation_summary="Get a list of available tours",
         operation_description="Retrieves a list containing the details of all currently available "
-                              "Tour objects within the database.",
+        "Tour objects within the database.",
     )
     def get(self, request):
         """
@@ -30,7 +30,9 @@ class TourView(APIView):
         category_id = tour_query_serializer.validated_data.get("category_id")
         category_name = tour_query_serializer.validated_data.get("category_name")
 
-        tours = Tour.filter_tours(lang=lang, category_id=category_id, category_name=category_name)
+        tours = Tour.filter_tours(
+            lang=lang, category_id=category_id, category_name=category_name
+        )
 
         serializer = TourSerializer(instance=tours, many=True, context={"lang": lang})
 

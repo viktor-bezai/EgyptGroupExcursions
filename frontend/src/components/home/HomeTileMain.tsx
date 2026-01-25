@@ -8,7 +8,12 @@ interface HomeTileMainProps {
   link: string;
 }
 
-const HomeTileMain = ({ title, description, image, link }: HomeTileMainProps) => {
+const HomeTileMain = ({
+  title,
+  description,
+  image,
+  link,
+}: HomeTileMainProps) => {
   return (
     <Link href={link} passHref>
       <Box
@@ -17,7 +22,7 @@ const HomeTileMain = ({ title, description, image, link }: HomeTileMainProps) =>
           position: "relative",
           minHeight: { xs: 300, md: 450, lg: 500, xl: 700 },
           minWidth: { md: 150, xl: 250 },
-          borderRadius: {xs: 2, md: 1},
+          borderRadius: { xs: 2, md: 1 },
           overflow: "hidden",
           backgroundImage: `url(${image})`,
           backgroundSize: "cover",
@@ -44,7 +49,7 @@ const HomeTileMain = ({ title, description, image, link }: HomeTileMainProps) =>
         <Box
           sx={{
             position: "absolute",
-            p: {xs: 1, md: 2},
+            p: { xs: 1, md: 2 },
             top: 0,
             left: 0,
             right: 0,
@@ -87,7 +92,7 @@ const HomeTileMain = ({ title, description, image, link }: HomeTileMainProps) =>
         >
           <Box
             sx={{
-              backgroundColor: {xs: "none", md: "rgba(0, 0, 0, 0.7)"},
+              backgroundColor: { xs: "none", md: "rgba(0, 0, 0, 0.7)" },
               p: 2,
             }}
           >
@@ -95,7 +100,12 @@ const HomeTileMain = ({ title, description, image, link }: HomeTileMainProps) =>
               sx={{
                 color: "white",
                 textAlign: "center",
-                fontSize: { xs: "0.9rem", sm: "0.75rem", lg: "0.9rem", xl: "1rem" },
+                fontSize: {
+                  xs: "0.9rem",
+                  sm: "0.75rem",
+                  lg: "0.9rem",
+                  xl: "1rem",
+                },
               }}
             >
               {description}

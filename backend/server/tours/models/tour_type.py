@@ -8,11 +8,11 @@ class TourType(models.Model):
     ordering = models.IntegerField(default=0, verbose_name="Порядковый номер")
 
     class Meta:
-        verbose_name = 'Тип Тура'
-        verbose_name_plural = 'Типы Туров'
+        verbose_name = "Тип Тура"
+        verbose_name_plural = "Типы Туров"
 
     def get_name(self, lang):
-        return getattr(self, f'name_{lang}', self.name_ru)
+        return getattr(self, f"name_{lang}", self.name_ru)
 
     def __str__(self):
         return self.name_ru

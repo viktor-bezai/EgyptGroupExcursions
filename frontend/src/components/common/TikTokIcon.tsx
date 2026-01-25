@@ -6,7 +6,9 @@ interface TikTokIconProps {
   color?: string; // Optional color prop
 }
 
-export const TikTokIcon: React.FC<TikTokIconProps> = ({ color = "secondary.main" }) => {
+export const TikTokIcon: React.FC<TikTokIconProps> = ({
+  color = "secondary.main",
+}) => {
   const theme = useTheme();
 
   const resolveColor = (color: string): string => {
@@ -49,7 +51,7 @@ export const TikTokIconWithBackground: React.FC = () => (
       width: "100%",
       height: "100%",
       backgroundColor: "white",
-      borderRadius: "10%"
+      borderRadius: "10%",
     }}
   >
     <TikTokIcon color="primary.main" />

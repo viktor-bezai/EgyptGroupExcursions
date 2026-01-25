@@ -1,8 +1,8 @@
 import React from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import {Box} from "@mui/material";
-import {useFetchNotifications} from "@/hooks/useFetchNotifications";
+import { Box } from "@mui/material";
+import { useFetchNotifications } from "@/hooks/useFetchNotifications";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 
 interface LayoutProps {
@@ -10,7 +10,7 @@ interface LayoutProps {
   lang: string;
 }
 
-const Layout: React.FC<LayoutProps> = ({children, lang}) => {
+const Layout: React.FC<LayoutProps> = ({ children, lang }) => {
   useFetchNotifications(lang);
 
   return (
@@ -36,7 +36,7 @@ const Layout: React.FC<LayoutProps> = ({children, lang}) => {
         {children}
       </Box>
 
-      <Footer/>
+      <Footer />
     </Box>
   );
 };

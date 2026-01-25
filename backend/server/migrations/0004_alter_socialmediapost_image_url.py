@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('server', '0003_socialmediapost'),
+        ("server", "0003_socialmediapost"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='socialmediapost',
-            name='image_url',
+            model_name="socialmediapost",
+            name="image_url",
             field=models.TextField(),
         ),
     ]

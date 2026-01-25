@@ -14,11 +14,11 @@ class Notification(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'Уведомление'
-        verbose_name_plural = 'Уведомления'
+        verbose_name = "Уведомление"
+        verbose_name_plural = "Уведомления"
 
     def get_name(self, lang):
-        return getattr(self, f'title_{lang}', self.title_ru)
+        return getattr(self, f"title_{lang}", self.title_ru)
 
     def __str__(self):
         return self.title_ru

@@ -6,4 +6,12 @@ from server.social_media_posts.models import SocialMediaPost
 class SocialMediaPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = SocialMediaPost
-        fields = "__all__"
+        fields = [
+            "id",
+            "url",
+            "social_media",
+            "oembed_html",
+            "thumbnail_url",
+            "title",
+            "display_order",
+        ]

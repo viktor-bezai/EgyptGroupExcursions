@@ -13,10 +13,18 @@ export const fetchWeather = async () => {
   try {
     const [hurghadaResponse, sharmResponse] = await Promise.all([
       axios.get(`https://api.openweathermap.org/data/2.5/weather`, {
-        params: { q: "Hurghada", units: "metric", appid: process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY },
+        params: {
+          q: "Hurghada",
+          units: "metric",
+          appid: process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY,
+        },
       }),
       axios.get(`https://api.openweathermap.org/data/2.5/weather`, {
-        params: { q: "Sharm El-Sheikh", units: "metric", appid: process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY },
+        params: {
+          q: "Sharm El-Sheikh",
+          units: "metric",
+          appid: process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY,
+        },
       }),
     ]);
 
@@ -33,11 +41,13 @@ export const fetchWeather = async () => {
   }
 };
 
-
 export const fetchForecast = async (location: string, period: "week") => {
-  const response = await axios.get(`https://api.openweathermap.org/data/2.5/forecast`, {
-    params: {q: location, units: "metric", appid: API_KEY},
-  });
+  const response = await axios.get(
+    `https://api.openweathermap.org/data/2.5/forecast`,
+    {
+      params: { q: location, units: "metric", appid: API_KEY },
+    },
+  );
 
   const today = new Date();
   const nextPeriod = new Date();

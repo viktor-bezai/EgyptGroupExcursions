@@ -13,9 +13,13 @@ interface NotificationsContextType {
   setNotifications: (notifications: Notification[]) => void;
 }
 
-const NotificationsContext = createContext<NotificationsContextType | undefined>(undefined);
+const NotificationsContext = createContext<
+  NotificationsContextType | undefined
+>(undefined);
 
-export const NotificationsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const NotificationsProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   return (
@@ -28,7 +32,9 @@ export const NotificationsProvider: React.FC<{ children: ReactNode }> = ({ child
 export const useNotifications = () => {
   const context = useContext(NotificationsContext);
   if (!context) {
-    throw new Error("useNotifications must be used within a NotificationsProvider");
+    throw new Error(
+      "useNotifications must be used within a NotificationsProvider",
+    );
   }
   return context;
 };

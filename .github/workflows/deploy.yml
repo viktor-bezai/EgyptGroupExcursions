@@ -1,0 +1,51 @@
+name: Deploy EgyptGroupExcursions
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            cd /home/deploy/egypt
+
+            # Pull latest code
+            git fetch origin main
+            git reset --hard origin/main
+
+            # Create .env from secrets
+            cat > .env << 'EOF'
+            ENVIRONMENT=production
+            SECRET_KEY=${{ secrets.SECRET_KEY }}
+            DBNAME=${{ secrets.DBNAME }}
+            DBUSER=${{ secrets.DBUSER }}
+            DBPASS=${{ secrets.DBPASS }}
+            DBHOST=${{ secrets.DBHOST }}
+            OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+            TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
+            TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
+            NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+            NEXT_PUBLIC_MEDIA_URL=${{ secrets.NEXT_PUBLIC_MEDIA_URL }}
+            NEXT_PUBLIC_OPENWEATHER_API_KEY=${{ secrets.NEXT_PUBLIC_OPENWEATHER_API_KEY }}
+            EOF
+
+            # Build and restart containers
+            docker-compose -f docker-compose.prod.yml build
+            docker-compose -f docker-compose.prod.yml up -d
+
+            # Cleanup
+            docker image prune -f
+
+            echo "Deployed successfully!"
