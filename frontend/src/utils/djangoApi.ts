@@ -1,5 +1,15 @@
+// Use internal URL for SSR (server-side), public URL for client-side
+const getApiUrl = () => {
+  if (typeof window === 'undefined') {
+    // Server-side: use Docker service name
+    return process.env.INTERNAL_API_URL || 'http://backend:8000/api/v1';
+  }
+  // Client-side: use public URL
+  return process.env.NEXT_PUBLIC_API_BASE_URL;
+};
+
 export const fetchHomePageData = async (lang: string) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const apiUrl = getApiUrl();
 
   try {
     const [toursRes, categoriesRes, typesRes] = await Promise.all([
@@ -24,7 +34,7 @@ export const fetchHomePageData = async (lang: string) => {
 };
 
 export const fetchAboutMePageData = async () => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const apiUrl = getApiUrl();
 
   try {
     const socialMediaPostsRes = await fetch(`${apiUrl}/social-media-posts/`);
@@ -58,7 +68,7 @@ export const fetchAboutMePageData = async () => {
 };
 
 export const fetchNotificationsData = async (lang: string) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const apiUrl = getApiUrl();
 
   try {
     const [notificationsRes] = await Promise.all([

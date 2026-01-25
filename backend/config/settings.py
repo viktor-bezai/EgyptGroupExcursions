@@ -51,6 +51,7 @@ CSRF_TRUSTED_ORIGINS = [
 if IS_LOCAL:
     ALLOWED_HOSTS.append('localhost')
     ALLOWED_HOSTS.append('127.0.0.1')
+    ALLOWED_HOSTS.append('egypt-backend')
     CORS_ALLOWED_ORIGINS.append("http://localhost:3000")
     CSRF_TRUSTED_ORIGINS.append('http://localhost:8000/')
 if IS_PROD:
@@ -122,7 +123,7 @@ DATABASES = {
         'USER': os.getenv('DBUSER'),
         'PASSWORD': os.getenv('DBPASS'),
         'HOST': os.getenv('DBHOST'),
-        'PORT': '5432',
+        'PORT': os.getenv('DBPORT', '5432'),
     }
 }
 

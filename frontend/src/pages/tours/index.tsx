@@ -3,7 +3,7 @@ import {GetServerSideProps} from "next";
 import {Box, Grid, Typography, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import TourCard from "@/components/tours/TourCard";
-import {fetchHomePageData} from "@/utils/api";
+import {fetchHomePageData} from "@/utils/djangoApi";
 import CategoryFilter from "@/components/tours/CategoryFilter";
 import TypeFilter from "@/components/tours/TypeFilter";
 import Head from 'next/head';
