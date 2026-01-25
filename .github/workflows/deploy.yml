@@ -22,8 +22,8 @@ jobs:
             cd /home/deploy/EgyptGroupExcursions
 
             # Pull latest code
-            git fetch origin main
-            git reset --hard origin/main
+            git fetch origin master
+            git reset --hard origin/master
 
             # Create .env from secrets
             cat > .env << 'EOF'
