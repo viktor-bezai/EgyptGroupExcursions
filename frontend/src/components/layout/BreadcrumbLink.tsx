@@ -1,7 +1,6 @@
-import {Link as MUILink, Typography} from "@mui/material";
+import { Link as MUILink, Typography } from "@mui/material";
 import NextLink from "next/link";
 import React from "react";
-
 
 interface BreadcrumbLinkProps {
   href: string;
@@ -37,4 +36,4 @@ const BreadcrumbLink = (props: BreadcrumbLinkProps) => {
   );
 };
 
-export default BreadcrumbLink
+export default BreadcrumbLink;

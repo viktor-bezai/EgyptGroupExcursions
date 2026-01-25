@@ -12,7 +12,9 @@ interface TravelersAssistantPageProps {
 
 export type TravelersAssistantMenuOption = "checklist" | "weather" | "calendar";
 
-export const getServerSideProps: GetServerSideProps<TravelersAssistantPageProps> = async (context) => {
+export const getServerSideProps: GetServerSideProps<
+  TravelersAssistantPageProps
+> = async (context) => {
   const lang = context.locale || "ru";
 
   return {
@@ -22,7 +24,8 @@ export const getServerSideProps: GetServerSideProps<TravelersAssistantPageProps>
 
 const TravelersAssistantPage = ({ lang }: TravelersAssistantPageProps) => {
   const { i18n } = useTranslation("common");
-  const [activeMenu, setActiveMenu] = useState<TravelersAssistantMenuOption>("checklist");
+  const [activeMenu, setActiveMenu] =
+    useState<TravelersAssistantMenuOption>("checklist");
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));

@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from "react";
+import React, { useState, useCallback } from "react";
 import {
   Box,
   Button,
@@ -10,16 +10,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {useTranslation} from "react-i18next";
-import {Tour} from "@/pages/tours";
+import { useTranslation } from "react-i18next";
+import { Tour } from "@/pages/tours";
 
 interface ContactFormProps {
   tour?: Tour;
   onClose?: () => void;
 }
 
-const ContactForm: React.FC<ContactFormProps> = ({tour, onClose}) => {
-  const {t} = useTranslation("common");
+const ContactForm: React.FC<ContactFormProps> = ({ tour, onClose }) => {
+  const { t } = useTranslation("common");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -30,23 +30,29 @@ const ContactForm: React.FC<ContactFormProps> = ({tour, onClose}) => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [feedbackMessage, setFeedbackMessage] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [feedbackMessage, setFeedbackMessage] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const {name, value} = event.target;
-      setFormData((prev) => ({...prev, [name]: value}));
-      setErrors((prev) => ({...prev, [name]: ""}));
+      const { name, value } = event.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     },
-    []
+    [],
   );
 
   const handlePreferredContactChange = useCallback(
     (event: SelectChangeEvent<string>) => {
-      setFormData((prev) => ({...prev, preferredContact: event.target.value}));
-      setErrors((prev) => ({...prev, preferredContact: ""}));
+      setFormData((prev) => ({
+        ...prev,
+        preferredContact: event.target.value,
+      }));
+      setErrors((prev) => ({ ...prev, preferredContact: "" }));
     },
-    []
+    [],
   );
 
   const validateForm = useCallback(() => {
@@ -90,7 +96,7 @@ const ContactForm: React.FC<ContactFormProps> = ({tour, onClose}) => {
       try {
         const response = await fetch("/api/contact", {
           method: "POST",
-          headers: {"Content-Type": "application/json"},
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         });
 
@@ -99,7 +105,10 @@ const ContactForm: React.FC<ContactFormProps> = ({tour, onClose}) => {
           throw new Error(errorData.message || t("message-send-error"));
         }
 
-        setFeedbackMessage({type: "success", message: t("message-sent-successfully")});
+        setFeedbackMessage({
+          type: "success",
+          message: t("message-sent-successfully"),
+        });
         setFormData((prev) => ({
           ...prev,
           firstName: "",
@@ -109,24 +118,24 @@ const ContactForm: React.FC<ContactFormProps> = ({tour, onClose}) => {
           message: "",
         }));
       } catch (err: any) {
-        setFeedbackMessage({type: "error", message: err.message});
+        setFeedbackMessage({ type: "error", message: err.message });
       } finally {
         setIsSubmitting(false);
       }
     },
-    [formData, t, validateForm]
+    [formData, t, validateForm],
   );
 
   return (
-    <Paper elevation={3} sx={{padding: 3, maxWidth: 900}}>
+    <Paper elevation={3} sx={{ padding: 3, maxWidth: 900 }}>
       {!onClose && (
-        <Typography variant="h5" sx={{fontWeight: 500, mb: 2}}>
+        <Typography variant="h5" sx={{ fontWeight: 500, mb: 2 }}>
           {t("contact-form")}
         </Typography>
       )}
 
       {tour && (
-        <Box sx={{mb: 2}}>
+        <Box sx={{ mb: 2 }}>
           <Typography variant="h6">{tour.title}</Typography>
         </Box>
       )}
@@ -144,7 +153,7 @@ const ContactForm: React.FC<ContactFormProps> = ({tour, onClose}) => {
               onChange={handleInputChange}
               error={!!errors.firstName}
               helperText={errors.firstName}
-              sx={{boxSizing: "border-box"}}
+              sx={{ boxSizing: "border-box" }}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -158,7 +167,7 @@ const ContactForm: React.FC<ContactFormProps> = ({tour, onClose}) => {
               onChange={handleInputChange}
               error={!!errors.lastName}
               helperText={errors.lastName}
-              sx={{boxSizing: "border-box"}}
+              sx={{ boxSizing: "border-box" }}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -177,7 +186,14 @@ const ContactForm: React.FC<ContactFormProps> = ({tour, onClose}) => {
               <MenuItem value="" disabled>
                 {t("select-contact-type")}
               </MenuItem>
-              {["Email", "Viber", "Whatsapp", "Telegram", "Instagram", "Tiktok"].map((option) => (
+              {[
+                "Email",
+                "Viber",
+                "Whatsapp",
+                "Telegram",
+                "Instagram",
+                "Tiktok",
+              ].map((option) => (
                 <MenuItem key={option} value={option}>
                   {t(option)}
                 </MenuItem>
@@ -195,7 +211,7 @@ const ContactForm: React.FC<ContactFormProps> = ({tour, onClose}) => {
               onChange={handleInputChange}
               error={!!errors.contactLink}
               helperText={errors.contactLink}
-              sx={{boxSizing: "border-box"}}
+              sx={{ boxSizing: "border-box" }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -218,20 +234,33 @@ const ContactForm: React.FC<ContactFormProps> = ({tour, onClose}) => {
             />
           </Grid>
         </Grid>
-        <Box sx={{mt: 3, textAlign: "center"}}>
+        <Box sx={{ mt: 3, textAlign: "center" }}>
           {feedbackMessage && (
             <Typography
               mb={2}
-              color={feedbackMessage.type === "success" ? "success.main" : "error"}
+              color={
+                feedbackMessage.type === "success" ? "success.main" : "error"
+              }
             >
               {feedbackMessage.message}
             </Typography>
           )}
-          <Button variant="contained" color="primary" size="large" type="submit" disabled={isSubmitting}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            type="submit"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? t("sending") : t("submit")}
           </Button>
           {onClose && (
-            <Button variant="outlined" size="large" onClick={onClose} sx={{ml: 2}}>
+            <Button
+              variant="outlined"
+              size="large"
+              onClick={onClose}
+              sx={{ ml: 2 }}
+            >
               {t("cancel")}
             </Button>
           )}

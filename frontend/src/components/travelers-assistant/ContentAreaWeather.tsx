@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -8,23 +8,23 @@ import {
   ButtonGroup,
   Card,
   CardHeader,
-  CardContent
+  CardContent,
 } from "@mui/material";
-import {fetchWeather, fetchForecast} from "@/utils/openweatherApi";
-import {useTranslation} from "react-i18next"; // Assuming `fetchForecast` is defined
+import { fetchWeather, fetchForecast } from "@/utils/openweatherApi";
+import { useTranslation } from "react-i18next"; // Assuming `fetchForecast` is defined
 
 type WeatherDataDescriprion = {
-  description: string,
-  icon: string,
-  main: string
-}
+  description: string;
+  icon: string;
+  main: string;
+};
 
 type WeatherData = {
   hurghada: {
     main: {
-      feels_like: number
-      humidity: number
-      temp: number
+      feels_like: number;
+      humidity: number;
+      temp: number;
     };
     weather: WeatherDataDescriprion[];
   };
@@ -42,12 +42,16 @@ type ForecastData = {
 
 const ContentAreaWeather = () => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-  const [forecastData, setForecastData] = useState<{ [key: string]: ForecastData } | null>(null);
+  const [forecastData, setForecastData] = useState<{
+    [key: string]: ForecastData;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedPeriod, setSelectedPeriod] = useState<"today" | "week">("today");
+  const [selectedPeriod, setSelectedPeriod] = useState<"today" | "week">(
+    "today",
+  );
 
-  const {t} = useTranslation("common");
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     const fetchWeatherData = async () => {
@@ -79,8 +83,13 @@ const ContentAreaWeather = () => {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-        <CircularProgress/>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100%"
+      >
+        <CircularProgress />
       </Box>
     );
   }
@@ -98,13 +107,19 @@ const ContentAreaWeather = () => {
   return (
     <Box>
       {/* Button Group */}
-      <Box sx={{display: "flex", justifyContent: "center", mb: 2}}>
+      <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
         <ButtonGroup variant="contained">
           <Button
             onClick={() => setSelectedPeriod("today")}
             sx={{
-              backgroundColor: selectedPeriod === "today" ? "primary.main" : "background.default",
-              color: selectedPeriod === "today" ? "primary.contrastText" : "text.primary",
+              backgroundColor:
+                selectedPeriod === "today"
+                  ? "primary.main"
+                  : "background.default",
+              color:
+                selectedPeriod === "today"
+                  ? "primary.contrastText"
+                  : "text.primary",
             }}
           >
             {t("today")}
@@ -112,23 +127,28 @@ const ContentAreaWeather = () => {
           <Button
             onClick={() => setSelectedPeriod("week")}
             sx={{
-              backgroundColor: selectedPeriod === "week" ? "primary.main" : "background.default",
-              color: selectedPeriod === "week" ? "primary.contrastText" : "text.primary",
+              backgroundColor:
+                selectedPeriod === "week"
+                  ? "primary.main"
+                  : "background.default",
+              color:
+                selectedPeriod === "week"
+                  ? "primary.contrastText"
+                  : "text.primary",
             }}
           >
             {t("this-week")}
           </Button>
-
         </ButtonGroup>
       </Box>
 
       {/* Content */}
-      <Box sx={{mt: 2}}>
+      <Box sx={{ mt: 2 }}>
         {selectedPeriod === "today" && weatherData && (
           <Grid container spacing={4}>
             <Grid item xs={12} sm={6}>
               <Card>
-                <CardHeader title={t("hurghada")}/>
+                <CardHeader title={t("hurghada")} />
                 <CardContent>
                   <Typography variant="h6">
                     {weatherData.hurghada.main.temp}°C
@@ -141,7 +161,7 @@ const ContentAreaWeather = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <Card>
-                <CardHeader title={t("sharm")}/>
+                <CardHeader title={t("sharm")} />
                 <CardContent>
                   <Typography variant="h6">
                     {weatherData.sharm.main.temp}°C
@@ -159,18 +179,18 @@ const ContentAreaWeather = () => {
           <Grid container spacing={4}>
             <Grid item xs={12} sm={6}>
               <Card>
-                <CardHeader title={t("hurghada")}/>
+                <CardHeader title={t("hurghada")} />
                 <CardContent>
                   {forecastData.hurghada.map((entry, index) => (
                     <Box key={index} mb={2}>
                       <Typography variant="body1">
-                        {new Intl.DateTimeFormat('en-US', {
-                          month: 'short',
-                          day: '2-digit',
-                          year: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          hour12: false
+                        {new Intl.DateTimeFormat("en-US", {
+                          month: "short",
+                          day: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false,
                         }).format(new Date(entry.dt * 1000))}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
@@ -183,18 +203,18 @@ const ContentAreaWeather = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <Card>
-                <CardHeader title={t("sharm")}/>
+                <CardHeader title={t("sharm")} />
                 <CardContent>
                   {forecastData.sharm.map((entry, index) => (
                     <Box key={index} mb={2}>
                       <Typography variant="body1">
-                        {new Intl.DateTimeFormat('en-US', {
-                          month: 'short',
-                          day: '2-digit',
-                          year: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          hour12: false
+                        {new Intl.DateTimeFormat("en-US", {
+                          month: "short",
+                          day: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false,
                         }).format(new Date(entry.dt * 1000))}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
@@ -207,7 +227,6 @@ const ContentAreaWeather = () => {
             </Grid>
           </Grid>
         )}
-
       </Box>
     </Box>
   );

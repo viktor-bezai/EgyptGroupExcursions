@@ -8,7 +8,11 @@ interface HeaderDrawerProps {
   navItems: { label: string; href: string }[];
 }
 
-const HeaderDrawer: React.FC<HeaderDrawerProps> = ({ open, onClose, navItems }) => {
+const HeaderDrawer: React.FC<HeaderDrawerProps> = ({
+  open,
+  onClose,
+  navItems,
+}) => {
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
       <Box

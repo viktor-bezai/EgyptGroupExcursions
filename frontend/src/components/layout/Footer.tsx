@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, Container, Typography, IconButton } from "@mui/material";
 import { Instagram } from "@mui/icons-material";
-import {TikTokIcon} from "@/components/common/TikTokIcon";
-import {useTranslation} from "react-i18next";
+import { TikTokIcon } from "@/components/common/TikTokIcon";
+import { useTranslation } from "react-i18next";
 
 const Footer: React.FC = () => {
   const socialIcons = [
@@ -68,7 +68,8 @@ const Footer: React.FC = () => {
           }}
         >
           <Typography variant="body2">
-            © {new Date().getFullYear()} Mystical Egypt Travels. All rights reserved.
+            © {new Date().getFullYear()} Mystical Egypt Travels. All rights
+            reserved.
           </Typography>
         </Box>
       </Container>

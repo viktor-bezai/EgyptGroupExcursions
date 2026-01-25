@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
-import {fetchNotificationsData} from "@/utils/djangoApi";
+import { fetchNotificationsData } from "@/utils/djangoApi";
 
 export const useFetchNotifications = (lang: string) => {
   const { setNotifications } = useNotifications();

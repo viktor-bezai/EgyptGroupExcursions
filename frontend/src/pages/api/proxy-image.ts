@@ -1,7 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import fetch from "node-fetch";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   const { url } = req.query;
 
   if (!url || typeof url !== "string") {

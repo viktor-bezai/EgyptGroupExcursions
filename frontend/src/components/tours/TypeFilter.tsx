@@ -14,11 +14,15 @@ const TypeFilter: React.FC<TypeFilterProps> = (props) => {
   const { t } = useTranslation("common");
 
   const handleTypeToggle = (type: tourType) => {
-    const isSelected = selectedTypes.some((selectedType) => selectedType.id === type.id);
+    const isSelected = selectedTypes.some(
+      (selectedType) => selectedType.id === type.id,
+    );
 
     if (isSelected) {
       // Remove the type from selectedTypes
-      onSelectTypes(selectedTypes.filter((selectedType) => selectedType.id !== type.id));
+      onSelectTypes(
+        selectedTypes.filter((selectedType) => selectedType.id !== type.id),
+      );
     } else {
       // Add the type to selectedTypes
       onSelectTypes([...selectedTypes, type]);

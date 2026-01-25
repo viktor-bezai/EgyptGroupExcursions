@@ -1,16 +1,20 @@
-import React, {useEffect, useState} from "react";
-import {Box, Breadcrumbs as MUIBreadcrumbs, Link as MUILink} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Breadcrumbs as MUIBreadcrumbs,
+  Link as MUILink,
+} from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import NextLink from "next/link";
-import {Tour} from "@/pages/tours";
-import {fetchTourBySlug} from "@/pages/api/tours";
-import {useTranslation} from "react-i18next";
+import { Tour } from "@/pages/tours";
+import { fetchTourBySlug } from "@/pages/api/tours";
+import { useTranslation } from "react-i18next";
 import BreadcrumbLink from "@/components/layout/BreadcrumbLink";
 
 const Breadcrumbs: React.FC = () => {
-  const {t, i18n} = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
   const router = useRouter();
   const [dynamicTitle, setDynamicTitle] = useState<string | null>(null);
 
@@ -45,15 +49,19 @@ const Breadcrumbs: React.FC = () => {
       const slug = pathArray[1];
       fetchTourBySlug(slug, lang) // Pass the lang parameter
         .then((data: Tour) => setDynamicTitle(data.title))
-        .catch((error: string) => console.error("Error fetching tour title:", error));
+        .catch((error: string) =>
+          console.error("Error fetching tour title:", error),
+        );
     }
   }, [pathArray, lang]);
 
   return (
-    <Box sx={{mx: 2, mt: 2, display: "flex", alignItems: "center"}}>
+    <Box sx={{ mx: 2, mt: 2, display: "flex", alignItems: "center" }}>
       <MUIBreadcrumbs
         aria-label="breadcrumb"
-        separator={<ChevronRightIcon fontSize="small" sx={{color: "text.secondary"}}/>}
+        separator={
+          <ChevronRightIcon fontSize="small" sx={{ color: "text.secondary" }} />
+        }
         sx={{
           "& .MuiBreadcrumbs-separator": {
             mx: 0.5,
@@ -91,7 +99,14 @@ const Breadcrumbs: React.FC = () => {
           const href = `/${pathArray.slice(0, index + 1).join("/")}`;
           const label = getBreadcrumbLabel(path, index);
 
-          return <BreadcrumbLink key={href} href={href} label={label} isLast={isLast}/>;
+          return (
+            <BreadcrumbLink
+              key={href}
+              href={href}
+              label={label}
+              isLast={isLast}
+            />
+          );
         })}
       </MUIBreadcrumbs>
     </Box>

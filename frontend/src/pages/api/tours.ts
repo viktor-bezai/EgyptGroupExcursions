@@ -1,8 +1,13 @@
-import {Tour} from "@/pages/tours";
+import { Tour } from "@/pages/tours";
 
-export const fetchTourBySlug = async (slug: string, lang: string): Promise<Tour> => {
+export const fetchTourBySlug = async (
+  slug: string,
+  lang: string,
+): Promise<Tour> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tours/slug/${slug}/?lang=${lang}`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/tours/slug/${slug}/?lang=${lang}`,
+    );
 
     if (!response.ok) {
       throw new Error(`Failed to fetch tour data: ${response.statusText}`);
@@ -16,7 +21,7 @@ export const fetchTourBySlug = async (slug: string, lang: string): Promise<Tour>
   }
 };
 
-export const fetchAllTours = async (lang: string = 'ru'): Promise<Tour[]> => {
+export const fetchAllTours = async (lang: string = "ru"): Promise<Tour[]> => {
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   try {
@@ -28,7 +33,7 @@ export const fetchAllTours = async (lang: string = 'ru'): Promise<Tour[]> => {
     const tours = await response.json();
     return Array.isArray(tours) ? tours : [];
   } catch (error) {
-    console.error('Error fetching tours:', error);
+    console.error("Error fetching tours:", error);
     return [];
   }
 };

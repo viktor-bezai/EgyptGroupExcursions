@@ -1,5 +1,11 @@
 import React from "react";
-import { Box, Button, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { TravelersAssistantMenuOption } from "@/pages/travelers-assistant";
 import { useTranslation } from "react-i18next";
 
@@ -23,7 +29,7 @@ const AssistantMenu = ({ activeMenu, setActiveMenu }: LeftMenuProps) => {
   return (
     <>
       {isMobile ? (
-        <Box sx={{textAlign: "center"}}>
+        <Box sx={{ textAlign: "center" }}>
           {menuOptions.map((option) => (
             <Button
               key={option.id}

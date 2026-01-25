@@ -1,9 +1,13 @@
 import sanitizeHtml from "sanitize-html";
 import React from "react";
-import {Box} from "@mui/material";
-import {useTheme} from "@mui/material/styles";
+import { Box } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
-export const truncateText = (htmlString: string | null, length: number, alterText: string): string => {
+export const truncateText = (
+  htmlString: string | null,
+  length: number,
+  alterText: string,
+): string => {
   if (!htmlString) {
     return alterText;
   }
@@ -14,11 +18,15 @@ export const truncateText = (htmlString: string | null, length: number, alterTex
   });
 
   // Truncate sanitized string
-  return sanitizedString.length > length ? `${sanitizedString.slice(0, length)}...` : sanitizedString;
+  return sanitizedString.length > length
+    ? `${sanitizedString.slice(0, length)}...`
+    : sanitizedString;
 };
 
 // Description Renderer
-export const DescriptionRenderer: React.FC<{ description: string }> = ({description}) => {
+export const DescriptionRenderer: React.FC<{ description: string }> = ({
+  description,
+}) => {
   const theme = useTheme();
 
   // Function to process the content
@@ -28,13 +36,16 @@ export const DescriptionRenderer: React.FC<{ description: string }> = ({descript
     // Match and update image src attributes
     const updatedContent = content.replace(
       /<img[^>]+src="\/media\/ckeditor\/([^"]+)"/g,
-      `<img src="${mediaUrl}/media/ckeditor/$1"`
+      `<img src="${mediaUrl}/media/ckeditor/$1"`,
     );
 
     // Match TikTok video links (if needed)
-    const tiktokRegex = /https?:\/\/(?:www\.)?tiktok\.com\/(?:@[\w.-]+\/video\/|v\/|embed\/)(\d+)(?:\?.*)?/g;
-    const finalContent = updatedContent.replace(tiktokRegex, (match, videoId) => {
-      return `
+    const tiktokRegex =
+      /https?:\/\/(?:www\.)?tiktok\.com\/(?:@[\w.-]+\/video\/|v\/|embed\/)(\d+)(?:\?.*)?/g;
+    const finalContent = updatedContent.replace(
+      tiktokRegex,
+      (match, videoId) => {
+        return `
         <div style="margin: 1em 0; position: relative; padding-bottom: 101%; height: 0; overflow: hidden;">
           <iframe 
             src="https://www.tiktok.com/embed/${videoId}" 
@@ -43,17 +54,18 @@ export const DescriptionRenderer: React.FC<{ description: string }> = ({descript
             title="TikTok Video">
           </iframe>
         </div>`;
-    });
+      },
+    );
 
     return finalContent;
   };
 
   return (
     <Box
-      dangerouslySetInnerHTML={{__html: processContent(description)}}
+      dangerouslySetInnerHTML={{ __html: processContent(description) }}
       sx={{
-        mb: {xs: 2, md: 4},
-        p: {xs: 1, md: 2},
+        mb: { xs: 2, md: 4 },
+        p: { xs: 1, md: 2 },
         border: "1px solid",
         borderColor: theme.palette.divider,
         borderRadius: "8px",
@@ -63,7 +75,7 @@ export const DescriptionRenderer: React.FC<{ description: string }> = ({descript
           height: "auto",
           borderRadius: 2,
         },
-        "& a": {color: theme.palette.primary.main, textDecoration: "none"},
+        "& a": { color: theme.palette.primary.main, textDecoration: "none" },
         "& .image-style-align-left": {
           float: "left",
           marginRight: 2,
@@ -89,4 +101,3 @@ export const DescriptionRenderer: React.FC<{ description: string }> = ({descript
     />
   );
 };
-

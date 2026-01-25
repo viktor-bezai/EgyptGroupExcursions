@@ -15,7 +15,9 @@ const TikTokFeed: React.FC<TikTokFeedProps> = ({ posts }) => {
       <Grid container spacing={4} justifyContent="center">
         {posts.map((post, index) => (
           <Grid item key={index}>
-            <Card sx={{ width: 300, height: 450, borderRadius: 2, boxShadow: 3 }}>
+            <Card
+              sx={{ width: 300, height: 450, borderRadius: 2, boxShadow: 3 }}
+            >
               <CardActionArea
                 href={post.url}
                 target="_blank"
@@ -28,7 +30,11 @@ const TikTokFeed: React.FC<TikTokFeedProps> = ({ posts }) => {
                   component="img"
                   height="100%"
                   image={`/api/proxy-image?url=${encodeURIComponent(post.imageUrl)}`}
-                  alt={post.description || t("tiktok-thumbnail-alt") || "TikTok Post"}
+                  alt={
+                    post.description ||
+                    t("tiktok-thumbnail-alt") ||
+                    "TikTok Post"
+                  }
                   onError={(e) => {
                     const imgElement = e.target as HTMLImageElement;
                     imgElement.src = "/images/placeholder_tiktok.webp";

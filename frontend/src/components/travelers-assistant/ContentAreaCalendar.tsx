@@ -1,5 +1,4 @@
-import {Typography} from "@mui/material";
-
+import { Typography } from "@mui/material";
 
 const ContentAreaCalendar = () => {
   return (
@@ -7,6 +6,6 @@ const ContentAreaCalendar = () => {
       Здесь будет календарь экскурсий с датами и описанием.
     </Typography>
   );
-}
+};
 
 export default ContentAreaCalendar;

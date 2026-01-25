@@ -1,24 +1,46 @@
 import React from "react";
-import {Box, Card, CardContent, CardMedia, Link, Typography} from "@mui/material";
-import {SocialMediaPostInterface} from "@/pages/about-me";
-import {truncateText} from "@/utils/textUtils";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardMedia,
+  Link,
+  Typography,
+} from "@mui/material";
+import { SocialMediaPostInterface } from "@/pages/about-me";
+import { truncateText } from "@/utils/textUtils";
 
 interface InstagramFeedProps {
   posts: SocialMediaPostInterface[];
 }
 
-const InstagramFeed: React.FC<InstagramFeedProps> = ({posts}) => {
+const InstagramFeed: React.FC<InstagramFeedProps> = ({ posts }) => {
   return (
-    <Box sx={{display: "flex", flexWrap: "wrap", gap: 4, justifyContent: "center"}}>
+    <Box
+      sx={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 4,
+        justifyContent: "center",
+      }}
+    >
       {posts.map((post, index) => (
         <Link
           key={post.id}
           href={post.url}
           target="_blank"
           rel="noopener"
-          sx={{textDecoration: "none"}}
+          sx={{ textDecoration: "none" }}
         >
-          <Card key={index} sx={{width: 300, display: "flex", flexDirection: "column", height: 300}}>
+          <Card
+            key={index}
+            sx={{
+              width: 300,
+              display: "flex",
+              flexDirection: "column",
+              height: 300,
+            }}
+          >
             <CardMedia
               component="img"
               height="200"
@@ -30,9 +52,18 @@ const InstagramFeed: React.FC<InstagramFeedProps> = ({posts}) => {
               }}
             />
             <CardContent
-              sx={{display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "space-between"}}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                flexGrow: 1,
+                justifyContent: "space-between",
+              }}
             >
-              <Typography variant="body2" color="text.secondary" sx={{flexGrow: 1}}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ flexGrow: 1 }}
+              >
                 {truncateText(post.description, 80, "No description available")}
               </Typography>
             </CardContent>

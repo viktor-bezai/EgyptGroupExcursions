@@ -1,8 +1,8 @@
-import {GetServerSideProps} from "next";
-import {Box, Grid} from "@mui/material";
+import { GetServerSideProps } from "next";
+import { Box, Grid } from "@mui/material";
 import Head from "next/head";
-import {useTranslation} from "react-i18next";
-import {useEffect} from "react";
+import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 import HomeTileMain from "@/components/home/HomeTileMain";
 
 interface HomeTilesInterface {
@@ -16,16 +16,18 @@ interface HomePageProps {
   lang: string;
 }
 
-export const getServerSideProps: GetServerSideProps<HomePageProps> = async (context) => {
+export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
+  context,
+) => {
   const lang = context.locale || "ru";
 
   return {
-    props: {lang},
+    props: { lang },
   };
 };
 
-const HomePage = ({lang}: HomePageProps) => {
-  const {t, i18n} = useTranslation("common");
+const HomePage = ({ lang }: HomePageProps) => {
+  const { t, i18n } = useTranslation("common");
 
   const homeTiles: HomeTilesInterface[] = [
     {
@@ -76,7 +78,7 @@ const HomePage = ({lang}: HomePageProps) => {
 
       <Box
         sx={{
-          width: {xs: "95%", md: "90%"},
+          width: { xs: "95%", md: "90%" },
           mx: "auto",
           px: 2,
           pt: 2,
