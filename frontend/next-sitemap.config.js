@@ -1,5 +1,5 @@
 module.exports = {
-  siteUrl: 'https://mystical-egypt-travels.online',
+  siteUrl: 'https://anna-egypt.com',
   generateRobotsTxt: true,
   exclude: ['/admin/*', '/swagger/*', '/media/*', '/static/*'],
   async additionalPaths(config) {

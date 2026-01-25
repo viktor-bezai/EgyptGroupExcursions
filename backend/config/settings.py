@@ -33,18 +33,18 @@ IS_PROD = ENVIRONMENT != "local"
 DEBUG = True if IS_LOCAL else False
 
 ALLOWED_HOSTS = [
-    "mystical-egypt-travels.online",
-    "www.mystical-egypt-travels.online",
+    "anna-egypt.com",
+    "www.anna-egypt.com",
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://mystical-egypt-travels.online",
-    "https://www.mystical-egypt-travels.online",
+    "https://anna-egypt.com",
+    "https://www.anna-egypt.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://mystical-egypt-travels.online",
-    "https://www.mystical-egypt-travels.online",
+    "https://anna-egypt.com",
+    "https://www.anna-egypt.com",
 ]
 if IS_LOCAL:
     ALLOWED_HOSTS.append("localhost")
@@ -59,7 +59,7 @@ if IS_PROD:
     CSRF_COOKIE_SECURE = True
     SWAGGER_SETTINGS = {
         "USE_SESSION_AUTH": False,
-        "DEFAULT_API_URL": "https://mystical-egypt-travels.online",
+        "DEFAULT_API_URL": "https://anna-egypt.com",
     }
 
 # Application definition

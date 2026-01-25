@@ -25,7 +25,7 @@ const nextConfig = {
       // Production media URL
       {
         protocol: "https",
-        hostname: "mystical-egypt-travels.online",
+        hostname: "anna-egypt.com",
         pathname: "/media/**",
       },
     ],

@@ -1,6 +1,8 @@
-# EgyptGroupExcursions Deployment Guide
+# Server Setup Guide
 
-Deploy to the same droplet as VIB and EnglishPreparation.
+Complete guide to deploy VIB and EnglishPreparation on a fresh Ubuntu server.
+
+> **Want to add another app?** See [ADD_NEW_APP.md](./ADD_NEW_APP.md) for a quick guide.
 
 ## Quick Reference
 
@@ -8,160 +10,290 @@ Deploy to the same droplet as VIB and EnglishPreparation.
 |---|---|
 | **Server IP** | 174.138.113.224 |
 | **SSH** | `ssh root@174.138.113.224` |
-| **App path** | /home/deploy/egypt |
-| **Backend port** | 8003 |
-| **Frontend port** | 3003 |
-| **Database** | External PostgreSQL at 64.227.119.29 |
+| **VIB URL** | https://viktorbezai.online |
+| **PrepEnglish URL** | https://prepenglish.viktorbezai.online |
+| **VIB path** | /home/deploy/vib |
+| **PrepEnglish path** | /home/deploy/prepenglish |
 
-## Port Allocation (Shared Server)
+## Architecture
 
-| App                | Backend | Frontend |
-|--------------------|---------|----------|
-| EnglishPreparation | 8001    | 3001     |
-| VIB                | 8002    | 3002     |
-| **EgyptGroupExcursions** | **8003** | **3003** |
+```
+Server: 174.138.113.224 (Ubuntu)
+├── nginx (host) - ports 80/443
+│   ├── viktorbezai.online      → localhost:8002/3002
+│   └── prepenglish.viktorbezai.online → localhost:8001/3001
+│
+├── VIB (/home/deploy/vib)
+│   ├── vib-backend     → 127.0.0.1:8002
+│   └── vib-frontend    → 127.0.0.1:3002
+│
+└── EnglishPreparation (/home/deploy/prepenglish)
+    ├── ep-backend      → 127.0.0.1:8001
+    ├── ep-frontend     → 127.0.0.1:3001
+    ├── ep-celery
+    ├── ep-celery-beat
+    └── ep-redis
+```
+
+## Port Mapping
+
+| App              | Backend | Frontend |
+|------------------|---------|----------|
+| VIB              | 8002    | 3002     |
+| EnglishPreparation | 8001  | 3001     |
 
 ---
 
-## Step 1: Get a Domain
-
-Purchase a domain (e.g., `egypt-tours.com`) and point it to `174.138.113.224` in Cloudflare:
-
-1. Add A record: `@` → `174.138.113.224` (grey cloud - DNS only)
-2. Add A record: `www` → `174.138.113.224` (grey cloud - DNS only)
-
-## Step 2: Get SSL Certificate
+## Step 1: Initial Server Setup
 
 ```bash
-ssh root@174.138.113.224
+# SSH into server
+ssh root@YOUR_SERVER_IP
 
-# Stop nginx temporarily
+# Update system
+apt update && apt upgrade -y
+
+# Install required packages
+apt install -y docker.io docker-compose nginx certbot python3-certbot-nginx git curl
+
+# Start and enable services
+systemctl start docker
+systemctl enable docker
+systemctl start nginx
+systemctl enable nginx
+```
+
+## Step 2: Configure DNS (Cloudflare or your DNS provider)
+
+Add A records pointing to your server IP:
+- `viktorbezai.online` → YOUR_SERVER_IP
+- `www.viktorbezai.online` → YOUR_SERVER_IP
+- `prepenglish.viktorbezai.online` → YOUR_SERVER_IP
+
+**Important:** If using Cloudflare, temporarily set proxy to "DNS only" (grey cloud) for SSL setup.
+
+## Step 3: Get SSL Certificates
+
+```bash
+# Stop nginx temporarily (certbot needs port 80)
 systemctl stop nginx
 
-# Get SSL certificate (replace YOUR_DOMAIN)
-certbot certonly --standalone -d YOUR_DOMAIN -d www.YOUR_DOMAIN
+# Get cert for viktorbezai.online
+certbot certonly --standalone -d viktorbezai.online -d www.viktorbezai.online
 
-# Start nginx
+# Get cert for prepenglish
+certbot certonly --standalone -d prepenglish.viktorbezai.online
+
+# Verify certs were created
+ls /etc/letsencrypt/live/
+
+# Don't start nginx yet - configure it first in Step 4
+```
+
+## Step 4: Configure nginx
+
+```bash
+# Remove default site
+rm /etc/nginx/sites-enabled/default
+
+# Copy nginx configs (from your local machine)
+scp server-configs/nginx/viktorbezai.online root@YOUR_SERVER_IP:/etc/nginx/sites-available/
+scp server-configs/nginx/prepenglish.viktorbezai.online root@YOUR_SERVER_IP:/etc/nginx/sites-available/
+
+# Or create manually on server
+nano /etc/nginx/sites-available/viktorbezai.online
+# (paste content from server-configs/nginx/viktorbezai.online)
+
+nano /etc/nginx/sites-available/prepenglish.viktorbezai.online
+# (paste content from server-configs/nginx/prepenglish.viktorbezai.online)
+
+# Enable sites
+ln -s /etc/nginx/sites-available/viktorbezai.online /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/prepenglish.viktorbezai.online /etc/nginx/sites-enabled/
+
+# Test and start nginx
+nginx -t
 systemctl start nginx
 ```
 
-## Step 3: Configure nginx
+## Step 5: Clone Repositories
 
 ```bash
-# Copy nginx template and replace YOUR_DOMAIN
-cd /home/deploy/egypt/server-configs/nginx
-sed 's/YOUR_DOMAIN/your-actual-domain.com/g' YOUR_DOMAIN.template > /etc/nginx/sites-available/your-actual-domain.com
-
-# Enable site
-ln -s /etc/nginx/sites-available/your-actual-domain.com /etc/nginx/sites-enabled/
-
-# Test and reload
-nginx -t
-systemctl reload nginx
-```
-
-## Step 4: Update Configuration Files
-
-### Update .env.prod
-```bash
-cd /home/deploy/egypt
-nano .env.prod
-# Replace YOUR_DOMAIN with actual domain
-```
-
-### Update backend/config/settings.py
-Add your domain to `ALLOWED_HOSTS` and `CORS_ALLOWED_ORIGINS`:
-```python
-ALLOWED_HOSTS = [
-    "your-domain.com",
-    "www.your-domain.com",
-    ...
-]
-```
-
-### Update frontend/next.config.js
-Add your domain to `images.remotePatterns`.
-
-## Step 5: Clone Repository (First Time)
-
-```bash
-ssh root@174.138.113.224
+# Create deploy directory
+mkdir -p /home/deploy
 cd /home/deploy
-git clone https://github.com/YOUR_USERNAME/EgyptGroupExcursions.git egypt
-git config --global --add safe.directory /home/deploy/egypt
+
+# Clone VIB
+git clone https://github.com/YOUR_USERNAME/vib.git
+git config --global --add safe.directory /home/deploy/vib
+
+# Clone EnglishPreparation
+git clone https://github.com/YOUR_USERNAME/EnglishPreparation.git prepenglish
+git config --global --add safe.directory /home/deploy/prepenglish
 ```
 
 ## Step 6: Configure GitHub Secrets
 
-Go to GitHub → Repository → Settings → Secrets → Actions
+### VIB Repository (Settings → Secrets → Actions)
 
 | Secret | Value |
 |--------|-------|
-| `VPS_HOST` | 174.138.113.224 |
+| `VPS_HOST` | YOUR_SERVER_IP |
 | `VPS_USER` | root |
-| `VPS_SSH_KEY` | Your SSH private key (id_ed25519) |
+| `VPS_SSH_KEY` | Your SSH private key |
 | `VPS_PORT` | 22 |
-| `SECRET_KEY` | Your Django secret key |
-| `DBNAME` | egypttours |
-| `DBUSER` | egypttours |
-| `DBPASS` | Your database password |
-| `DBHOST` | 64.227.119.29 |
-| `OPENAI_API_KEY` | Your OpenAI key |
-| `TELEGRAM_BOT_TOKEN` | Your Telegram bot token |
-| `TELEGRAM_CHAT_ID` | Your Telegram chat ID |
-| `NEXT_PUBLIC_API_BASE_URL` | https://your-domain.com/api/v1 |
-| `NEXT_PUBLIC_MEDIA_URL` | https://your-domain.com |
+| `SECRET_KEY` | Django secret key |
+| `POSTGRES_NAME` | vib-database |
+| `POSTGRES_HOST` | Your DB host |
+| `POSTGRES_USER` | vibuser |
+| `POSTGRES_PASSWORD` | Your DB password |
+| `POSTGRES_PORT` | 25060 |
+| `NEXT_PUBLIC_API_BASE_URL` | https://viktorbezai.online |
+
+### EnglishPreparation Repository
+
+| Secret | Value |
+|--------|-------|
+| `DROPLET_HOST` | YOUR_SERVER_IP |
+| `DROPLET_USER` | root |
+| `DROPLET_SSH_KEY` | Your SSH private key |
+| `DROPLET_PORT` | 22 |
+| ... | (other secrets as needed) |
 
 ## Step 7: First Deployment
 
+**Option A: Via GitHub Actions (recommended)**
+
+Just push to main/master branch. GitHub Actions will:
+1. SSH to server
+2. Pull latest code
+3. Create .env from secrets
+4. Build and start containers
+
+**Option B: Manual deployment**
+
 ```bash
-cd /home/deploy/egypt
-cp .env.prod .env
-# Edit .env with correct values
-nano .env
+# On server:
+
+# VIB - create .env first
+cd /home/deploy/vib
+cp .env.example .env
+nano .env  # Fill in production values
 
 # Build and start
 docker-compose -f docker-compose.prod.yml build
 docker-compose -f docker-compose.prod.yml up -d
 
-# Check status
-docker ps
+# EnglishPreparation - create .env first
+cd /home/deploy/prepenglish
+cp env.example .env
+nano .env  # Fill in production values
+
+# Build and start
+cd docker
+docker-compose -f docker-compose.prod.yml build
+docker-compose -f docker-compose.prod.yml up -d
 ```
 
-## Step 8: Enable Cloudflare Proxy
+## Step 8: Verify Everything Works
 
-After everything works:
-1. Switch DNS records to orange cloud (Proxied)
-2. Set SSL mode to "Full (strict)" in Cloudflare
+```bash
+# Check containers are running
+docker ps
+
+# Check nginx is running
+systemctl status nginx
+
+# Test the sites
+curl -I https://viktorbezai.online
+curl -I https://prepenglish.viktorbezai.online
+```
+
+## Step 9: Enable Cloudflare Proxy (Optional)
+
+After everything works, you can switch back to orange cloud (Proxied) in Cloudflare.
+Set SSL mode to "Full (strict)" in Cloudflare SSL/TLS settings.
 
 ---
 
 ## Maintenance Commands
 
+### View logs
 ```bash
-# View logs
-docker logs egypt-backend
-docker logs egypt-frontend
+# VIB
+docker logs vib-backend
+docker logs vib-frontend
 
-# Restart containers
-cd /home/deploy/egypt
-docker-compose -f docker-compose.prod.yml restart
+# EnglishPreparation
+docker logs ep-backend
+docker logs ep-frontend
 
-# Reload nginx
-systemctl reload nginx
-
-# Check SSL
-certbot certificates
+# nginx
+tail -f /var/log/nginx/error.log
 ```
 
-## Checklist
+### Restart services
+```bash
+# VIB only
+cd /home/deploy/vib
+docker-compose -f docker-compose.prod.yml restart
 
-- [ ] Domain purchased and DNS configured
-- [ ] SSL certificate obtained
-- [ ] nginx config created and enabled
-- [ ] .env.prod updated with domain
-- [ ] backend settings.py updated with domain
-- [ ] frontend next.config.js updated with domain
-- [ ] GitHub secrets configured
-- [ ] First deployment successful
-- [ ] Cloudflare proxy enabled
+# EnglishPreparation only
+cd /home/deploy/prepenglish/docker
+docker-compose -f docker-compose.prod.yml restart
+
+# nginx
+systemctl reload nginx
+```
+
+### SSL renewal (automatic, but manual if needed)
+```bash
+certbot renew
+systemctl reload nginx
+```
+
+### Check what's running
+```bash
+docker ps
+systemctl status nginx
+```
+
+---
+
+## Troubleshooting
+
+### Port already in use
+```bash
+lsof -i :80
+lsof -i :443
+# Stop the process using the port
+```
+
+### nginx won't start
+```bash
+nginx -t  # Check config syntax
+journalctl -u nginx  # View logs
+```
+
+### Container won't start
+```bash
+docker-compose -f docker-compose.prod.yml logs
+```
+
+### SSL certificate issues
+```bash
+certbot certificates  # List certs
+certbot renew --dry-run  # Test renewal
+```
+
+### Low disk space
+```bash
+# Check disk usage
+df -h
+
+# Clean up Docker (removes unused images, containers, volumes)
+docker system prune -a -f
+
+# Check what's using space
+du -sh /var/lib/docker/*
+```

@@ -115,7 +115,7 @@ const Tours = (props: ToursProps) => {
     name: tour.title,
     description: tour.description,
     image: tour.image,
-    url: `https://mystical-egypt-travels.online/tours/${tour.slug}`,
+    url: `https://anna-egypt.com/tours/${tour.slug}`,
     priceRange: `$${tour.cost_from} - $${tour.cost_to}`,
     isAccessibleForFree: false,
     available: tour.is_available,
