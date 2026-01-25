@@ -68,3 +68,6 @@ yarn-error.log*
 /frontend/public/sitemap-0.xml
 /frontend/package-lock.json
 /debug.log
+/deployment.txt
+/backend/staticfiles/
+/backend/venv/

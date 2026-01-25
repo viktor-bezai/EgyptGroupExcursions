@@ -1,8 +1,0 @@
-.form-row label {
-    display: block; /* Ensure the label takes up its own line */
-    margin-bottom: 8px; /* Add spacing between the label and the input */
-}
-
-.form-row .ck-editor-container {
-    margin-top: 10px; /* Adjust margin for CKEditor containers, if needed */
-}
