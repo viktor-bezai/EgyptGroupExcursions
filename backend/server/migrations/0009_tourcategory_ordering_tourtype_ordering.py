@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('server', '0008_alter_tour_slug'),
+        ("server", "0008_alter_tour_slug"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='tourcategory',
-            name='ordering',
-            field=models.IntegerField(default=0, verbose_name='Порядковый номер'),
+            model_name="tourcategory",
+            name="ordering",
+            field=models.IntegerField(default=0, verbose_name="Порядковый номер"),
         ),
         migrations.AddField(
-            model_name='tourtype',
-            name='ordering',
-            field=models.IntegerField(default=0, verbose_name='Порядковый номер'),
+            model_name="tourtype",
+            name="ordering",
+            field=models.IntegerField(default=0, verbose_name="Порядковый номер"),
         ),
     ]

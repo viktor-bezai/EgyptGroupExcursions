@@ -28,6 +28,8 @@ class TourTypeView(APIView):
 
         tour_types = TourType.objects.all().order_by("ordering")
 
-        serializer = TourTypeSerializer(instance=tour_types, many=True, context={"lang": lang})
+        serializer = TourTypeSerializer(
+            instance=tour_types, many=True, context={"lang": lang}
+        )
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)

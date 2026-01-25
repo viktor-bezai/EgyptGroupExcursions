@@ -11,11 +11,11 @@ import { fetchAboutMePageData } from "@/utils/djangoApi";
 
 export interface SocialMediaPostInterface {
   id: number;
-  imageUrl: string;
-  description: string | null;
   url: string;
-  postDate: string | null;
   socialMedia: string;
+  oembedHtml: string | null;
+  thumbnailUrl: string | null;
+  title: string | null;
 }
 
 interface AboutMeProps {

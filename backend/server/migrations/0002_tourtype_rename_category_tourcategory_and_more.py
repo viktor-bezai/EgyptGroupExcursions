@@ -5,51 +5,76 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('server', '0001_initial'),
+        ("server", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='TourType',
+            name="TourType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name_ru', models.CharField(max_length=200, verbose_name='Название (Русский)')),
-                ('name_ukr', models.CharField(max_length=200, verbose_name='Назва (Украiнська)')),
-                ('name_en', models.CharField(max_length=200, verbose_name='Name (English)')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name_ru",
+                    models.CharField(max_length=200, verbose_name="Название (Русский)"),
+                ),
+                (
+                    "name_ukr",
+                    models.CharField(max_length=200, verbose_name="Назва (Украiнська)"),
+                ),
+                (
+                    "name_en",
+                    models.CharField(max_length=200, verbose_name="Name (English)"),
+                ),
             ],
             options={
-                'verbose_name': 'Тип Тура',
-                'verbose_name_plural': 'Типы Туров',
+                "verbose_name": "Тип Тура",
+                "verbose_name_plural": "Типы Туров",
             },
         ),
         migrations.RenameModel(
-            old_name='Category',
-            new_name='TourCategory',
+            old_name="Category",
+            new_name="TourCategory",
         ),
         migrations.AlterModelOptions(
-            name='tourcategory',
-            options={'verbose_name': 'Категорию Тура', 'verbose_name_plural': 'Категории Туров'},
+            name="tourcategory",
+            options={
+                "verbose_name": "Категорию Тура",
+                "verbose_name_plural": "Категории Туров",
+            },
         ),
         migrations.AlterField(
-            model_name='tour',
-            name='description_en',
-            field=django_ckeditor_5.fields.CKEditor5Field(verbose_name='Description (English)'),
+            model_name="tour",
+            name="description_en",
+            field=django_ckeditor_5.fields.CKEditor5Field(
+                verbose_name="Description (English)"
+            ),
         ),
         migrations.AlterField(
-            model_name='tour',
-            name='description_ru',
-            field=django_ckeditor_5.fields.CKEditor5Field(verbose_name='Описание (Русский)'),
+            model_name="tour",
+            name="description_ru",
+            field=django_ckeditor_5.fields.CKEditor5Field(
+                verbose_name="Описание (Русский)"
+            ),
         ),
         migrations.AlterField(
-            model_name='tour',
-            name='description_ukr',
-            field=django_ckeditor_5.fields.CKEditor5Field(verbose_name='Опис (Украiнська)'),
+            model_name="tour",
+            name="description_ukr",
+            field=django_ckeditor_5.fields.CKEditor5Field(
+                verbose_name="Опис (Украiнська)"
+            ),
         ),
         migrations.AddField(
-            model_name='tour',
-            name='types',
-            field=models.ManyToManyField(related_name='tours', to='server.tourtype'),
+            model_name="tour",
+            name="types",
+            field=models.ManyToManyField(related_name="tours", to="server.tourtype"),
         ),
     ]

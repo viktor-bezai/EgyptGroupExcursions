@@ -4,6 +4,6 @@ from server.notifications.views.notification_detail_view import NotificationDeta
 from server.notifications.views.notification_view import NotificationView
 
 urlpatterns = [
-    path('', NotificationView.as_view(), name='api-notifications-list'),
-    path('<int:id>/', NotificationDetailView.as_view(), name='api-notification-detail'),
+    path("", NotificationView.as_view(), name="api-notifications-list"),
+    path("<int:id>/", NotificationDetailView.as_view(), name="api-notification-detail"),
 ]

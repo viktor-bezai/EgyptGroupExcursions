@@ -1,9 +1,8 @@
-from typing import List
+import logging
 
 from django.db import models
-from django.db import transaction
 
-from server.social_media_posts.dtos.social_media_post_dto import SocialMediaPostDTO
+logger = logging.getLogger(__name__)
 
 
 class SocialMediaPost(models.Model):
@@ -14,40 +13,56 @@ class SocialMediaPost(models.Model):
         (TIKTOK, TIKTOK),
     ]
 
-    image_url = models.TextField()
-    description = models.TextField(null=True, blank=True)
-    url = models.URLField()
-    post_date = models.DateTimeField(null=True, blank=True)
+    url = models.URLField(
+        max_length=500, unique=True, help_text="Post URL (Instagram or TikTok)"
+    )
     social_media = models.CharField(
         max_length=100,
         choices=SOCIAL_MEDIA_CHOICES,
     )
+    oembed_html = models.TextField(
+        blank=True, null=True, help_text="Cached oEmbed HTML"
+    )
+    thumbnail_url = models.URLField(
+        max_length=1000, blank=True, null=True, help_text="Thumbnail URL for preview"
+    )
+    title = models.CharField(
+        max_length=500, blank=True, null=True, help_text="Post title/caption"
+    )
+    is_active = models.BooleanField(
+        default=True, help_text="Show this post on the website"
+    )
+    display_order = models.PositiveIntegerField(
+        default=0, help_text="Lower number = shown first"
+    )
 
     class Meta:
-        verbose_name = 'Пост Социальной Сети'
-        verbose_name_plural = 'Посты Социальной Сети'
+        verbose_name = "Пост Социальной Сети"
+        verbose_name_plural = "Посты Социальной Сети"
+        ordering = ["display_order", "-id"]
 
     def __str__(self):
-        return self.url
+        return f"{self.social_media}: {self.url}"
 
-    @classmethod
-    @transaction.atomic
-    def update_last_posts(cls, social_media_post_dto_list: List[SocialMediaPostDTO], social_media: str):
-        # Extract URLs from the incoming DTO list
-        incoming_urls = {dto.url for dto in social_media_post_dto_list}
+    def fetch_oembed(self) -> bool:
+        """Fetch and cache oEmbed data for this post."""
+        from server.social_media_posts.utils.oembed import fetch_oembed
 
-        # Get all posts with the given social_media and not in the incoming URLs
-        existing_posts = cls.objects.filter(social_media=social_media).exclude(url__in=incoming_urls)
-        existing_posts.delete()
+        oembed_data = fetch_oembed(self.url, self.social_media)
+        if oembed_data:
+            self.oembed_html = oembed_data.html
+            self.thumbnail_url = oembed_data.thumbnail_url
+            self.title = oembed_data.title
+            self.save()
+            logger.info(f"Fetched oEmbed data for {self.url}")
+            return True
+        return False
 
-        # Update or create posts
-        for dto in social_media_post_dto_list:
-            post, created = cls.objects.update_or_create(
-                social_media=social_media,
-                url=dto.url,
-                defaults={
-                    "image_url": dto.image_url,
-                    "description": dto.description,
-                    "post_date": dto.post_date,
-                }
-            )
+    def save(self, *args, **kwargs):
+        """Auto-detect social media platform from URL if not set."""
+        if not self.social_media:
+            if "tiktok.com" in self.url:
+                self.social_media = self.TIKTOK
+            elif "instagram.com" in self.url:
+                self.social_media = self.INSTAGRAM
+        super().save(*args, **kwargs)

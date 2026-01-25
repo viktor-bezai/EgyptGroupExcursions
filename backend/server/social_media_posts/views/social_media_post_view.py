@@ -4,7 +4,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from server.social_media_posts.models import SocialMediaPost
-from server.social_media_posts.serializers.social_media_post_serializer import SocialMediaPostSerializer
+from server.social_media_posts.serializers.social_media_post_serializer import (
+    SocialMediaPostSerializer,
+)
 
 
 class SocialMediaPostView(APIView):
@@ -14,14 +16,23 @@ class SocialMediaPostView(APIView):
     @swagger_auto_schema(
         responses={200: SocialMediaPostSerializer(many=True)},
         operation_summary="Get a list of Social Media Posts",
-        operation_description="Retrieves a list containing the details of all Social Media Posts objects within the database.",
+        operation_description="Retrieves active social media posts with oEmbed data for display.",
     )
     def get(self, request):
         """
-        Returns list of Social Media Posts
+        Returns list of active Social Media Posts with oEmbed data.
+        Optional query param: ?platform=instagram or ?platform=tiktok
         """
-        social_media_posts = SocialMediaPost.objects.all()
+        queryset = SocialMediaPost.objects.filter(is_active=True)
 
-        serializer = SocialMediaPostSerializer(instance=social_media_posts, many=True)
+        # Optional filter by platform
+        platform = request.query_params.get("platform")
+        if platform:
+            queryset = queryset.filter(social_media__iexact=platform)
+
+        serializer = SocialMediaPostSerializer(
+            instance=queryset,
+            many=True,
+        )
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)

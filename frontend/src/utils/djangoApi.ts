@@ -55,11 +55,11 @@ export const fetchAboutMePageData = async () => {
     const socialMediaPosts = Array.isArray(rawSocialMediaPosts)
       ? rawSocialMediaPosts.map((post) => ({
           id: post.id,
-          imageUrl: post.image_url,
-          description: post.description,
           url: post.url,
-          postDate: post.post_date,
           socialMedia: post.social_media,
+          oembedHtml: post.oembed_html,
+          thumbnailUrl: post.thumbnail_url,
+          title: post.title,
         }))
       : [];
 

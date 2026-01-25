@@ -5,45 +5,87 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name_ru', models.CharField(max_length=200, verbose_name='Название (Русский)')),
-                ('name_ukr', models.CharField(max_length=200, verbose_name='Назва (Украiнська)')),
-                ('name_en', models.CharField(max_length=200, verbose_name='Name (English)')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name_ru",
+                    models.CharField(max_length=200, verbose_name="Название (Русский)"),
+                ),
+                (
+                    "name_ukr",
+                    models.CharField(max_length=200, verbose_name="Назва (Украiнська)"),
+                ),
+                (
+                    "name_en",
+                    models.CharField(max_length=200, verbose_name="Name (English)"),
+                ),
             ],
             options={
-                'verbose_name': 'Категорию',
-                'verbose_name_plural': 'Категории',
+                "verbose_name": "Категорию",
+                "verbose_name_plural": "Категории",
             },
         ),
         migrations.CreateModel(
-            name='Tour',
+            name="Tour",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title_ru', models.CharField(max_length=100, verbose_name='Название (Русский)')),
-                ('title_ukr', models.CharField(max_length=100, verbose_name='Назва (Украiнська)')),
-                ('title_en', models.CharField(max_length=100, verbose_name='Title (English)')),
-                ('image', models.ImageField(blank=True, null=True, upload_to='tours')),
-                ('description_en', models.TextField(verbose_name='Description (English)')),
-                ('description_ru', models.TextField(verbose_name='Описание (Русский)')),
-                ('description_ukr', models.TextField(verbose_name='Опис (Украiнська)')),
-                ('cost_from', models.IntegerField()),
-                ('cost_to', models.IntegerField()),
-                ('is_available', models.BooleanField(default=False)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tours', to='server.category')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title_ru",
+                    models.CharField(max_length=100, verbose_name="Название (Русский)"),
+                ),
+                (
+                    "title_ukr",
+                    models.CharField(max_length=100, verbose_name="Назва (Украiнська)"),
+                ),
+                (
+                    "title_en",
+                    models.CharField(max_length=100, verbose_name="Title (English)"),
+                ),
+                ("image", models.ImageField(blank=True, null=True, upload_to="tours")),
+                (
+                    "description_en",
+                    models.TextField(verbose_name="Description (English)"),
+                ),
+                ("description_ru", models.TextField(verbose_name="Описание (Русский)")),
+                ("description_ukr", models.TextField(verbose_name="Опис (Украiнська)")),
+                ("cost_from", models.IntegerField()),
+                ("cost_to", models.IntegerField()),
+                ("is_available", models.BooleanField(default=False)),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="tours",
+                        to="server.category",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Тур',
-                'verbose_name_plural': 'Туры',
+                "verbose_name": "Тур",
+                "verbose_name_plural": "Туры",
             },
         ),
     ]

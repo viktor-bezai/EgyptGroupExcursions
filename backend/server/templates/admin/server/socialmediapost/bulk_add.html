@@ -1,0 +1,43 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block content %}
+<h1>Bulk Add Social Media Posts</h1>
+
+<p>Paste Instagram and TikTok post URLs below (one per line). The system will automatically detect the platform and fetch oEmbed data.</p>
+
+<form method="post">
+    {% csrf_token %}
+    <fieldset class="module aligned">
+        <div class="form-row">
+            <label for="urls">Post URLs:</label>
+            <textarea name="urls" id="urls" rows="15" style="width: 100%; font-family: monospace;" placeholder="https://www.instagram.com/p/ABC123/
+https://www.instagram.com/reel/XYZ789/
+https://www.tiktok.com/@username/video/1234567890"></textarea>
+        </div>
+    </fieldset>
+
+    <div class="submit-row">
+        <input type="submit" value="Add Posts" class="default">
+        <a href="{% url 'admin:server_socialmediapost_changelist' %}" class="button cancel-link">Cancel</a>
+    </div>
+</form>
+
+<fieldset class="module" style="margin-top: 20px;">
+    <h2>How to get post URLs:</h2>
+    <div style="padding: 10px;">
+        <p><strong>Instagram:</strong></p>
+        <ol>
+            <li>Open Instagram in your browser</li>
+            <li>Go to the post/reel you want to add</li>
+            <li>Copy the URL from the address bar (e.g., https://www.instagram.com/p/ABC123/)</li>
+        </ol>
+        <p><strong>TikTok:</strong></p>
+        <ol>
+            <li>Open TikTok in your browser</li>
+            <li>Go to the video you want to add</li>
+            <li>Copy the URL from the address bar (e.g., https://www.tiktok.com/@username/video/1234567890)</li>
+        </ol>
+    </div>
+</fieldset>
+{% endblock %}

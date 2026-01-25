@@ -5,7 +5,9 @@ from rest_framework.views import APIView
 
 from server.lang_query_serializer import LangQuerySerializer
 from server.notifications.models import Notification
-from server.notifications.serializers.notification_serializer import NotificationSerializer
+from server.notifications.serializers.notification_serializer import (
+    NotificationSerializer,
+)
 
 
 class NotificationView(APIView):
@@ -29,6 +31,8 @@ class NotificationView(APIView):
 
         notifications = Notification.objects.all().order_by("-id")[:5]
 
-        serializer = NotificationSerializer(instance=notifications, many=True, context={"lang": lang})
+        serializer = NotificationSerializer(
+            instance=notifications, many=True, context={"lang": lang}
+        )
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)

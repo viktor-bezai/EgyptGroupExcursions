@@ -8,10 +8,10 @@ class TourTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = TourType
         fields = [
-            'id',
-            'name',
+            "id",
+            "name",
         ]
 
     def get_name(self, obj):
-        lang = self.context.get('lang', 'ru')
+        lang = self.context.get("lang", "ru")
         return obj.get_name(lang)

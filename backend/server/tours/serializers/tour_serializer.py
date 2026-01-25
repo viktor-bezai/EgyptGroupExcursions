@@ -13,29 +13,31 @@ class TourSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tour
         fields = [
-            'id',
-            'title',
-            'image',
-            'category',
-            'types',
-            'description',
-            'cost_from',
-            'cost_to',
-            'is_available',
-            'slug'
+            "id",
+            "title",
+            "image",
+            "category",
+            "types",
+            "description",
+            "cost_from",
+            "cost_to",
+            "is_available",
+            "slug",
         ]
 
     def get_title(self, obj):
-        lang = self.context.get('lang', 'ru')
+        lang = self.context.get("lang", "ru")
         name_field = f"title_{lang}"
         return getattr(obj, name_field, obj.title_ru)
 
     def get_description(self, obj):
-        lang = self.context.get('lang', 'ru')
+        lang = self.context.get("lang", "ru")
         name_field = f"description_{lang}"
         return getattr(obj, name_field, obj.description_ru)
 
     def get_types(self, obj):
-        lang = self.context.get('lang', 'ru')
+        lang = self.context.get("lang", "ru")
         # Serialize the related TourType objects with context
-        return TourTypeSerializer(obj.types.all(), many=True, context={'lang': lang}).data
+        return TourTypeSerializer(
+            obj.types.all(), many=True, context={"lang": lang}
+        ).data

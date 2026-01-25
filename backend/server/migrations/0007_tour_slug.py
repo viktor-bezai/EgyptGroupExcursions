@@ -6,7 +6,7 @@ from django.utils.text import slugify
 
 def populate_slugs(apps, schema_editor):
     # Get the Tour model dynamically for migration purposes
-    Tour = apps.get_model('server', 'Tour')
+    Tour = apps.get_model("server", "Tour")
 
     for tour in Tour.objects.all():
         if not tour.slug:  # Only populate if slug is empty
@@ -26,13 +26,13 @@ def populate_slugs(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('server', '0006_rename_description_ukr_notification_description_ua_and_more'),
+        ("server", "0006_rename_description_ukr_notification_description_ua_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='tour',
-            name='slug',
+            model_name="tour",
+            name="slug",
             field=models.SlugField(blank=True, max_length=120),
         ),
         migrations.RunPython(populate_slugs),

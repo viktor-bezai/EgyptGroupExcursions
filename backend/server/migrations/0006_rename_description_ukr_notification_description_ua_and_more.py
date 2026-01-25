@@ -4,40 +4,39 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('server', '0005_notification'),
+        ("server", "0005_notification"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='notification',
-            old_name='description_ukr',
-            new_name='description_ua',
+            model_name="notification",
+            old_name="description_ukr",
+            new_name="description_ua",
         ),
         migrations.RenameField(
-            model_name='notification',
-            old_name='title_ukr',
-            new_name='title_ua',
+            model_name="notification",
+            old_name="title_ukr",
+            new_name="title_ua",
         ),
         migrations.RenameField(
-            model_name='tour',
-            old_name='description_ukr',
-            new_name='description_ua',
+            model_name="tour",
+            old_name="description_ukr",
+            new_name="description_ua",
         ),
         migrations.RenameField(
-            model_name='tour',
-            old_name='title_ukr',
-            new_name='title_ua',
+            model_name="tour",
+            old_name="title_ukr",
+            new_name="title_ua",
         ),
         migrations.RenameField(
-            model_name='tourcategory',
-            old_name='name_ukr',
-            new_name='name_ua',
+            model_name="tourcategory",
+            old_name="name_ukr",
+            new_name="name_ua",
         ),
         migrations.RenameField(
-            model_name='tourtype',
-            old_name='name_ukr',
-            new_name='name_ua',
+            model_name="tourtype",
+            old_name="name_ukr",
+            new_name="name_ua",
         ),
     ]
