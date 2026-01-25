@@ -35,6 +35,9 @@ DEBUG = True if IS_LOCAL else False
 ALLOWED_HOSTS = [
     "anna-egypt.com",
     "www.anna-egypt.com",
+    "egypt-backend",  # Docker internal hostname for SSR
+    "localhost",
+    "127.0.0.1",
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -47,14 +50,13 @@ CSRF_TRUSTED_ORIGINS = [
     "https://www.anna-egypt.com",
 ]
 if IS_LOCAL:
-    ALLOWED_HOSTS.append("localhost")
-    ALLOWED_HOSTS.append("127.0.0.1")
-    ALLOWED_HOSTS.append("egypt-backend")
     CORS_ALLOWED_ORIGINS.append("http://localhost:3000")
     CSRF_TRUSTED_ORIGINS.append("http://localhost:8000/")
 if IS_PROD:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SECURE_SSL_REDIRECT = True
+    # SSL redirect disabled - Cloudflare handles HTTPS enforcement
+    # Internal Docker requests (SSR) don't have X-Forwarded-Proto header
+    SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SWAGGER_SETTINGS = {
