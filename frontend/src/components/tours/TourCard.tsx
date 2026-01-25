@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import Image from "next/image";
+import ImageWithFallback from "@/components/common/ImageWithFallback";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { truncateText } from "@/utils/textUtils";
@@ -100,12 +101,8 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
         {/* Image Section */}
         <CardMedia>
           <Box position="relative" sx={{ width: "100%", height: 150 }}>
-            <Image
-              src={
-                tour.image
-                  ? `${mediaUrl}${tour.image}`
-                  : "/images/placeholder.jpg"
-              }
+            <ImageWithFallback
+              src={tour.image ? `${mediaUrl}${tour.image}` : ""}
               alt={tour.title || t("tour-placeholder-alt")}
               fill
               sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"

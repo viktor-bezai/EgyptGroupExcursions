@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { GetServerSideProps } from "next";
 import { Box, Button, Dialog, DialogContent, Typography } from "@mui/material";
-import Image from "next/image";
+import ImageWithFallback from "@/components/common/ImageWithFallback";
 import { useTranslation } from "react-i18next";
 import { DescriptionRenderer } from "@/utils/textUtils";
 import { Tour } from "@/pages/tours/index";
@@ -99,11 +99,11 @@ const TourDetail = (props: TourDetailProps) => {
       >
         {/* Image Section */}
         <Box position="relative" sx={{ width: "100%", height: 400, mb: 4 }}>
-          <Image
+          <ImageWithFallback
             src={
               tour.image
                 ? `${process.env.NEXT_PUBLIC_MEDIA_URL}${tour.image}`
-                : "/images/placeholder.jpg"
+                : ""
             }
             alt={tour.title}
             fill
