@@ -30,6 +30,7 @@ const Header: React.FC = () => {
   const navItems = [
     { label: t("tours"), href: "/tours" },
     { label: t("about-me"), href: "/about-me" },
+    { label: t("travelers-assistant"), href: "/travelers-assistant" },
     { label: t("contacts"), href: "/contacts" },
   ];
 
@@ -151,24 +152,27 @@ const Header: React.FC = () => {
                     <Button
                       color="inherit"
                       sx={{
-                        px: { sm: 1, lg: 3, xl: 4 }, // Add horizontal padding for better spacing
-                        py: 1, // Add vertical padding for better clickability
-                        borderRadius: 2, // Smooth edges
+                        px: { sm: 1, lg: 2, xl: 3 },
+                        py: 1,
+                        borderRadius: 2,
+                        maxWidth: { md: 140, lg: 180, xl: "none" },
                         "&:hover": {
-                          backgroundColor: "rgba(255, 255, 255, 0.1)", // Subtle hover effect
+                          backgroundColor: "rgba(255, 255, 255, 0.1)",
                         },
                       }}
                     >
                       <Typography
                         sx={{
-                          fontSize: { xs: "0.8rem", md: "1rem" },
-                          fontWeight: "bold", // Make it bold for emphasis
-                          textTransform: "uppercase", // Ensure uniform appearance
-                          letterSpacing: 1, // Add spacing between letters for better readability
-                          color: "primary.contrastText", // Use the theme's secondary color
+                          fontSize: { xs: "0.7rem", md: "0.8rem", lg: "0.9rem" },
+                          fontWeight: "bold",
+                          textTransform: "uppercase",
+                          letterSpacing: 0.5,
+                          color: "primary.contrastText",
+                          lineHeight: 1.2,
+                          textAlign: "center",
                         }}
                       >
-                        {t(item.label)}
+                        {item.label}
                       </Typography>
                     </Button>
                   </Link>

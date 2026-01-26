@@ -1,5 +1,15 @@
 import { createTheme } from "@mui/material/styles";
 
+// Extend MUI palette types for custom colors
+declare module "@mui/material/styles" {
+  interface Palette {
+    subtle: Palette["primary"];
+  }
+  interface PaletteOptions {
+    subtle?: PaletteOptions["primary"];
+  }
+}
+
 // Create a custom theme
 const theme = createTheme({
   palette: {
@@ -38,6 +48,12 @@ const theme = createTheme({
     background: {
       default: "#f9f9f9", // Default background color
       paper: "#ffffff", // Background for cards and dialogs
+    },
+    // Custom colors for subtle UI elements
+    subtle: {
+      main: "#fdf8e8", // Very light gold tint
+      light: "#fffdf5", // Even lighter
+      dark: "#f5edd4", // Slightly darker for hover states
     },
     text: {
       primary: "#212121", // Primary text color

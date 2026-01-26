@@ -19,7 +19,9 @@ const Breadcrumbs: React.FC = () => {
   const [dynamicTitle, setDynamicTitle] = useState<string | null>(null);
 
   const lang = i18n.language || router.locale || "en"; // Determine the current language
-  const pathArray = router.asPath.split("/").filter((path) => path);
+  // Remove query string and hash from path before splitting
+  const cleanPath = router.asPath.split("?")[0].split("#")[0];
+  const pathArray = cleanPath.split("/").filter((path) => path);
 
   // Dynamically generate the breadcrumb map using translations
   const breadcrumbMap: Record<string, string> = {

@@ -1,7 +1,8 @@
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 import AssistantMenu from "@/components/travelers-assistant/AssistantMenu";
 import ContentArea from "@/components/travelers-assistant/ContentArea";
@@ -11,6 +12,13 @@ interface TravelersAssistantPageProps {
 }
 
 export type TravelersAssistantMenuOption = "checklist" | "weather" | "calendar";
+
+const VALID_TABS: TravelersAssistantMenuOption[] = [
+  "checklist",
+  "weather",
+  "calendar",
+];
+const DEFAULT_TAB: TravelersAssistantMenuOption = "checklist";
 
 export const getServerSideProps: GetServerSideProps<
   TravelersAssistantPageProps
@@ -24,8 +32,22 @@ export const getServerSideProps: GetServerSideProps<
 
 const TravelersAssistantPage = ({ lang }: TravelersAssistantPageProps) => {
   const { i18n } = useTranslation("common");
-  const [activeMenu, setActiveMenu] =
-    useState<TravelersAssistantMenuOption>("checklist");
+  const router = useRouter();
+
+  // Get active tab from URL query parameter
+  const tabParam = router.query.tab as string | undefined;
+  const activeMenu: TravelersAssistantMenuOption =
+    tabParam && VALID_TABS.includes(tabParam as TravelersAssistantMenuOption)
+      ? (tabParam as TravelersAssistantMenuOption)
+      : DEFAULT_TAB;
+
+  const setActiveMenu = (menu: TravelersAssistantMenuOption) => {
+    router.push(
+      { pathname: router.pathname, query: { tab: menu } },
+      undefined,
+      { shallow: true },
+    );
+  };
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
