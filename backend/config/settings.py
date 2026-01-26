@@ -82,6 +82,9 @@ INSTALLED_APPS = [
     "django_celery_results",
 ]
 
+if IS_PROD:
+    INSTALLED_APPS.append("storages")
+
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -177,9 +180,35 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB
+
+# Media files configuration
+if IS_PROD:
+    # Use DigitalOcean Spaces for media in production
+    AWS_ACCESS_KEY_ID = os.getenv("SPACES_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = os.getenv("SPACES_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = os.getenv("SPACES_BUCKET_NAME", "prep-english")
+    AWS_S3_REGION_NAME = os.getenv("SPACES_REGION", "tor1")
+    AWS_S3_ENDPOINT_URL = f"https://{AWS_S3_REGION_NAME}.digitaloceanspaces.com"
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_DEFAULT_ACL = "public-read"
+    AWS_QUERYSTRING_AUTH = False
+    AWS_LOCATION = "egypt"  # Subfolder in the bucket
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+
+    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/{AWS_LOCATION}/"
+else:
+    # Use local filesystem for development
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # CKEditor 5 Configuration
 CKEDITOR_5_CONFIGS = {
