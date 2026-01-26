@@ -46,10 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta
-          property="og:url"
-          content="https://anna-egypt.com/"
-        />
+        <meta property="og:url" content="https://anna-egypt.com/" />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="ru_RU" />
         <meta property="og:locale:alternate" content="ua_UA" />
