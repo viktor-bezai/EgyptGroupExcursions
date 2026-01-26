@@ -261,7 +261,9 @@ const ContentAreaWeather = () => {
                 mb: 0.5,
               }}
             >
-              <Thermostat sx={{ fontSize: 20, color: "warning.main", mr: 0.5 }} />
+              <Thermostat
+                sx={{ fontSize: 20, color: "warning.main", mr: 0.5 }}
+              />
             </Box>
             <Typography variant="body2" color="text.secondary">
               {t("feels-like") || "Feels like"}
@@ -355,7 +357,8 @@ const ContentAreaWeather = () => {
                 sx={{
                   px: 2,
                   py: 1.5,
-                  bgcolor: dayIndex % 2 === 0 ? "background.default" : "subtle.light",
+                  bgcolor:
+                    dayIndex % 2 === 0 ? "background.default" : "subtle.light",
                   borderBottom: "1px solid",
                   borderColor: "divider",
                 }}
@@ -500,12 +503,18 @@ const ContentAreaWeather = () => {
           </>
         ) : selectedPeriod === "today" && weatherData ? (
           <>
-            <TodayWeatherCard city={t("hurghada")} data={weatherData.hurghada} />
+            <TodayWeatherCard
+              city={t("hurghada")}
+              data={weatherData.hurghada}
+            />
             <TodayWeatherCard city={t("sharm")} data={weatherData.sharm} />
           </>
         ) : selectedPeriod === "week" && forecastData ? (
           <>
-            <ForecastCard city={t("hurghada")} forecast={forecastData.hurghada} />
+            <ForecastCard
+              city={t("hurghada")}
+              forecast={forecastData.hurghada}
+            />
             <ForecastCard city={t("sharm")} forecast={forecastData.sharm} />
           </>
         ) : null}
