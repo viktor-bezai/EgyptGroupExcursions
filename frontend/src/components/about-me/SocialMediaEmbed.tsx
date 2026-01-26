@@ -65,21 +65,25 @@ const SocialMediaEmbed: React.FC<SocialMediaEmbedProps> = ({
   }, [html, platform]);
 
   const isTikTok = platform === "tiktok";
+  const skeletonHeight = SKELETON_HEIGHT[platform];
 
   return (
     <Box
       sx={{
         maxWidth: { xs: "100%", sm: isTikTok ? 325 : 400 },
         width: "100%",
-        minHeight: {
-          xs: SKELETON_HEIGHT[platform] * 0.8,
-          sm: SKELETON_HEIGHT[platform],
-        },
+        // Use fixed height while loading to prevent overlap, auto when loaded
+        height: isLoaded ? "auto" : skeletonHeight + 50, // +50 for text skeletons
+        minHeight: skeletonHeight,
         position: "relative",
         // Ensure embeds scale properly
         "& iframe": {
           maxWidth: "100%",
           width: "100% !important",
+          // TikTok: set fixed height to prevent scrolling
+          ...(isTikTok && {
+            height: "750px !important",
+          }),
         },
         "& .instagram-media, & blockquote": {
           maxWidth: "100% !important",
@@ -87,14 +91,6 @@ const SocialMediaEmbed: React.FC<SocialMediaEmbedProps> = ({
           width: "100% !important",
           margin: "0 auto !important",
         },
-        // TikTok: set fixed height on desktop to prevent scrolling
-        ...(isTikTok && {
-          "@media (min-width: 600px)": {
-            "& iframe": {
-              height: "750px !important",
-            },
-          },
-        }),
       }}
     >
       {/* Skeleton - shown while loading */}
