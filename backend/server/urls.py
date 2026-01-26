@@ -9,4 +9,6 @@ urlpatterns = [
     path("social-media-posts/", include("server.social_media_posts.urls")),
     # NOTIFICATIONS
     path("notifications/", include("server.notifications.urls")),
+    # CONTACTS
+    path("contact/", include("server.contacts.urls")),
 ]
