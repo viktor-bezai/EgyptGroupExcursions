@@ -60,10 +60,26 @@ const AboutMe = (props: AboutMeProps) => {
         <title>About Me | Mystical Egypt Travels</title>
       </Head>
 
-      <Box sx={{ p: 4, width: "80%", mx: "auto" }}>
+      <Box
+        sx={{
+          p: { xs: 2, sm: 3, md: 4 },
+          width: { xs: "100%", sm: "95%", md: "80%" },
+          mx: "auto",
+        }}
+      >
         {/* Button Group */}
-        <Box sx={{ mb: 4, display: "flex", justifyContent: "center" }}>
-          <ButtonGroup variant="contained" color="primary">
+        <Box
+          sx={{
+            mb: { xs: 2, sm: 3, md: 4 },
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <ButtonGroup
+            variant="contained"
+            color="primary"
+            sx={{ width: { xs: "100%", sm: "auto" } }}
+          >
             <Button
               onClick={() => setSelectedPlatform("instagram")}
               variant={
@@ -90,7 +106,7 @@ const AboutMe = (props: AboutMeProps) => {
           sx={{
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
-            gap: 4,
+            gap: { xs: 2, sm: 3, md: 4 },
           }}
         >
           {selectedPlatform === "instagram" ? (

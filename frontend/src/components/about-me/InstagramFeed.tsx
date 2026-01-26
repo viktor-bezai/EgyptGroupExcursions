@@ -20,7 +20,7 @@ const InstagramFeed: React.FC<InstagramFeedProps> = ({ posts }) => {
       sx={{
         display: "flex",
         flexWrap: "wrap",
-        gap: 3,
+        gap: { xs: 2, sm: 3 },
         justifyContent: "center",
       }}
     >
