@@ -13,12 +13,11 @@ import Image from "next/image";
 import ImageWithFallback from "@/components/common/ImageWithFallback";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
-import { truncateText } from "@/utils/textUtils";
+import { getMediaUrl, truncateText } from "@/utils/textUtils";
 import { Tour } from "@/pages/tours";
 import ContactForm from "@/components/contacts/ContactForm";
 
 const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
-  const mediaUrl = process.env.NEXT_PUBLIC_MEDIA_URL || "";
   const { t } = useTranslation("common");
   const router = useRouter();
   const [isContactFormOpen, setContactFormOpen] = useState(false);
@@ -102,7 +101,7 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
         <CardMedia>
           <Box position="relative" sx={{ width: "100%", height: 150 }}>
             <ImageWithFallback
-              src={tour.image ? `${mediaUrl}${tour.image}` : ""}
+              src={getMediaUrl(tour.image)}
               alt={tour.title || t("tour-placeholder-alt")}
               fill
               sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
