@@ -98,7 +98,7 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
         </Box>
 
         {/* Image Section */}
-        <CardMedia>
+        <CardMedia onClick={handleDetailsClick} sx={{ cursor: "pointer" }}>
           <Box position="relative" sx={{ width: "100%", height: 150 }}>
             <ImageWithFallback
               src={getMediaUrl(tour.image)}
