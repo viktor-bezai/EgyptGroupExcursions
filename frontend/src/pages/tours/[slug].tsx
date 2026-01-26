@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next";
 import { Box, Button, Dialog, DialogContent, Typography } from "@mui/material";
 import ImageWithFallback from "@/components/common/ImageWithFallback";
 import { useTranslation } from "react-i18next";
-import { DescriptionRenderer } from "@/utils/textUtils";
+import { DescriptionRenderer, getMediaUrl } from "@/utils/textUtils";
 import { Tour } from "@/pages/tours/index";
 import { fetchTourBySlug } from "@/pages/api/tours";
 import Head from "next/head";
@@ -67,7 +67,7 @@ const TourDetail = (props: TourDetailProps) => {
     "@type": "TouristAttraction",
     name: tour.title,
     description: tour.description,
-    image: `${process.env.NEXT_PUBLIC_MEDIA_URL}${tour.image}`,
+    image: getMediaUrl(tour.image),
     url: `https://anna-egypt.com/tours/${tour.slug}`,
     priceRange: `$${tour.cost_from} - $${tour.cost_to}`,
     isAccessibleForFree: false,
@@ -100,11 +100,7 @@ const TourDetail = (props: TourDetailProps) => {
         {/* Image Section */}
         <Box position="relative" sx={{ width: "100%", height: 400, mb: 4 }}>
           <ImageWithFallback
-            src={
-              tour.image
-                ? `${process.env.NEXT_PUBLIC_MEDIA_URL}${tour.image}`
-                : ""
-            }
+            src={getMediaUrl(tour.image)}
             alt={tour.title}
             fill
             style={{ objectFit: "cover", borderRadius: "8px" }}

@@ -3,6 +3,23 @@ import React from "react";
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
+/**
+ * Get the full media URL for an image.
+ * Handles both relative paths (local dev) and absolute URLs (DO Spaces in production).
+ */
+export const getMediaUrl = (imagePath: string | null | undefined): string => {
+  if (!imagePath) return "";
+
+  // If already an absolute URL, return as-is
+  if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+    return imagePath;
+  }
+
+  // Otherwise, prepend the media URL
+  const mediaUrl = process.env.NEXT_PUBLIC_MEDIA_URL || "";
+  return `${mediaUrl}${imagePath}`;
+};
+
 export const truncateText = (
   htmlString: string | null,
   length: number,

@@ -22,11 +22,17 @@ const nextConfig = {
         port: "8000",
         pathname: "/media/**",
       },
-      // Production media URL
+      // Production media URL (legacy)
       {
         protocol: "https",
         hostname: "anna-egypt.com",
         pathname: "/media/**",
+      },
+      // DigitalOcean Spaces
+      {
+        protocol: "https",
+        hostname: "tor1.digitaloceanspaces.com",
+        pathname: "/prep-english/**",
       },
     ],
   },
@@ -34,7 +40,7 @@ const nextConfig = {
   trailingSlash: true,
   reactStrictMode: true,
   env: {
-    NEXT_PUBLIC_MEDIA_URL: process.env.NEXT_PUBLIC_MEDIA_URL || "http://127.0.0.1:8000/media/",
+    NEXT_PUBLIC_MEDIA_URL: process.env.NEXT_PUBLIC_MEDIA_URL || "http://127.0.0.1:8000",
   },
 };
 
