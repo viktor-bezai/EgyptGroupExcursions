@@ -28,9 +28,6 @@ function MyApp({ Component, pageProps }: AppProps) {
           name="description"
           content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии для незабываемого путешествия."
         />
-        <link rel="icon" href="/icons/favicon.ico" />
-        <link rel="canonical" href="https://anna-egypt.com/" />
-        <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content={theme.palette.primary.main} />
 
@@ -63,25 +60,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta
           name="twitter:image"
           content="https://anna-egypt.com/images/thumbnail.png"
-        />
-
-        {/* Favicons */}
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/icons/apple-touch-icon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/icons/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/icons/favicon-16x16.png"
         />
       </Head>
 
