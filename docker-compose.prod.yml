@@ -1,4 +1,22 @@
 services:
+  egypt-redis:
+    image: redis:7-alpine
+    container_name: egypt-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   egypt-backend:
     build:
       context: ./backend
@@ -10,9 +28,14 @@ services:
       - .env
     environment:
       - ENVIRONMENT=production
+      - CELERY_BROKER_URL=redis://egypt-redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://egypt-redis:6379/0
     volumes:
       - ./backend/staticfiles:/app/staticfiles
       - ./backend/media:/app/media
+    depends_on:
+      egypt-redis:
+        condition: service_healthy
     command: >
       sh -c "python manage.py migrate --noinput &&
              python manage.py collectstatic --noinput &&
@@ -57,3 +80,54 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+  egypt-celery-worker:
+    build:
+      context: ./backend
+    container_name: egypt-celery-worker
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=production
+      - CELERY_BROKER_URL=redis://egypt-redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://egypt-redis:6379/0
+    volumes:
+      - ./backend/media:/app/media
+    depends_on:
+      egypt-redis:
+        condition: service_healthy
+      egypt-backend:
+        condition: service_healthy
+    command: celery -A config worker -l INFO
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  egypt-celery-beat:
+    build:
+      context: ./backend
+    container_name: egypt-celery-beat
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=production
+      - CELERY_BROKER_URL=redis://egypt-redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://egypt-redis:6379/0
+    depends_on:
+      egypt-redis:
+        condition: service_healthy
+      egypt-celery-worker:
+        condition: service_started
+    command: celery -A config beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  redis_data:

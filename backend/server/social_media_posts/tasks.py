@@ -32,9 +32,7 @@ def refresh_all_posts_task(self):
             failed_count += 1
             logger.error(f"Error refreshing {post.url}: {e}")
 
-    logger.info(
-        f"Refresh complete: {success_count} success, {failed_count} failed"
-    )
+    logger.info(f"Refresh complete: {success_count} success, {failed_count} failed")
     return {"success": success_count, "failed": failed_count}
 
 
@@ -60,9 +58,7 @@ def refresh_instagram_posts_task(self):
             failed_count += 1
             logger.error(f"Error refreshing Instagram {post.url}: {e}")
 
-    logger.info(
-        f"Instagram refresh: {success_count} success, {failed_count} failed"
-    )
+    logger.info(f"Instagram refresh: {success_count} success, {failed_count} failed")
     return {"success": success_count, "failed": failed_count}
 
 
@@ -88,9 +84,7 @@ def refresh_tiktok_posts_task(self):
             failed_count += 1
             logger.error(f"Error refreshing TikTok {post.url}: {e}")
 
-    logger.info(
-        f"TikTok refresh: {success_count} success, {failed_count} failed"
-    )
+    logger.info(f"TikTok refresh: {success_count} success, {failed_count} failed")
     return {"success": success_count, "failed": failed_count}
 
 

@@ -1,9 +1,16 @@
 from django.contrib import admin
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.urls import path, reverse
 from django.utils.html import format_html
 
 from server.social_media_posts.models import SocialMediaPost
+from server.social_media_posts.tasks import (
+    refresh_all_posts_task,
+    refresh_instagram_posts_task,
+    refresh_tiktok_posts_task,
+)
+from server.social_media_posts.utils.fetch_posts import add_posts_from_urls
 
 
 class SocialMediaPostAdmin(admin.ModelAdmin):
@@ -156,52 +163,37 @@ class SocialMediaPostAdmin(admin.ModelAdmin):
         return custom_urls + urls
 
     def refresh_all_posts_view(self, request):
-        """Trigger Celery task to refresh all posts."""
-        from server.social_media_posts.tasks import refresh_all_posts_task
-
+        """Refresh all posts via Celery task."""
         refresh_all_posts_task.delay()
         self.message_user(
             request,
-            "Refresh task started! Check Celery logs for progress.",
+            "Refresh task started in background!",
             level="SUCCESS",
         )
-        return HttpResponseRedirect(
-            reverse("admin:server_socialmediapost_changelist")
-        )
+        return HttpResponseRedirect(reverse("admin:server_socialmediapost_changelist"))
 
     def refresh_instagram_posts_view(self, request):
-        """Trigger Celery task to refresh Instagram posts."""
-        from server.social_media_posts.tasks import refresh_instagram_posts_task
-
+        """Refresh Instagram posts via Celery task."""
         refresh_instagram_posts_task.delay()
         self.message_user(
             request,
-            "Instagram refresh task started! Check Celery logs for progress.",
+            "Instagram refresh task started in background!",
             level="SUCCESS",
         )
-        return HttpResponseRedirect(
-            reverse("admin:server_socialmediapost_changelist")
-        )
+        return HttpResponseRedirect(reverse("admin:server_socialmediapost_changelist"))
 
     def refresh_tiktok_posts_view(self, request):
-        """Trigger Celery task to refresh TikTok posts."""
-        from server.social_media_posts.tasks import refresh_tiktok_posts_task
-
+        """Refresh TikTok posts via Celery task."""
         refresh_tiktok_posts_task.delay()
         self.message_user(
             request,
-            "TikTok refresh task started! Check Celery logs for progress.",
+            "TikTok refresh task started in background!",
             level="SUCCESS",
         )
-        return HttpResponseRedirect(
-            reverse("admin:server_socialmediapost_changelist")
-        )
+        return HttpResponseRedirect(reverse("admin:server_socialmediapost_changelist"))
 
     def bulk_add_posts_view(self, request):
         """Bulk add posts from URLs."""
-        from django.shortcuts import render
-        from server.social_media_posts.utils.fetch_posts import add_posts_from_urls
-
         if request.method == "POST":
             urls_text = request.POST.get("urls", "")
             urls = [u.strip() for u in urls_text.split("\n") if u.strip()]

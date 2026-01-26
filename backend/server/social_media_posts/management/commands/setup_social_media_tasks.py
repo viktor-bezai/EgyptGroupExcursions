@@ -43,15 +43,11 @@ class Command(BaseCommand):
 
         if created:
             self.stdout.write(
-                self.style.SUCCESS(
-                    f"Created task: {task_all_morning.name}"
-                )
+                self.style.SUCCESS(f"Created task: {task_all_morning.name}")
             )
         else:
             self.stdout.write(
-                self.style.WARNING(
-                    f"Updated task: {task_all_morning.name}"
-                )
+                self.style.WARNING(f"Updated task: {task_all_morning.name}")
             )
 
         # Create periodic task for refreshing all posts (evening)
@@ -67,15 +63,11 @@ class Command(BaseCommand):
 
         if created:
             self.stdout.write(
-                self.style.SUCCESS(
-                    f"Created task: {task_all_evening.name}"
-                )
+                self.style.SUCCESS(f"Created task: {task_all_evening.name}")
             )
         else:
             self.stdout.write(
-                self.style.WARNING(
-                    f"Updated task: {task_all_evening.name}"
-                )
+                self.style.WARNING(f"Updated task: {task_all_evening.name}")
             )
 
         self.stdout.write(
