@@ -77,7 +77,8 @@ def fetch_tiktok_oembed(url: str) -> Optional[OEmbedData]:
             return None
 
         # Use iframe embed - more reliable than blockquote/embed.js
-        embed_html = f'''<iframe src="https://www.tiktok.com/embed/{video_id}" style="width: 100%; height: 739px; display: block; visibility: unset; max-height: 739px;" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>'''
+        # TikTok's default embed size is 325px wide, ~575px tall
+        embed_html = f'''<iframe src="https://www.tiktok.com/embed/v2/{video_id}" style="width: 100%; min-width: 325px; height: 575px; border: none;" allowfullscreen allow="encrypted-media"></iframe>'''
 
         return OEmbedData(
             html=embed_html,
