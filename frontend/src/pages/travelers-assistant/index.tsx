@@ -13,7 +13,11 @@ interface TravelersAssistantPageProps {
 
 export type TravelersAssistantMenuOption = "checklist" | "weather" | "calendar";
 
-const VALID_TABS: TravelersAssistantMenuOption[] = ["checklist", "weather", "calendar"];
+const VALID_TABS: TravelersAssistantMenuOption[] = [
+  "checklist",
+  "weather",
+  "calendar",
+];
 const DEFAULT_TAB: TravelersAssistantMenuOption = "checklist";
 
 export const getServerSideProps: GetServerSideProps<
@@ -41,7 +45,7 @@ const TravelersAssistantPage = ({ lang }: TravelersAssistantPageProps) => {
     router.push(
       { pathname: router.pathname, query: { tab: menu } },
       undefined,
-      { shallow: true }
+      { shallow: true },
     );
   };
 
