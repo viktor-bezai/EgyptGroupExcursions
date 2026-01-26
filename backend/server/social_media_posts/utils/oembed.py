@@ -24,7 +24,7 @@ class OEmbedData:
 def fetch_tiktok_oembed(url: str) -> Optional[OEmbedData]:
     """
     Fetch oEmbed data from TikTok.
-    TikTok's oEmbed API is free and doesn't require authentication.
+    Uses TikTok's iframe embed for better reliability.
 
     Args:
         url: TikTok video URL (e.g., https://www.tiktok.com/@user/video/123)
@@ -33,17 +33,58 @@ def fetch_tiktok_oembed(url: str) -> Optional[OEmbedData]:
         OEmbedData or None if failed
     """
     try:
-        oembed_url = f"https://www.tiktok.com/oembed?url={url}"
-        response = requests.get(oembed_url, timeout=10)
-        response.raise_for_status()
+        # Extract video ID from URL
+        # URLs can be like:
+        # https://www.tiktok.com/@user/video/7484561069369855287
+        # https://vm.tiktok.com/ABC123/
+        video_id = None
+        if "/video/" in url:
+            video_id = url.split("/video/")[1].split("/")[0].split("?")[0]
 
-        data = response.json()
+        if not video_id:
+            # Try oEmbed API to get video info
+            oembed_url = f"https://www.tiktok.com/oembed?url={url}"
+            response = requests.get(oembed_url, timeout=10)
+            response.raise_for_status()
+            data = response.json()
+
+            # Extract video ID from embed_product_id or html
+            html = data.get("html", "")
+            if 'data-video-id="' in html:
+                video_id = html.split('data-video-id="')[1].split('"')[0]
+            elif "embed/" in html:
+                video_id = html.split("embed/")[1].split('"')[0].split("/")[0]
+
+            thumbnail_url = data.get("thumbnail_url")
+            title = data.get("title")
+            author_name = data.get("author_name")
+        else:
+            # Fetch metadata from oEmbed API
+            oembed_url = f"https://www.tiktok.com/oembed?url={url}"
+            response = requests.get(oembed_url, timeout=10)
+            if response.ok:
+                data = response.json()
+                thumbnail_url = data.get("thumbnail_url")
+                title = data.get("title")
+                author_name = data.get("author_name")
+            else:
+                thumbnail_url = None
+                title = None
+                author_name = None
+
+        if not video_id:
+            logger.error(f"Could not extract video ID from TikTok URL: {url}")
+            return None
+
+        # Use iframe embed - more reliable than blockquote/embed.js
+        embed_html = f'''<iframe src="https://www.tiktok.com/embed/{video_id}" style="width: 100%; height: 739px; display: block; visibility: unset; max-height: 739px;" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>'''
+
         return OEmbedData(
-            html=data.get("html", ""),
-            thumbnail_url=data.get("thumbnail_url"),
-            title=data.get("title"),
-            author_name=data.get("author_name"),
-            author_url=data.get("author_url"),
+            html=embed_html,
+            thumbnail_url=thumbnail_url,
+            title=title,
+            author_name=author_name,
+            author_url=None,
         )
     except Exception as e:
         logger.error(f"Failed to fetch TikTok oEmbed for {url}: {e}")
