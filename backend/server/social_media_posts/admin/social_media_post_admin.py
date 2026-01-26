@@ -137,8 +137,65 @@ class SocialMediaPostAdmin(admin.ModelAdmin):
                 self.admin_site.admin_view(self.bulk_add_posts_view),
                 name="socialmediapost_bulk_add",
             ),
+            path(
+                "refresh-all/",
+                self.admin_site.admin_view(self.refresh_all_posts_view),
+                name="socialmediapost_refresh_all",
+            ),
+            path(
+                "refresh-instagram/",
+                self.admin_site.admin_view(self.refresh_instagram_posts_view),
+                name="socialmediapost_refresh_instagram",
+            ),
+            path(
+                "refresh-tiktok/",
+                self.admin_site.admin_view(self.refresh_tiktok_posts_view),
+                name="socialmediapost_refresh_tiktok",
+            ),
         ]
         return custom_urls + urls
+
+    def refresh_all_posts_view(self, request):
+        """Trigger Celery task to refresh all posts."""
+        from server.social_media_posts.tasks import refresh_all_posts_task
+
+        refresh_all_posts_task.delay()
+        self.message_user(
+            request,
+            "Refresh task started! Check Celery logs for progress.",
+            level="SUCCESS",
+        )
+        return HttpResponseRedirect(
+            reverse("admin:server_socialmediapost_changelist")
+        )
+
+    def refresh_instagram_posts_view(self, request):
+        """Trigger Celery task to refresh Instagram posts."""
+        from server.social_media_posts.tasks import refresh_instagram_posts_task
+
+        refresh_instagram_posts_task.delay()
+        self.message_user(
+            request,
+            "Instagram refresh task started! Check Celery logs for progress.",
+            level="SUCCESS",
+        )
+        return HttpResponseRedirect(
+            reverse("admin:server_socialmediapost_changelist")
+        )
+
+    def refresh_tiktok_posts_view(self, request):
+        """Trigger Celery task to refresh TikTok posts."""
+        from server.social_media_posts.tasks import refresh_tiktok_posts_task
+
+        refresh_tiktok_posts_task.delay()
+        self.message_user(
+            request,
+            "TikTok refresh task started! Check Celery logs for progress.",
+            level="SUCCESS",
+        )
+        return HttpResponseRedirect(
+            reverse("admin:server_socialmediapost_changelist")
+        )
 
     def bulk_add_posts_view(self, request):
         """Bulk add posts from URLs."""

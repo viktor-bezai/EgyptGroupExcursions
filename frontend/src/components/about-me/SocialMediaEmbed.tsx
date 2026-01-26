@@ -8,7 +8,12 @@ interface SocialMediaEmbedProps {
 
 const SKELETON_HEIGHT = {
   instagram: 450,
-  tiktok: 500,
+  tiktok: 750,
+};
+
+const FALLBACK_TIMEOUT = {
+  instagram: 5000,
+  tiktok: 8000,
 };
 
 const SocialMediaEmbed: React.FC<SocialMediaEmbedProps> = ({
@@ -26,16 +31,17 @@ const SocialMediaEmbed: React.FC<SocialMediaEmbedProps> = ({
 
     // Observe DOM changes to detect when embed is rendered
     const observer = new MutationObserver(() => {
-      // Check if an iframe or rendered content exists
+      // Instagram adds this class after fully processing
+      const instagramRendered = container.querySelector(
+        ".instagram-media-rendered",
+      );
+      // Check for iframe with actual dimensions (means it's loaded)
       const iframe = container.querySelector("iframe");
-      const renderedContent =
-        platform === "instagram"
-          ? container.querySelector(".instagram-media-rendered")
-          : container.querySelector('[data-e2e="browse-video"]');
+      const iframeReady = iframe && iframe.offsetHeight > 100;
 
-      if (iframe || renderedContent) {
-        // Add small delay for visual smoothness
-        setTimeout(() => setIsLoaded(true), 100);
+      if (instagramRendered || iframeReady) {
+        // Add delay to ensure content is fully visible
+        setTimeout(() => setIsLoaded(true), 300);
         observer.disconnect();
       }
     });
@@ -50,7 +56,7 @@ const SocialMediaEmbed: React.FC<SocialMediaEmbedProps> = ({
     const fallbackTimeout = setTimeout(() => {
       setIsLoaded(true);
       observer.disconnect();
-    }, 5000);
+    }, FALLBACK_TIMEOUT[platform]);
 
     return () => {
       observer.disconnect();
@@ -97,9 +103,13 @@ const SocialMediaEmbed: React.FC<SocialMediaEmbedProps> = ({
         ref={containerRef}
         sx={{
           opacity: isLoaded ? 1 : 0,
+          height: isLoaded ? "auto" : 0,
+          overflow: "hidden",
           transition: "opacity 0.3s ease-in-out",
         }}
-        dangerouslySetInnerHTML={{ __html: html }}
+        dangerouslySetInnerHTML={{
+          __html: html.replace(/<script[^>]*>.*?<\/script>/gi, ""),
+        }}
       />
     </Box>
   );

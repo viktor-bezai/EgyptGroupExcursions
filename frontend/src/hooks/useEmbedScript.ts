@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 type Platform = "instagram" | "tiktok";
 
@@ -7,61 +7,49 @@ const SCRIPT_URLS: Record<Platform, string> = {
   tiktok: "https://www.tiktok.com/embed.js",
 };
 
-const loadedScripts = new Set<string>();
-
 export const useEmbedScript = (platform: Platform) => {
-  const processedRef = useRef(false);
-
   useEffect(() => {
     const scriptUrl = SCRIPT_URLS[platform];
 
     const loadScript = () => {
-      // Check if script already exists
-      const existingScript = document.querySelector(
-        `script[src="${scriptUrl}"]`,
-      );
-
-      if (existingScript) {
-        // Script exists, just process embeds
-        processEmbeds();
-        return;
-      }
-
-      // Create and load script
-      const script = document.createElement("script");
-      script.src = scriptUrl;
-      script.async = true;
-      script.onload = () => {
-        loadedScripts.add(scriptUrl);
-        processEmbeds();
-      };
-      document.body.appendChild(script);
-    };
-
-    const processEmbeds = () => {
-      if (processedRef.current) return;
-
-      if (platform === "instagram" && (window as any).instgrm) {
-        (window as any).instgrm.Embeds.process();
-        processedRef.current = true;
-      } else if (platform === "tiktok") {
-        // TikTok auto-processes, but we may need to reload script
+      if (platform === "instagram") {
+        // Instagram: check if script exists and process, or load new
         const existingScript = document.querySelector(
           `script[src="${scriptUrl}"]`,
         );
-        if (existingScript && !processedRef.current) {
-          existingScript.remove();
-          const newScript = document.createElement("script");
-          newScript.src = scriptUrl;
-          newScript.async = true;
-          document.body.appendChild(newScript);
-          processedRef.current = true;
+
+        if (existingScript && (window as any).instgrm) {
+          (window as any).instgrm.Embeds.process();
+          return;
         }
+
+        const script = document.createElement("script");
+        script.src = scriptUrl;
+        script.async = true;
+        script.onload = () => {
+          if ((window as any).instgrm) {
+            (window as any).instgrm.Embeds.process();
+          }
+        };
+        document.body.appendChild(script);
+      } else if (platform === "tiktok") {
+        // TikTok: always remove and reload script for SPA navigation
+        const existingScript = document.querySelector(
+          `script[src*="tiktok.com/embed"]`,
+        );
+        if (existingScript) {
+          existingScript.remove();
+        }
+
+        const script = document.createElement("script");
+        script.src = scriptUrl;
+        script.async = true;
+        document.body.appendChild(script);
       }
     };
 
-    // Small delay to ensure DOM is ready
-    const timeoutId = setTimeout(loadScript, 100);
+    // Delay to ensure DOM with blockquotes is ready
+    const timeoutId = setTimeout(loadScript, 200);
 
     return () => {
       clearTimeout(timeoutId);
