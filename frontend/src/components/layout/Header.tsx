@@ -163,7 +163,11 @@ const Header: React.FC = () => {
                     >
                       <Typography
                         sx={{
-                          fontSize: { xs: "0.7rem", md: "0.8rem", lg: "0.9rem" },
+                          fontSize: {
+                            xs: "0.7rem",
+                            md: "0.8rem",
+                            lg: "0.9rem",
+                          },
                           fontWeight: "bold",
                           textTransform: "uppercase",
                           letterSpacing: 0.5,
