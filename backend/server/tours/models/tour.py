@@ -32,6 +32,12 @@ class Tour(models.Model):
         return self.title_ru
 
     def save(self, *args, **kwargs):
+        # Delete old image if changed
+        if self.pk:
+            old = Tour.objects.filter(pk=self.pk).first()
+            if old and old.image and old.image != self.image:
+                old.image.delete(save=False)
+
         if not self.slug:
             self.slug = slugify(self.title_en)
         super().save(*args, **kwargs)
