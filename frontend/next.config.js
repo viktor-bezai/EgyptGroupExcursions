@@ -6,6 +6,19 @@ const nextConfig = {
     defaultLocale: "ru",
     localeDetection: false,
   },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Permissions-Policy",
+            value: "unload=self",
+          },
+        ],
+      },
+    ];
+  },
   images: {
     unoptimized: process.env.NODE_ENV === 'development',
     remotePatterns: [

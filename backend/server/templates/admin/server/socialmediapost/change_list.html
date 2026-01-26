@@ -7,5 +7,23 @@
         + Bulk Add Posts
     </a>
 </li>
+<li>
+    <a href="{% url 'admin:socialmediapost_refresh_all' %}" class="viewlink"
+       onclick="return confirm('This will refresh oEmbed data for ALL active posts. Continue?');">
+        🔄 Refresh All Posts
+    </a>
+</li>
+<li>
+    <a href="{% url 'admin:socialmediapost_refresh_instagram' %}" class="viewlink"
+       onclick="return confirm('This will refresh oEmbed data for all Instagram posts. Continue?');">
+        📷 Refresh Instagram
+    </a>
+</li>
+<li>
+    <a href="{% url 'admin:socialmediapost_refresh_tiktok' %}" class="viewlink"
+       onclick="return confirm('This will refresh oEmbed data for all TikTok posts. Continue?');">
+        🎵 Refresh TikTok
+    </a>
+</li>
 {{ block.super }}
 {% endblock %}
