@@ -92,6 +92,7 @@ const HomePage = ({ lang }: HomePageProps) => {
                 description={t(linkBox.description)}
                 image={linkBox.image}
                 link={linkBox.link}
+                index={index}
               />
             </Grid>
           ))}
