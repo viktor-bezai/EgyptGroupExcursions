@@ -1,5 +1,6 @@
 import { GetServerSideProps } from "next";
-import { Box, Grid } from "@mui/material";
+import { Box } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import Head from "next/head";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
@@ -86,7 +87,7 @@ const HomePage = ({ lang }: HomePageProps) => {
       >
         <Grid container spacing={2} justifyContent="center">
           {homeTiles.map((linkBox, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
               <HomeTileMain
                 title={t(linkBox.title)}
                 description={t(linkBox.description)}

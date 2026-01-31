@@ -2,7 +2,6 @@ import React, { useState, useCallback } from "react";
 import {
   Box,
   Button,
-  Grid,
   MenuItem,
   Paper,
   Select,
@@ -10,6 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import { useTranslation } from "react-i18next";
 import { Tour } from "@/pages/tours";
 
@@ -143,7 +143,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ tour, onClose }) => {
 
       <form onSubmit={handleSubmit} noValidate>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="firstName"
               label={t("first-name")}
@@ -157,7 +157,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ tour, onClose }) => {
               sx={{ boxSizing: "border-box" }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="lastName"
               label={t("last-name")}
@@ -171,7 +171,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ tour, onClose }) => {
               sx={{ boxSizing: "border-box" }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Select
               name="preferredContact"
               value={formData.preferredContact}
@@ -201,7 +201,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ tour, onClose }) => {
               ))}
             </Select>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="contactLink"
               label={t("your-contact")}
@@ -215,7 +215,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ tour, onClose }) => {
               sx={{ boxSizing: "border-box" }}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <TextField
               name="message"
               label={t("message")}

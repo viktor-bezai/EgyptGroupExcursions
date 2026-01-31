@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from server.tours.models import TourCategory
+from server.tours.models.tour import Tour
 from server.tours.serializers.tour_category_serializer import TourCategorySerializer
 from server.lang_query_serializer import LangQuerySerializer
 
@@ -26,7 +27,13 @@ class TourCategoryView(APIView):
 
         lang = category_query_serializer.validated_data.get("lang")
 
-        tour_categories = TourCategory.objects.all().order_by("ordering")
+        # Only return categories that have at least one tour
+        category_ids_with_tours = Tour.objects.values_list(
+            "category_id", flat=True
+        ).distinct()
+        tour_categories = TourCategory.objects.filter(
+            id__in=category_ids_with_tours
+        ).order_by("ordering")
 
         serializer = TourCategorySerializer(
             instance=tour_categories, many=True, context={"lang": lang}
