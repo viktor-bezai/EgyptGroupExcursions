@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import ContactInfo from "@/components/contacts/ContactInfo";
 import ContactForm from "@/components/contacts/ContactForm";
 import { useTranslation } from "react-i18next";
@@ -35,7 +36,7 @@ const Contacts = (props: ContactsProps) => {
       <Head>
         <title>
           {t("contacts-title", {
-            defaultValue: "Contacts | Mystical Egypt Travels",
+            defaultValue: "Contacts | Anna-Egypt",
           })}
         </title>
       </Head>
@@ -68,10 +69,10 @@ const Contacts = (props: ContactsProps) => {
 
         <Box>
           <Grid container spacing={4} justifyContent="center">
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <ContactInfo />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <ContactForm />
             </Grid>
           </Grid>

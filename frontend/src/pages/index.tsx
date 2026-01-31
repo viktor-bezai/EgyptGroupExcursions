@@ -1,5 +1,6 @@
 import { GetServerSideProps } from "next";
-import { Box, Grid } from "@mui/material";
+import { Box } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import Head from "next/head";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
@@ -65,10 +66,10 @@ const HomePage = ({ lang }: HomePageProps) => {
   return (
     <>
       <Head>
-        <title>Home | Mystical Egypt Travels</title>
+        <title>Home | Anna-Egypt</title>
         <meta
           name="description"
-          content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии для незабываемого путешествия."
+          content="Anna-Egypt — индивидуальные экскурсии по Египту. Хургада, Шарм-эль-Шейх, Каир, Луксор. Проверенный гид, лучшие цены."
         />
         <meta
           name="keywords"
@@ -86,12 +87,13 @@ const HomePage = ({ lang }: HomePageProps) => {
       >
         <Grid container spacing={2} justifyContent="center">
           {homeTiles.map((linkBox, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
               <HomeTileMain
                 title={t(linkBox.title)}
                 description={t(linkBox.description)}
                 image={linkBox.image}
                 link={linkBox.link}
+                index={index}
               />
             </Grid>
           ))}

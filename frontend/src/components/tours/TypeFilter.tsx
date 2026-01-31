@@ -1,7 +1,18 @@
-import React from "react";
-import { Box, Button, Typography } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  Checkbox,
+  Chip,
+  Collapse,
+  FormControlLabel,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { tourType } from "@/pages/tours";
 import { useTranslation } from "react-i18next";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 interface TypeFilterProps {
   tourTypes: tourType[];
@@ -12,84 +23,235 @@ interface TypeFilterProps {
 const TypeFilter: React.FC<TypeFilterProps> = (props) => {
   const { tourTypes, selectedTypes, onSelectTypes } = props;
   const { t } = useTranslation("common");
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [expanded, setExpanded] = useState(false);
 
   const handleTypeToggle = (type: tourType) => {
-    const isSelected = selectedTypes.some(
-      (selectedType) => selectedType.id === type.id,
-    );
-
+    const isSelected = selectedTypes.some((st) => st.id === type.id);
     if (isSelected) {
-      // Remove the type from selectedTypes
-      onSelectTypes(
-        selectedTypes.filter((selectedType) => selectedType.id !== type.id),
-      );
+      onSelectTypes(selectedTypes.filter((st) => st.id !== type.id));
     } else {
-      // Add the type to selectedTypes
       onSelectTypes([...selectedTypes, type]);
     }
   };
 
   const isTypeSelected = (type: tourType) =>
-    selectedTypes.some((selectedType) => selectedType.id === type.id);
+    selectedTypes.some((st) => st.id === type.id);
 
+  const allSelected = selectedTypes.length === 0;
+
+  if (isMobile) {
+    return (
+      <Box
+        sx={{
+          backgroundColor: "background.paper",
+          borderRadius: 2,
+          border: "1px solid",
+          borderColor: allSelected ? "divider" : "primary.main",
+          overflow: "hidden",
+          transition: "border-color 0.3s ease",
+        }}
+      >
+        {/* Tappable header */}
+        <Box
+          onClick={() => setExpanded((prev) => !prev)}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            px: 2,
+            py: 1.5,
+            backgroundColor: "subtle.main",
+            borderBottom: expanded ? "1px solid" : "none",
+            borderColor: "divider",
+            cursor: "pointer",
+            userSelect: "none",
+          }}
+        >
+          <FilterListIcon sx={{ fontSize: 18, color: "primary.main" }} />
+          <Typography
+            sx={{
+              fontSize: "0.85rem",
+              fontWeight: 600,
+              color: "text.primary",
+            }}
+          >
+            {t("filter")}
+          </Typography>
+          {!allSelected && (
+            <Chip
+              label={selectedTypes.length}
+              size="small"
+              color="primary"
+              sx={{ height: 20, fontSize: "0.7rem", ml: 0.5 }}
+            />
+          )}
+          {!allSelected && (
+            <Typography
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelectTypes([]);
+              }}
+              sx={{
+                ml: "auto",
+                mr: 1,
+                fontSize: "0.75rem",
+                color: "primary.main",
+                cursor: "pointer",
+                "&:hover": { textDecoration: "underline" },
+              }}
+            >
+              {t("reset")}
+            </Typography>
+          )}
+          <ExpandMoreIcon
+            sx={{
+              ml: allSelected ? "auto" : 0,
+              fontSize: 20,
+              color: "text.secondary",
+              transition: "transform 0.3s ease",
+              transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+            }}
+          />
+        </Box>
+
+        {/* Collapsible chip/checkbox area */}
+        <Collapse in={expanded}>
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 0.75,
+              px: 1.5,
+              py: 1.5,
+            }}
+          >
+            {tourTypes.map((type) => {
+              const checked = isTypeSelected(type);
+              return (
+                <Chip
+                  key={type.id}
+                  label={type.name}
+                  variant={checked ? "filled" : "outlined"}
+                  color={checked ? "primary" : "default"}
+                  onClick={() => handleTypeToggle(type)}
+                  sx={{
+                    fontWeight: checked ? 600 : 400,
+                    fontSize: "0.8rem",
+                    transition: "all 0.2s ease",
+                  }}
+                />
+              );
+            })}
+          </Box>
+        </Collapse>
+      </Box>
+    );
+  }
+
+  // Desktop layout — unchanged
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: {
-          xs: "row", // Horizontal for extra-small screens
-          md: "column", // Vertical for small screens and above
-        },
-        alignItems: {
-          xs: "center", // Center align items for horizontal layout
-          md: "start", // Start align for vertical layout
-        },
-        justifyContent: {
-          xs: "center", // Center buttons horizontally for small screens
-          md: "start", // Align buttons to the start for larger screens
-        },
-        gap: 1,
-        flexWrap: "wrap", // Wrap buttons in horizontal layout
+        backgroundColor: "background.paper",
+        borderRadius: 2,
+        border: "1px solid",
+        borderColor: allSelected ? "divider" : "primary.main",
+        overflow: "hidden",
+        transition: "border-color 0.3s ease",
       }}
     >
-      <Button
-        key={"all"}
-        onClick={() => onSelectTypes([])} // Clear all selections
-        variant="outlined"
-        color={selectedTypes.length === 0 ? "primary" : "inherit"}
+      {/* Header */}
+      <Box
         sx={{
-          minWidth: "auto", // Adjust width to fit the text
-          textTransform: "none", // Preserve text case
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          px: 2,
+          py: 1.5,
+          backgroundColor: "subtle.main",
+          borderBottom: "1px solid",
+          borderColor: "divider",
         }}
       >
+        <FilterListIcon sx={{ fontSize: 18, color: "primary.main" }} />
         <Typography
           sx={{
-            fontSize: { xs: "0.8rem", sm: "1rem" },
+            fontSize: "0.9rem",
+            fontWeight: 600,
+            color: "text.primary",
           }}
         >
-          {t("all-types")}
+          {t("filter")}
         </Typography>
-      </Button>
-      {tourTypes.map((type) => (
-        <Button
-          key={type.id}
-          onClick={() => handleTypeToggle(type)}
-          variant="outlined"
-          color={isTypeSelected(type) ? "primary" : "inherit"}
-          sx={{
-            minWidth: "auto", // Adjust width to fit the text
-            textTransform: "none", // Preserve text case
-          }}
-        >
+        {!allSelected && (
           <Typography
+            onClick={() => onSelectTypes([])}
             sx={{
-              fontSize: { xs: "0.8rem", sm: "1rem" },
+              ml: "auto",
+              fontSize: "0.75rem",
+              color: "primary.main",
+              cursor: "pointer",
+              "&:hover": { textDecoration: "underline" },
             }}
           >
-            {type.name}
+            {t("reset")}
           </Typography>
-        </Button>
-      ))}
+        )}
+      </Box>
+
+      {/* Checkbox list */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          px: 1,
+          py: 0.5,
+        }}
+      >
+        {tourTypes.map((type) => {
+          const checked = isTypeSelected(type);
+          return (
+            <FormControlLabel
+              key={type.id}
+              control={
+                <Checkbox
+                  checked={checked}
+                  onChange={() => handleTypeToggle(type)}
+                  size="small"
+                  sx={{
+                    color: "text.disabled",
+                    "&.Mui-checked": {
+                      color: "primary.main",
+                    },
+                  }}
+                />
+              }
+              label={type.name}
+              sx={{
+                mx: 0,
+                py: 0.25,
+                px: 1,
+                borderRadius: 1,
+                transition: "background-color 0.2s ease",
+                "&:hover": {
+                  backgroundColor: "subtle.main",
+                },
+                ...(checked && {
+                  backgroundColor: "subtle.main",
+                }),
+                "& .MuiFormControlLabel-label": {
+                  fontSize: "0.875rem",
+                  color: checked ? "primary.dark" : "text.primary",
+                  fontWeight: checked ? 600 : 400,
+                  transition: "color 0.2s ease, font-weight 0.2s ease",
+                },
+              }}
+            />
+          );
+        })}
+      </Box>
     </Box>
   );
 };

@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { GetServerSideProps } from "next";
-import { Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import { useTranslation } from "react-i18next";
 import TourCard from "@/components/tours/TourCard";
 import { fetchHomePageData } from "@/utils/djangoApi";
@@ -62,6 +63,12 @@ const Tours = (props: ToursProps) => {
   );
   const [selectedTypes, setSelectedTypes] = useState<tourType[]>([]);
 
+  // Clear type selections when category changes (avoids stale filters)
+  const handleCategoryChange = useCallback((category: tourCategory | null) => {
+    setSelectedCategory(category);
+    setSelectedTypes([]);
+  }, []);
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -71,30 +78,36 @@ const Tours = (props: ToursProps) => {
     }
   }, [lang, i18n]);
 
+  // Tours filtered by category only (used to determine available types)
+  const categoryFilteredTours = useMemo(() => {
+    if (!selectedCategory) return tours;
+    return tours.filter((tour) => tour.category.id === selectedCategory.id);
+  }, [tours, selectedCategory]);
+
   const filteredTours = useMemo(() => {
-    let filtered = tours;
+    if (selectedTypes.length === 0) return categoryFilteredTours;
+    return categoryFilteredTours.filter((tour) =>
+      selectedTypes.every((selectedType) =>
+        tour.types.some((type) => type.id === selectedType.id),
+      ),
+    );
+  }, [categoryFilteredTours, selectedTypes]);
 
-    if (selectedCategory) {
-      filtered = filtered.filter(
-        (tour) => tour.category.id === selectedCategory.id,
-      );
-    }
-
-    if (selectedTypes.length > 0) {
-      filtered = filtered.filter((tour) =>
-        selectedTypes.every((selectedType) =>
-          tour.types.some((type) => type.id === selectedType.id),
+  // Only show types that exist in the current category-filtered tours
+  const availableTypes = useMemo(
+    () =>
+      tourTypes.filter((type) =>
+        categoryFilteredTours.some((tour) =>
+          tour.types.some((t) => t.id === type.id),
         ),
-      );
-    }
-
-    return filtered;
-  }, [tours, selectedCategory, selectedTypes]);
+      ),
+    [categoryFilteredTours, tourTypes],
+  );
 
   // Generate dynamic keywords
   const keywords = useMemo(() => {
     const pre_setup_keywords =
-      "Мистические туры по Египту, путешествия по Египту, экскурсии, туры к пирамидам, круизы по Нилу, достопримечательности Каира, Луксор и Асуан, сафари в пустыне, туры по Египту, исторические экскурсии";
+      "экскурсии Египет, туры по Египту, экскурсии Хургада, экскурсии Шарм-эль-Шейх, туры к пирамидам, круизы по Нилу, достопримечательности Каира, Луксор и Асуан, сафари в пустыне, исторические экскурсии";
     const tourTitles = filteredTours.map((tour) => tour.title);
     const categoryNames = tourCategories.map((category) => category.name);
     const typeNames = tourTypes.map((type) => type.name);
@@ -124,10 +137,10 @@ const Tours = (props: ToursProps) => {
   return (
     <>
       <Head>
-        <title>Tours | Mystical Egypt Travels</title>
+        <title>Tours | Anna-Egypt</title>
         <meta
           name="description"
-          content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии для незабываемого путешествия."
+          content="Все экскурсии по Египту от Anna-Egypt. Групповые и индивидуальные туры в Хургаде, Шарм-эль-Шейхе, Каире и Луксоре."
         />
         <meta name="keywords" content={keywords} />
         {/* Add JSON-LD structured data for tours */}
@@ -146,10 +159,10 @@ const Tours = (props: ToursProps) => {
             <CategoryFilter
               tourCategories={tourCategories}
               selectedCategory={selectedCategory}
-              onSelectCategory={setSelectedCategory}
+              onSelectCategory={handleCategoryChange}
             />
             <TypeFilter
-              tourTypes={tourTypes}
+              tourTypes={availableTypes}
               selectedTypes={selectedTypes}
               onSelectTypes={setSelectedTypes}
             />
@@ -162,7 +175,7 @@ const Tours = (props: ToursProps) => {
             <CategoryFilter
               tourCategories={tourCategories}
               selectedCategory={selectedCategory}
-              onSelectCategory={setSelectedCategory}
+              onSelectCategory={handleCategoryChange}
             />
           </Box>
         )}
@@ -171,13 +184,13 @@ const Tours = (props: ToursProps) => {
         <Grid container justifyContent="center">
           {/* Left Area - Notifications (Hidden on Mobile) */}
           {!isMobile && (
-            <Grid item xs={12} md={2}>
+            <Grid size={{ xs: 12, md: 2 }}>
               <NotificationsPanel notifications={notifications} />
             </Grid>
           )}
 
           {/* Center Area - Tours */}
-          <Grid item xs={12} md={8}>
+          <Grid size={{ xs: 12, md: 8 }}>
             <Grid
               container
               spacing={4}
@@ -188,26 +201,21 @@ const Tours = (props: ToursProps) => {
               }}
             >
               {filteredTours.length > 0 ? (
-                filteredTours.map((tour) => (
+                filteredTours.map((tour, index) => (
                   <Grid
-                    item
-                    xs={12}
-                    sm={6}
-                    xl={4}
+                    size={{ xs: 12, sm: 6, xl: 4 }}
                     key={tour.id}
                     sx={{
                       display: "flex",
                       justifyContent: "center",
                     }}
                   >
-                    <TourCard tour={tour} />
+                    <TourCard tour={tour} index={index} />
                   </Grid>
                 ))
               ) : (
                 <Grid
-                  item
-                  xs={12}
-                  sm={6}
+                  size={{ xs: 12, sm: 6 }}
                   key={"no-tours"}
                   sx={{
                     display: "flex",
@@ -231,9 +239,9 @@ const Tours = (props: ToursProps) => {
 
           {/* Right Area - TypeFilter (Hidden on Mobile) */}
           {!isMobile && (
-            <Grid item xs={12} md={2}>
+            <Grid size={{ xs: 12, md: 2 }}>
               <TypeFilter
-                tourTypes={tourTypes}
+                tourTypes={availableTypes}
                 selectedTypes={selectedTypes}
                 onSelectTypes={setSelectedTypes}
               />

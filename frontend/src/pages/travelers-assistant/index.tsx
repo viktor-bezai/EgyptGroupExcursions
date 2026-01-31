@@ -61,7 +61,7 @@ const TravelersAssistantPage = ({ lang }: TravelersAssistantPageProps) => {
   return (
     <>
       <Head>
-        <title>Travelers Assistant | Mystical Egypt Travels</title>
+        <title>Travelers Assistant | Anna-Egypt</title>
         <meta
           name="description"
           content="Удобные и полезные инструменты для путешествий. Проверьте чеклист до или перед вылетом или узнайте полезную информацию."
