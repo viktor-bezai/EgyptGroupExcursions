@@ -6,6 +6,7 @@ services:
     volumes:
       - redis_data:/data
     command: redis-server --appendonly yes
+    mem_limit: 64m
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -40,6 +41,7 @@ services:
       sh -c "python manage.py migrate --noinput &&
              python manage.py collectstatic --noinput &&
              gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2 --threads 2 --timeout 120"
+    mem_limit: 384m
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/tours/?lang=ru"]
       interval: 30s
@@ -69,6 +71,7 @@ services:
       - INTERNAL_API_URL=http://egypt-backend:8000/api/v1
     depends_on:
       - egypt-backend
+    mem_limit: 256m
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/"]
       interval: 30s
@@ -99,7 +102,8 @@ services:
         condition: service_healthy
       egypt-backend:
         condition: service_healthy
-    command: celery -A config worker -l INFO
+    command: celery -A config worker -l INFO --concurrency=1
+    mem_limit: 256m
     logging:
       driver: "json-file"
       options:
@@ -123,6 +127,7 @@ services:
       egypt-celery-worker:
         condition: service_started
     command: celery -A config beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    mem_limit: 192m
     logging:
       driver: "json-file"
       options:
