@@ -101,23 +101,47 @@ const AboutMe = (props: AboutMeProps) => {
           </ButtonGroup>
         </Box>
 
-        {/* Dynamic Content */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            gap: { xs: 2, sm: 3, md: 4 },
-          }}
-        >
-          {selectedPlatform === "instagram" ? (
+        {/* Dynamic Content — both feeds always mounted, inactive hidden off-screen
+             to preserve iframe state (display:none causes browsers to discard iframe content) */}
+        <Box sx={{ position: "relative" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              gap: { xs: 2, sm: 3, md: 4 },
+              ...(selectedPlatform !== "instagram" && {
+                visibility: "hidden",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                pointerEvents: "none",
+              }),
+            }}
+          >
             <Box sx={{ flex: 1 }}>
               <InstagramFeed posts={instagramPosts} />
             </Box>
-          ) : (
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              gap: { xs: 2, sm: 3, md: 4 },
+              ...(selectedPlatform !== "tiktok" && {
+                visibility: "hidden",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                pointerEvents: "none",
+              }),
+            }}
+          >
             <Box sx={{ flex: 1 }}>
               <TikTokFeed posts={tikTokPosts} />
             </Box>
-          )}
+          </Box>
         </Box>
       </Box>
     </>

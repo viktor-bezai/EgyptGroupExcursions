@@ -68,9 +68,11 @@ LOCAL_DBPASS=$(read_env_var "$PROJECT_ROOT/.env" "DBPASS")
 LOCAL_DBHOST=$(read_env_var "$PROJECT_ROOT/.env" "DBHOST")
 LOCAL_DBPORT=$(read_env_var "$PROJECT_ROOT/.env" "DBPORT")
 
-# Set defaults for local if not specified
-LOCAL_DBHOST=${LOCAL_DBHOST:-localhost}
-LOCAL_DBPORT=${LOCAL_DBPORT:-5432}
+# Override Docker-internal host/port with host-accessible values
+# The .env file uses Docker service names (e.g. "db"), but this script
+# runs on the host and needs to connect via the mapped port.
+LOCAL_DBHOST=localhost
+LOCAL_DBPORT=5433
 
 echo -e "${GREEN}✅ Environment configurations loaded${NC}"
 echo -e "   Production DB: ${PROD_DBNAME}@${PROD_DBHOST}:${PROD_DBPORT}"
