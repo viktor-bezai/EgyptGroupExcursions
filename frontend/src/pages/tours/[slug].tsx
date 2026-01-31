@@ -77,7 +77,7 @@ const TourDetail = (props: TourDetailProps) => {
   return (
     <>
       <Head>
-        <title>{tour.title} | Mystical Egypt Travels</title>
+        <title>{tour.title} | Anna-Egypt</title>
         <meta name="description" content={tour.title} />
         <meta name="keywords" content={keywords} />
         {/* Add JSON-LD structured data for tours */}

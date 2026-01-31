@@ -65,10 +65,10 @@ const HomePage = ({ lang }: HomePageProps) => {
   return (
     <>
       <Head>
-        <title>Home | Mystical Egypt Travels</title>
+        <title>Home | Anna-Egypt</title>
         <meta
           name="description"
-          content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии для незабываемого путешествия."
+          content="Anna-Egypt — индивидуальные экскурсии по Египту. Хургада, Шарм-эль-Шейх, Каир, Луксор. Проверенный гид, лучшие цены."
         />
         <meta
           name="keywords"

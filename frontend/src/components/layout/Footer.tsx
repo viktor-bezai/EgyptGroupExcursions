@@ -68,8 +68,8 @@ const Footer: React.FC = () => {
           }}
         >
           <Typography variant="body2">
-            © {new Date().getFullYear()} Mystical Egypt Travels. All rights
-            reserved.
+            © {new Date().getFullYear()} Anna-Egypt.{" "}
+            {t("all-rights-reserved", { defaultValue: "Все права защищены." })}
           </Typography>
         </Box>
       </Container>

@@ -125,11 +125,16 @@ const Header: React.FC = () => {
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Image
                   src="/icons/logo.png"
-                  alt="Mystical Egypt Travels"
-                  width={50}
-                  height={50}
+                  alt="Anna-Egypt"
+                  width={160}
+                  height={100}
                   priority
-                  style={{ cursor: "pointer" }}
+                  style={{
+                    cursor: "pointer",
+                    height: "40px",
+                    width: "auto",
+                    objectFit: "contain",
+                  }}
                 />
               </Box>
             </Link>

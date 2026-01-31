@@ -57,7 +57,7 @@ const AboutMe = (props: AboutMeProps) => {
   return (
     <>
       <Head>
-        <title>About Me | Mystical Egypt Travels</title>
+        <title>About Me | Anna-Egypt</title>
       </Head>
 
       <Box

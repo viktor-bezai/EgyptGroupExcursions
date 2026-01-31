@@ -94,7 +94,7 @@ const Tours = (props: ToursProps) => {
   // Generate dynamic keywords
   const keywords = useMemo(() => {
     const pre_setup_keywords =
-      "Мистические туры по Египту, путешествия по Египту, экскурсии, туры к пирамидам, круизы по Нилу, достопримечательности Каира, Луксор и Асуан, сафари в пустыне, туры по Египту, исторические экскурсии";
+      "экскурсии Египет, туры по Египту, экскурсии Хургада, экскурсии Шарм-эль-Шейх, туры к пирамидам, круизы по Нилу, достопримечательности Каира, Луксор и Асуан, сафари в пустыне, исторические экскурсии";
     const tourTitles = filteredTours.map((tour) => tour.title);
     const categoryNames = tourCategories.map((category) => category.name);
     const typeNames = tourTypes.map((type) => type.name);
@@ -124,10 +124,10 @@ const Tours = (props: ToursProps) => {
   return (
     <>
       <Head>
-        <title>Tours | Mystical Egypt Travels</title>
+        <title>Tours | Anna-Egypt</title>
         <meta
           name="description"
-          content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии для незабываемого путешествия."
+          content="Все экскурсии по Египту от Anna-Egypt. Групповые и индивидуальные туры в Хургаде, Шарм-эль-Шейхе, Каире и Луксоре."
         />
         <meta name="keywords" content={keywords} />
         {/* Add JSON-LD structured data for tours */}

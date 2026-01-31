@@ -23,19 +23,19 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Mystical Egypt Travels</title>
+        <title>Anna-Egypt</title>
         <meta
           name="description"
-          content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии для незабываемого путешествия."
+          content="Anna-Egypt — индивидуальные экскурсии по Египту. Хургада, Шарм-эль-Шейх, Каир, Луксор. Проверенный гид, лучшие цены."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content={theme.palette.primary.main} />
 
         {/* Open Graph meta tags */}
-        <meta property="og:title" content="Home | Mystical Egypt Travels" />
+        <meta property="og:title" content="Anna-Egypt — экскурсии по Египту" />
         <meta
           property="og:description"
-          content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии для незабываемого путешествия."
+          content="Anna-Egypt — индивидуальные экскурсии по Египту. Хургада, Шарм-эль-Шейх, Каир, Луксор. Проверенный гид, лучшие цены."
         />
         <meta
           property="og:image"
@@ -48,14 +48,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta property="og:locale" content="ru_RU" />
         <meta property="og:locale:alternate" content="ua_UA" />
         <meta property="og:locale:alternate" content="en_US" />
-        <meta property="og:site_name" content="Mystical Egypt Travels" />
+        <meta property="og:site_name" content="Anna-Egypt" />
 
         {/* Twitter meta tags */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Home | Mystical Egypt Travels" />
+        <meta name="twitter:title" content="Anna-Egypt — экскурсии по Египту" />
         <meta
           name="twitter:description"
-          content="Откройте для себя чудеса Египта с Mystical Egypt Travels. Уникальные туры и экскурсии для незабываемого путешествия."
+          content="Anna-Egypt — индивидуальные экскурсии по Египту. Хургада, Шарм-эль-Шейх, Каир, Луксор. Проверенный гид, лучшие цены."
         />
         <meta
           name="twitter:image"

@@ -35,7 +35,7 @@ const Contacts = (props: ContactsProps) => {
       <Head>
         <title>
           {t("contacts-title", {
-            defaultValue: "Contacts | Mystical Egypt Travels",
+            defaultValue: "Contacts | Anna-Egypt",
           })}
         </title>
       </Head>
