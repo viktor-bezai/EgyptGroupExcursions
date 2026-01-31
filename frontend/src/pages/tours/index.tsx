@@ -188,7 +188,7 @@ const Tours = (props: ToursProps) => {
               }}
             >
               {filteredTours.length > 0 ? (
-                filteredTours.map((tour) => (
+                filteredTours.map((tour, index) => (
                   <Grid
                     item
                     xs={12}
@@ -200,7 +200,7 @@ const Tours = (props: ToursProps) => {
                       justifyContent: "center",
                     }}
                   >
-                    <TourCard tour={tour} />
+                    <TourCard tour={tour} index={index} />
                   </Grid>
                 ))
               ) : (

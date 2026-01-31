@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogContent,
   Typography,
+  keyframes,
 } from "@mui/material";
 import Image from "next/image";
 import ImageWithFallback from "@/components/common/ImageWithFallback";
@@ -17,7 +18,21 @@ import { getMediaUrl, truncateText } from "@/utils/textUtils";
 import { Tour } from "@/pages/tours";
 import ContactForm from "@/components/contacts/ContactForm";
 
-const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const TourCard: React.FC<{ tour: Tour; index?: number }> = ({
+  tour,
+  index = 0,
+}) => {
   const { t } = useTranslation("common");
   const router = useRouter();
   const [isContactFormOpen, setContactFormOpen] = useState(false);
@@ -67,6 +82,13 @@ const TourCard: React.FC<{ tour: Tour }> = ({ tour }) => {
           boxShadow: 3,
           borderRadius: 2,
           position: "relative",
+          animation: `${fadeInUp} 0.5s ease-out both`,
+          animationDelay: `${index * 0.1}s`,
+          transition: "transform 0.3s ease, box-shadow 0.3s ease",
+          "&:hover": {
+            transform: "translateY(-6px)",
+            boxShadow: 8,
+          },
         }}
       >
         {/* Circle with Icon */}
